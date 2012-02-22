@@ -1,0 +1,65 @@
+core             (Core Set)
+ |-- passage     (Passage Through Mirkwood)
+ |-- spiders     (Spiders of Mirkwood)
+ |-- orcs        (Dol Guldur Orcs)
+ |-- anduin      (Journey Down the Anduin)
+ |-- sauron      (Sauron's Reach)
+ |-- wilderlands (Wilderlands)
+ |-- escape      (Escape from Dol Guldur)
+
+
+mirkwood       (Shadows of Mirkwood)
+ |-- gollum    (The Hunt for Gollum)
+ |-- carrock   (Conflict at the Carrock)
+ |-- rhosgobel (A Journey to Rhosgobel)
+ |-- emynmuil  (The Hills of Emyn Muil)
+ |-- marshes   (The Dead Marshes)
+ |-- return    (Return to Mirkwood)
+
+
+osgiliath       (The Massing at Osgiliath)
+
+
+khazaddum       (Khazad-dum)
+ |-- pit        (Into the Pit)
+ |-- twists     (Twists and Turns)
+ |-- hazards    (Hazards of the Pit)
+ |-- goblin     (Goblins of the Deep)
+ |-- seventh    (The Seventh Level)
+ |-- plundering (Plundering Goblins)
+ |-- flight     (Flight from Moria)
+ |-- moria      (Deeps of Moria)
+ |
+ |-- misty      (Misty Mountains)
+
+
+dwarrowdelf      (Dwarrowdelf)
+ |-- redhorn     (The Redhorn Gate)
+ |-- rivendell   (Road to Rivendell)
+ |-- watcher     (The Watcher in the Water)
+ |-- long        (The Long Dark)
+ |-- foundations (Foundations of Stone)
+
+
+{
+	"set": "core",
+	"id": 83,
+	"quantity": 1,
+	"unique": false,
+	"type": "enemy",
+	"title": "Goblin Sniper",
+	"icon": "wilderlands",  // hero resource / encounter set / sphere type
+	"cost": 48,  // cost / hero cost / engagement cost / quest points
+	"strength": 2,  // willpower / threat
+	"attack": 2,
+	"defense": 0,
+	"hp": 2,
+	"traits": ["Goblin", "Orc"],
+	"effect": {
+		"normal": "During the encounter phase, players cannot optionally engage Goblin Sniper if there are other enemies in the staging area.",
+		"forced": "If Goblin Sniper is in the staging area at the end of the combat phase, each player deals 1 point of damage to 1 character he controls.",
+	},
+}
+
+
+grep EXPANSION for future code modifications
