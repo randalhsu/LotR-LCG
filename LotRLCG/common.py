@@ -13,7 +13,7 @@ except ImportError:
     sys.exit(1)
 
 
-VERSION = '0.1'
+VERSION = '2012.02.24'
 
 
 SETS = ('core', 'mirkwood', 'osgiliath', 'khazaddum')  # EXPANSION
