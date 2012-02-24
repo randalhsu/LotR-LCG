@@ -1,19 +1,14 @@
 ## LotR LCG
 
-An implementation of Fantasy Flight Games' board game: <a href="http://www.fantasyflightgames.com/edge_minisite.asp?eidm=129">The Lord of the Rings: The Card Game</a>
-
-This program provides auto Scenario setting and Card/Token dragging.
-
-Players must resolve Phases/Damage/Card effects etc. by themselves.
-
-Currently SOLO game only. Multiplayer mode will be done when I have time, maybe.
+The blog post about this program:
+http://ogc-daily.blogspot.com/2012/02/lotr-lcg-for-pc.html
 
 
 ### Prerequisites:
 
-* Card image files are required but NOT included. Look for `resource/card_image_path_*.txt` for some clues.
+* Card image files are not included in the repository. Click <a href="http://db.tt/n9tyf9Bk">here</a> to download, and place them to where they should be.
 
-* Each Quest Card image `*.jpg` must also be splited to `*-A.jpg` and `*-B.jpg`. `resource/quest_cards_splitter.py` is doing this.
+* If you use your own card image files, note that each Quest Card image `*.jpg` must also be splited to `*-A.jpg` and `*-B.jpg`. `resource/quest_cards_splitter.py` is doing this.
 
 
 ### Usage:

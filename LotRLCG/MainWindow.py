@@ -50,7 +50,7 @@ class _PhaseTips(QDialog):
 
 class _About(QMessageBox):
     def __init__(self, parent=None):
-        text = '<br><center><h2>The Lord of the Rings: The Card Game</h2><big>version {0}</big><br><br>Program written by amulet</center><br><br>Try <b>Left / Right / Double Click</b> and <b>Drag & Drop</b> everywhere.<br><br><a href="http://www.fantasyflightgames.com/edge_minisite_sec.asp?eidm=129&esem=4">Game rules</a> available at Fantasy Flight Games website.<br><br><code><a href="https://github.com/amulet-tw/LotR-LCG">Source code</a> licensed under GNU GPL v2.</code>'.format(VERSION)
+        text = '<br><center><h2>The Lord of the Rings: The Card Game</h2><big>version {0}</big><br><br>Program written by amulet (Taiwan)</center><br><br>Try <b>Left / Right / Double Click</b> and <b>Drag & Drop</b> everywhere.<br><br><a href="http://www.fantasyflightgames.com/edge_minisite_sec.asp?eidm=129&esem=4">Game rules</a> available at Fantasy Flight Games website.<br><br><code><a href="https://github.com/amulet-tw/LotR-LCG">Source code</a> licensed under GNU GPL v2.</code>'.format(VERSION)
         super(_About, self).__init__(QMessageBox.Information, 'About', text, QMessageBox.Ok, parent)
 
 
