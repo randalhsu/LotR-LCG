@@ -6,7 +6,7 @@ This program provides auto Scenario setting and Card/Token dragging.
 
 Players must resolve Phases/Damage/Card effects etc. by themselves.
 
-Currently SOLO game only. Multiplayer mode will be done when I have time (Maybe. I do not guarantee anything).
+Currently SOLO game only. Multiplayer mode will be done when I have time, maybe.
 
 
 ### Prerequisites:
@@ -25,7 +25,7 @@ Currently SOLO game only. Multiplayer mode will be done when I have time (Maybe.
 
 * Python 2.7.2
 
-* PyQt   4.9
+* PyQt   4.9.1
 
 * PIL    1.1.7  (optional, for splitting Quest Cards)
 
@@ -33,8 +33,6 @@ Currently SOLO game only. Multiplayer mode will be done when I have time (Maybe.
 ### License:
 
 * Python codes are licensed under GNU GPL v2.
-
-* All image art is copyrighted by Fantasy Flight Games.
 
 
 https://github.com/amulet-tw/LotR-LCG

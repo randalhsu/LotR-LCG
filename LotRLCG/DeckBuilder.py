@@ -286,13 +286,12 @@ class DeckBuilder(QMainWindow):
         return item
         
     def updateDeckTable(self):
+        self.deckTable.clearContents()
         if self.deckComboBox.currentIndex() == -1:
             self.currentDeck = collections.Counter()
             self.updateSizeLabel()
             return
             
-        self.deckTable.clearContents()
-        
         self.deckTable.setSortingEnabled(False)
         deck = self.decks[self.deckComboBox.currentIndex()]['deck']
         self.currentDeck = collections.Counter()
@@ -374,7 +373,7 @@ class DeckBuilder(QMainWindow):
     def addToDeck(self):
         idx = self.deckComboBox.currentIndex()
         if idx == -1:
-            self.setStateLabel(self.makeRedFont(self.tr('No deck')))
+            self.setStateLabel(self.makeRedFont(self.tr('No deck. Try to Add New Deck first.')))
             return
             
         card = self.playerCardsTable.selectedCard()
@@ -391,7 +390,7 @@ class DeckBuilder(QMainWindow):
             
             heroCount = 0
             for (set__, id_) in self.currentDeck:
-                if isHeroCard(set__, id_):
+                if isHeroCard(set__, id_) and self.currentDeck[(set__, id_)] >= 1:
                     heroCount += 1
             if heroCount >= 3:
                 self.setStateLabel(self.makeRedFont(self.tr('Error: Max = 3 Heroes')))
@@ -414,7 +413,7 @@ class DeckBuilder(QMainWindow):
                 self.setStateLabel('{0} = {1}'.format(cardsInfo[set_][id]['title'], self.currentDeck[card]))
                 break
         else:  # card not in deck yet
-            self.deckTable.setSortingEnabled(False)  # I debugged this shit for 2 hrs. Should RTFD carefully
+            self.deckTable.setSortingEnabled(False)  # I debugged this shit for 2 hrs. Should have RTFD carefully
             row = self.deckTable.rowCount()
             self.deckTable.insertRow(row)
             for (col, field) in enumerate(['quantity'] + list(CARD_FIELDS)):
@@ -423,17 +422,18 @@ class DeckBuilder(QMainWindow):
                 if col == 0:
                     self.deckTable.setCurrentItem(item)
                     self.deckTable.scrollToItem(item)
+            self.deckTable.setSortingEnabled(True)
+            #self.deckTable.resizeColumnsToContents()
             self.setStateLabel('{0} joined the deck!'.format(cardsInfo[setFull[set_]][id]['title']))
             
         # TODO: highlight deckTable's current row
         # ISSUE: adding a card to empty deck cause strange rowspan
-        self.updateDeckTable()
         self.updateSizeLabel()
         
     def removeFromDeck(self):
         idx = self.deckComboBox.currentIndex()
         if idx == -1:
-            self.setStateLabel(self.makeRedFont(self.tr('No deck')))
+            self.setStateLabel(self.makeRedFont(self.tr('No deck. Try to Add New Deck first.')))
             return
             
         card = self.deckTable.selectedCard()
@@ -453,8 +453,7 @@ class DeckBuilder(QMainWindow):
         else:
             self.deckTable.removeRow(row)
             self.setStateLabel('{0} has gone...'.format(cardsInfo[set_][id]['title']))
-            self.deckTable.setCurrentItem(None)
-        self.updateDeckTable()
+            #self.deckTable.setCurrentItem(None)
         self.updateSizeLabel()
         
     def addNewDeck(self):
@@ -595,6 +594,7 @@ class DeckBuilder(QMainWindow):
         removeDeckButton.clicked.connect(self.removeDeck)
         self.deckTable = DeckTableWidget(parent=self)
         self.updateDeckTable()
+        self.deckTable.sortByColumn(self.deckTable.HEADER.index('Set'), Qt.AscendingOrder)
         self.stateLabel = QLabel()
         duplicateDeckButton = QPushButton(self.tr('Duplicate This Deck'))
         duplicateDeckButton.clicked.connect(self.duplicateDeck)
