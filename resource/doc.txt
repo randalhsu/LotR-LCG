@@ -22,15 +22,14 @@ osgiliath       (The Massing at Osgiliath)
 
 khazaddum       (Khazad-dum)
  |-- pit        (Into the Pit)
- |-- twists     (Twists and Turns)
- |-- hazards    (Hazards of the Pit)
- |-- goblin     (Goblins of the Deep)
  |-- seventh    (The Seventh Level)
- |-- plundering (Plundering Goblins)
  |-- flight     (Flight from Moria)
+ |-- plundering (Plundering Goblins)
+ |-- twists     (Twists and Turns)
  |-- moria      (Deeps of Moria)
- |
+ |-- hazards    (Hazards of the Pit)
  |-- misty      (Misty Mountains)
+ |-- goblin     (Goblins of the Deep)
 
 
 dwarrowdelf      (Dwarrowdelf)

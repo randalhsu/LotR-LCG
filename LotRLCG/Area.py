@@ -1,3 +1,6 @@
+'''
+TODO: attached card may get resource
+'''
 import random
 from Draggable import *
 

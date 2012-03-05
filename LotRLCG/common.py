@@ -16,7 +16,7 @@ except ImportError:
 VERSION = '2012.02.24'
 
 
-SETS = ('core', 'mirkwood', 'osgiliath', 'khazaddum')  # EXPANSION
+SETS = ('core', 'mirkwood', 'osgiliath', 'khazaddum', 'dwarrowdelf')  # EXPANSION
 
 CARD_WIDTH = 358
 CARD_HEIGHT = 500

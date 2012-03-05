@@ -193,7 +193,7 @@
 			},
 			"B": {
 				"normal": "Rumors have led you to the eaves of Mirkwood Forest, where the Woodmen whisper of a new terror in the night...",
-				"forced": "Forced: At the beginning of the quest phase, the first player looks at the top 2 cards of the encounter deck. Reveal and add 1 of those cards to the staging area, and discard the other."
+				"forced": "At the beginning of the quest phase, the first player looks at the top 2 cards of the encounter deck. Reveal and add 1 of those cards to the staging area, and discard the other."
 			}
 		}
 	},
@@ -211,7 +211,7 @@
 			},
 			"B": {
 				"normal": "Any player who does not control a hero with at least 1 Clue objective attached cannot commit characters to this quest. If there are ever no heroes with Clue objectives attached in play, reset the quest deck to stage 2B.\nIf the players defeat this stage, the players have once again found a true sign of Gollum's passing, and won the game.",
-				"forced": "Forced: At the beginning of the quest phase, the first player looks at the top 2 cards of the encounter deck. Reveal and add 1 of those cards to the staging area, and discard the other."
+				"forced": "At the beginning of the quest phase, the first player looks at the top 2 cards of the encounter deck. Reveal and add 1 of those cards to the staging area, and discard the other."
 			}
 		}
 	},

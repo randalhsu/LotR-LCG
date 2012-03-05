@@ -102,5 +102,13 @@
 		"icon": "flight",
 		"encounters": ["flight", "hazards", "moria"],
 		"description": "Balin's colony ended in death and darkness. After paying their respects at his tomb, the heroes fought their way out of the Goblin infested Seventh Level and made their way down toward the gate. But exiting Moria will not be easy, for a shadowy form masses at the end of the hall, and fear and terror go before it. The heroes must escape Moria before it is too late."
+	},
+	{
+		"set": "dwarrowdelf",
+		"difficulty": 6,
+		"name": "The Redhorn Gate",
+		"icon": "redhorn",
+		"encounters": ["misty", "redhorn"],
+		"description": ""
 	}
 ]

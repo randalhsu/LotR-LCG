@@ -11,7 +11,7 @@ EFFECT_TYPES = ('normal', 'travel', 'action', 'quest action', 'combat action', '
 TABLE_HEADER = ('Qty', 'Set', 'ID', 'Title', 'Type', 'Icon', 'Cost', 'WP', 'ATK', 'DEF', 'HP', 'Traits', 'Description')
 
 # EXPANSION
-setShort = {'core': 'core', 'mirkwood': 'mirk', 'osgiliath': 'osgi', 'khazaddum': 'khaz'}  # for saving column space. max len == 4
+setShort = {'core': 'core', 'mirkwood': 'mirk', 'osgiliath': 'osgi', 'khazaddum': 'khaz', 'dwarrowdelf': 'dwar'}  # for saving column space. max len == 4
 setFull = {
     'core': 'core',
     'mirk': 'mirkwood',
@@ -19,7 +19,9 @@ setFull = {
     'osgi': 'osgiliath',
     'osgiliath': 'osgiliath',
     'khaz': 'khazaddum',
-    'khazaddum': 'khazaddum'
+    'khazaddum': 'khazaddum',
+    'dwar': 'dwarrowdelf',
+    'dwarrowdelf': 'dwarrowdelf',
 }
 
 
@@ -124,7 +126,7 @@ class TypeItem(QTableWidgetItem):
 
 class IconItem(QTableWidgetItem):
     PLAYERS = ('neural', 'leadership', 'tactics', 'spirit', 'lore')
-    ENCOUNTERS = ('spiders', 'wilderlands', 'orcs', 'passage', 'escape', 'anduin', 'sauron', 'gollum', 'carrock', 'rhosgobel', 'emynmuil', 'marshes', 'return', 'osgiliath', 'pit', 'seventh', 'flight', 'plundering', 'twists', 'moria', 'hazards', 'misty', 'goblin')  # EXPANSION
+    ENCOUNTERS = ('spiders', 'wilderlands', 'orcs', 'passage', 'escape', 'anduin', 'sauron', 'gollum', 'carrock', 'rhosgobel', 'emynmuil', 'marshes', 'return', 'osgiliath', 'pit', 'seventh', 'flight', 'plundering', 'twists', 'moria', 'hazards', 'misty', 'goblin', 'redhorn')  # EXPANSION
     
     def __init__(self, iconName):
         text = 'N' if iconName == 'neural' else ''
@@ -348,7 +350,7 @@ class DeckBuilder(QMainWindow):
                 tableWidget.setItem(row, col, item)
         
         self.adjustTableWidget(tableWidget)
-        tableWidget.sortByColumn(tableWidget.HEADER.index('Icon'), Qt.AscendingOrder)
+        tableWidget.sortByColumn(tableWidget.HEADER.index('Set'), Qt.AscendingOrder)
         return tableWidget
         
     def adjustTableWidget(self, tableWidget):

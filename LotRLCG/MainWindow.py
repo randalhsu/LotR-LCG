@@ -145,6 +145,8 @@ class MainWindow(QMainWindow):
             s = 'osgiliath'
         elif scenarioId <= 12:
             s = 'khazaddum'
+        else:
+            s = 'dwarrowdelf'
         # EXPANSION
         
         
@@ -181,7 +183,7 @@ class MainWindow(QMainWindow):
             questList = [(s, 35), (s, 36)]
             stagingList = [(s, 43)]  # The Carrock
             encounterList.remove((s, 43))
-            prepareList = [(s, 38), (s, 39), (s, 40), (s, 41), (s, 48), (s, 48), (s, 48), (s, 48)]  # 4 Trolls and 4 Sacked!
+            prepareList = [(s, 38), (s, 39), (s, 40), (s, 41), (s, 48), (s, 48), (s, 48), (s, 48)]  # 4 Trolls and 4 Sacked!s
             for card in prepareList:
                 encounterList.remove(card)
                 
@@ -222,7 +224,7 @@ class MainWindow(QMainWindow):
             questList = [(s, 64), (s, 65), (s, 66)]
             stagingList = [(s, 16)]  # East-gate, put it to staging area and draw to location deck later
             encounterList.remove((s, 16))
-            heroList.append((s, 41))  # Cave Torch
+            heroList.append((s, 41))  # Cave Torch, for first player
             encounterList.remove((s, 41))
             prepareList = [(s, 17), (s, 18)]  # First Hall, Bridge of Khazad-dum
             for card in prepareList:
@@ -230,7 +232,7 @@ class MainWindow(QMainWindow):
             
         elif scenarioId == 11:  # The Seventh Level
             questList = [(s, 67), (s, 68)]
-            heroList.append((s, 24))  # Book of Mazarbul
+            heroList.append((s, 24))  # Book of Mazarbul, for first player
             encounterList.remove((s, 24))
             
         elif scenarioId == 12:  # Flight from Moria
@@ -249,9 +251,20 @@ class MainWindow(QMainWindow):
             
             stagingList.append(encounterList.pop(-1))  # 1 card per player
             self.victorySpinBox.setValue(2)
+            
+        elif scenarioId == 13:  # The Redhorn Gate
+            questList = [(s, 11), (s, 12), (s, 13)]
+            stagingList = [(s, 15)]  # Caradhras
+            encounterList.remove((s, 15))
+            prepareList = [(s, 22), (s, 22), (s, 22), (s, 22), (s, 22)]  # 5 Snowstorms
+            for card in prepareList:
+                encounterList.remove(card)
+            heroList.append((s, 14))  # Arwen Undomiel, for first player
+            encounterList.remove((s, 14))
+            stagingList.append(encounterList.pop(-1))  # 1 card per player
+        # EXPANSION
         
         prepareList.reverse()
-        
         
         # start creating Card instances
         for (set_, id) in reversed(questList):
