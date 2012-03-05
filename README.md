@@ -1,22 +1,24 @@
 ## LotR LCG
 
-The blog post about this program:
+See the blog post about this program:
 http://ogc-daily.blogspot.com/2012/02/lotr-lcg-for-pc.html
 
 
-### Prerequisites:
+### About Card Image Files
 
-* Card image files are not included in the repository. Click <a href="http://db.tt/n9tyf9Bk">here</a> to download, and place them to where they should be.
+* Card image files included in the repository are stripped. You can replace them by your own scans, just follow the same naming.
 
-* If you use your own card image files, note that each Quest Card image `*.jpg` must also be splited to `*-A.jpg` and `*-B.jpg`. `resource/quest_cards_splitter.py` is doing this.
+* If you do so, note that each Quest Card image `*.jpg` must also be splitted to `*-A.jpg` and `*-B.jpg`. `resource/quest_cards_splitter.py` is doing this.
 
 
-### Usage:
+### Usage
 
 `python Launcher.py`
 
+Windows binary can be found in the blog post.
 
-### Tested dependencies:
+
+### Tested Dependencies
 
 * Python 2.7.2
 
@@ -25,7 +27,7 @@ http://ogc-daily.blogspot.com/2012/02/lotr-lcg-for-pc.html
 * PIL    1.1.7  (optional, for splitting Quest Cards)
 
 
-### License:
+### License
 
 * Python codes are licensed under GNU GPL v2.
 
