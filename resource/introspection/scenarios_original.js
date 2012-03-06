@@ -109,6 +109,6 @@
 		"name": "The Redhorn Gate",
 		"icon": "redhorn",
 		"encounters": ["misty", "redhorn"],
-		"description": ""
+		"description": "Arwen wishes to visit her father Elrond, and Celeborn has bid the heroes to escort her over the Misty Mountains and safely to Rivendell. But the season grows late, and a sudden chill has descended on the three peaks that guard the Redhorn pass."
 	}
 ]
