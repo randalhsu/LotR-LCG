@@ -1,3 +1,9 @@
+If you want to trace code, maybe you can follow module import order in LotRLCG/MainWindow.py
+
+==================================================
+
+Expansion set & Encounter set abbreviations:
+
 core             (Core Set)
  |-- passage     (Passage Through Mirkwood)
  |-- spiders     (Spiders of Mirkwood)
@@ -40,6 +46,10 @@ dwarrowdelf      (Dwarrowdelf)
  |-- foundations (Foundations of Stone)
 
 
+==================================================
+
+JSON structure of resource/introspection/*.js :
+
 {
 	"set": "core",
 	"id": 83,
@@ -47,12 +57,12 @@ dwarrowdelf      (Dwarrowdelf)
 	"unique": false,
 	"type": "enemy",
 	"title": "Goblin Sniper",
-	"icon": "wilderlands",  // hero resource / encounter set / sphere type
-	"cost": 48,  // cost / hero cost / engagement cost / quest points
-	"strength": 2,  // willpower / threat
+	"icon": "wilderlands",  // hero resource icon / encounter set / sphere type
+	"cost": 48,             // cost / hero cost / engagement cost
+	"strength": 2,          // willpower / threat
 	"attack": 2,
 	"defense": 0,
-	"hp": 2,
+	"hp": 2,                // hit points / quest points
 	"traits": ["Goblin", "Orc"],
 	"effect": {
 		"normal": "During the encounter phase, players cannot optionally engage Goblin Sniper if there are other enemies in the staging area.",
@@ -60,5 +70,6 @@ dwarrowdelf      (Dwarrowdelf)
 	},
 }
 
+==================================================
 
 grep EXPANSION for future code modifications
