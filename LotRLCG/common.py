@@ -37,7 +37,6 @@ def _convertJson():
         '''replace some JavaScript keywords to Python keywords then eval'''
         with open(filePath) as f:
             content = f.read()
-            content = content.replace(': null,', ': None,')
             content = content.replace(': true,', ': True,')
             content = content.replace(': false,', ': False,')
             return eval(content)
