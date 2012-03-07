@@ -106,10 +106,12 @@ class MainWindow(QMainWindow):
         self.scenarioId = setupDialog.selectedScenarioId()
         self.playerDeckId = setupDialog.selectedDeckId()
         self.setup()
+        self.promptMulligan()
         
     def restartGame(self):
         self.cleanup()
         self.setup()
+        self.promptMulligan()
         
     def setup(self):
         scenarioId = self.scenarioId
@@ -315,6 +317,7 @@ class MainWindow(QMainWindow):
             self.locationDeck.addCard(self.stagingArea.draw())
         # EXPANSION
         
+    def promptMulligan(self):
         if _MulliganDialog(self).exec_() == QMessageBox.AcceptRole:
             for i in range(6):
                 card = self.handArea.draw()
