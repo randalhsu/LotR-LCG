@@ -19,7 +19,7 @@ class SetupDialog(QDialog):
             return text
             
         self.scenarioButtons = []
-        scenarioGroupBox = QGroupBox(self.tr('Scenario:'))
+        self.scenarioGroupBox = QGroupBox(self.tr('Scenario:'))
         scenarioLayout = QVBoxLayout()
         scenarioNames = [scenario['icon'] for scenario in scenariosInfo]
         
@@ -34,8 +34,8 @@ class SetupDialog(QDialog):
             if CARD_TASTE and (i >= 5 and i != 9):
                 button.hide()
         scenarioLayout.addStretch(1)
-        scenarioGroupBox.setLayout(scenarioLayout)
-        scenarioGroupBox.leaveEvent = lambda _: self.descriptionLabel.setText(self.scenarioButtons[self.selectedScenarioId()].description)
+        self.scenarioGroupBox.setLayout(scenarioLayout)
+        self.scenarioGroupBox.leaveEvent = lambda _: self.descriptionLabel.setText(self.scenarioButtons[self.selectedScenarioId()].description)
         
         self.deckButtons = []
         decksGroupBox = QGroupBox(self.tr('Player Deck:'))
@@ -60,15 +60,15 @@ class SetupDialog(QDialog):
         littleLayout = QVBoxLayout()
         littleLayout.addWidget(self.descriptionLabel)
         descriptionGroupBox.setLayout(littleLayout)
-        startButton = QPushButton(self.tr('Start!'))
-        startButton.clicked.connect(self.accept)
+        self.startButton = QPushButton(self.tr('Start!'))
+        self.startButton.clicked.connect(self.accept)
         
         midLayout = QVBoxLayout()
         midLayout.addWidget(descriptionGroupBox)
-        midLayout.addWidget(startButton)
+        midLayout.addWidget(self.startButton)
         
         layout = QHBoxLayout()
-        layout.addWidget(scenarioGroupBox)
+        layout.addWidget(self.scenarioGroupBox)
         layout.addLayout(midLayout)
         layout.addWidget(decksGroupBox)
         self.setLayout(layout)
@@ -85,3 +85,13 @@ class SetupDialog(QDialog):
         for (id, button) in enumerate(self.deckButtons):
             if button.isChecked():
                 return id
+
+
+class ClientSetupDialog(SetupDialog):
+    def __init__(self, parent=None):
+        super(ClientSetupDialog, self).__init__(parent)
+        self.startButton.setText(self.tr('Ready!'))
+        self.scenarioGroupBox.hide()
+        
+    def selectedScenarioId(self):
+        return -1
