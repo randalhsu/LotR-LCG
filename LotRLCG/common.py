@@ -16,7 +16,7 @@ except ImportError:
 VERSION = '2012.02.24'
 
 
-SETS = ('core', 'mirkwood', 'osgiliath', 'khazaddum')  # EXPANSION
+SETS = ('core', 'mirkwood', 'osgiliath', 'khazaddum', 'dwarrowdelf')  # EXPANSION
 
 CARD_WIDTH = 358
 CARD_HEIGHT = 500
@@ -37,7 +37,6 @@ def _convertJson():
         '''replace some JavaScript keywords to Python keywords then eval'''
         with open(filePath) as f:
             content = f.read()
-            content = content.replace(': null,', ': None,')
             content = content.replace(': true,', ': True,')
             content = content.replace(': false,', ': False,')
             return eval(content)

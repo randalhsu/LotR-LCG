@@ -2,8 +2,8 @@
 	{
 		"set": "core",
 		"id": 0,
-		"type": null,
-		"icon": null,
+		"type": "iDontCare",
+		"icon": "iDontCare",
 		"why": "programmers count from zero"
 	},
 	{

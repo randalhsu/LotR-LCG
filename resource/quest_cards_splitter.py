@@ -1,4 +1,4 @@
-﻿'''Split each W*H quest cards into two H*(W/2) cards, rotated -90 degrees.'''
+﻿'''Split each W*H quest cards into two H*(W/2) cards, rotated 90 degrees CCW.'''
 import glob
 import os
 from PIL import Image
@@ -53,6 +53,11 @@ questCards = {  # EXPANSION
         'search-for-an-exit-narrow-paths-kd',
         'search-for-the-chamber-kd',
         'the-fate-of-balin-kd',
+    ],
+    'dwarrowdelf': [
+        'up-the-pass-trg',
+        'snowdrifts-trg',
+        'the-mountains-peaks-trg',
     ],
 }
 
