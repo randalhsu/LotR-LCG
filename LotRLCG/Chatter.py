@@ -35,7 +35,7 @@ class Chatter(QWidget):
     def createUI(self):
         self.textBrowser = QTextBrowser()
         self.messageLineEdit = QLineEdit()
-        sendButton = QPushButton(self.tr('&Send'))
+        sendButton = QPushButton(self.tr('Send'))
         sendButton.clicked.connect(self.send)
         self.messageLineEdit.returnPressed.connect(self.send)
         

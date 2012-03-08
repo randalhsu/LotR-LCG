@@ -63,9 +63,6 @@ class Client(QTcpSocket):
             return False
             
         self.write(QByteArray(data))
-        #except:
-        #    QMessageBox.critical(self.parent, 'Networking Failed', 'Connection error')
-        #    return False
         return True
         
     def handleChatData(self, data):
@@ -86,12 +83,22 @@ class Client(QTcpSocket):
         
         if type_ == 'CHAT':  # example data: 'CHAT:amulet:Cave-Troll, WTF!?\n'
             self.handleChatData(data)
+            
         elif type_ == 'SERVER':
             content = content.rstrip()
-            if content == 'CLOSE':
+            if content == 'CLOSE':  # data == 'SERVER:CLOSE\n'
                 QMessageBox.critical(self.parent, 'Disconnected', 'Server closed!')
-            elif content == 'STARTGAME':
+            elif content == 'STARTGAME':  # data == 'SERVER:STARTGAME\n'
                 self.parent.initializeMainWindow()
+            elif content.startswith('SETUP'):  # example data: 'SERVER:SETUP:1\n'
+                scenarioId = int(content.split(':')[1])
+                self.parent.scenarioId = scenarioId
+                self.parent.setup()
+                
+        elif type_ == 'STATE':
+            content = content[:-1]  # trim '\n'
+            DPRINT(repr(content))
+            self.parent.handleStateChange(content)
             
     def dataIncoming(self):
         while self.canReadLine():
@@ -132,7 +139,6 @@ class Server(QTcpServer):
     def writeDataToSocket(self, socket, data):
         if not data.endswith('\n'):  # ISSUE: potential bug involved in Unicode?
             data += '\n'
-        #print 'writing:', repr(data)
         socket.write(QByteArray(data))
         
     def broadcast(self, data):
@@ -146,7 +152,7 @@ class Server(QTcpServer):
             data = 'CHAT:__SYSTEM__:{0}\n'.format(message)
             return data
             
-        DPRINT('handle: ' + repr(data))
+        #DPRINT('handle: ' + repr(data))
         if ':' not in data:
             return False
             
@@ -192,7 +198,14 @@ class Server(QTcpServer):
                         allReadied = False
                         break
                 if allReadied:
-                    self.parent.setup()
+                    data = 'SERVER:SETUP:{0}\n'.format(self.parent.scenarioId)
+                    self.broadcast(data)
+                    
+        elif type_ == 'STATE':  # game state change
+            # broadcast except source
+            for socket in self.subscribers:
+                if socket != sourceSocket:
+                    self.writeDataToSocket(socket, data)
             
     def playerJoined(self):
         

@@ -28,7 +28,13 @@ PADDING = 10
 OFFSET = (CARD_HEIGHT - CARD_WIDTH) / 2
 
 
-def scaledCardPixmap(pixmap):
+def scaledCardPixmap(imagePath):
+    pixmap = None
+    if os.path.exists(imagePath):
+        pixmap = QPixmap(imagePath)
+    else:
+        pixmap = QPixmap('./resource/image/error.png')
+        print('File not exists: {0}'.format(imagePath))
     return pixmap.scaled(CARD_WIDTH, CARD_HEIGHT, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
 
 

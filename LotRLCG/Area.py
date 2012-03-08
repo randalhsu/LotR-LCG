@@ -54,9 +54,9 @@ class Area(QGraphicsView):
         return self.cardList
         
     def setList(self, cardList):
-        for card in self.cardList:
-            self.removeCard(card)
-        self.cardList = []
+        while self.getList():
+            card = self.draw()
+            del card
         
         for card in cardList:
             self.addCard(card)
@@ -316,6 +316,51 @@ class Area(QGraphicsView):
         
     def __str__(self):
         return self.name
+        
+    def getState(self):
+        state = []
+        for card in self.getList():
+            state.append(card.getState())
+        return state
+        
+    def setState(self, state):
+        
+        def constructCardByState(state):
+            set_ = state['s']
+            id = state['i']
+            revealed = False if 'c' in state else True
+            exhausted = True if 'e' in state else False
+            
+            damage = state['D'] if 'D' in state else 0
+            progress = state['P'] if 'P' in state else 0
+            resource = state['R'] if 'R' in state else 0
+            
+            equipments = state['E'] if 'E' in state else []
+            shadows = state['S'] if 'S' in state else []
+            
+            
+            card = Card(cardsInfo[set_][id], revealed=revealed)
+            if exhausted:
+                card.exhaust()
+                
+            for i in range(damage):
+                card.attach(Token('damage'))
+            for i in range(progress):
+                card.attach(Token('progress'))
+            for i in range(resource):
+                card.attach(Token('resource'))
+                
+            for cardState in equipments:
+                card.attach(constructCardByState(cardState))
+            for cardState in shadows:
+                card.attach(constructCardByState(cardState))
+                
+            return card
+            
+        cardList = []
+        for cardState in state:
+            cardList.append(constructCardByState(cardState))
+        self.setList(cardList)
 
 
 # sorry for recursive dependencies...

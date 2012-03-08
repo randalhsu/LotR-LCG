@@ -12,6 +12,7 @@ joinGameDialog = None
 
 def startServer():
     global hostGameDialog
+    hostGameDialog.move(0, -100)
     hostGameDialog.show()
     hostGameDialog.hostButton.click()
     QTest.keyPress(hostGameDialog.hostingLineEdit, Qt.Key_C, Qt.ControlModifier)

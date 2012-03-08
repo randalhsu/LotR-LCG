@@ -6,7 +6,7 @@ class Deck(Area):
         super(Deck, self).__init__(name, parent=parent)
         self.orientation = orientation
         
-        self.emptyItem = QGraphicsPixmapItem(scaledCardPixmap(QPixmap('./resource/image/empty.png')))
+        self.emptyItem = QGraphicsPixmapItem(scaledCardPixmap('./resource/image/empty.png'))
         self.emptyItem.setPos(0, 0)
         self.emptyItem.setZValue(-1)
         self.scene.addItem(self.emptyItem)

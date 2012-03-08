@@ -49,8 +49,12 @@ class _AttachedItems:
         elif isinstance(item, Token):
             self.attachToken(item)
             
-        for view in self.parent.scene().views():
-            view.update()
+        scene = self.parent.scene()
+        if scene:
+            views = scene.views()
+            if views:
+                for view in views:
+                    view.update()
         
     def attachToken(self, token):
         self.tokens.append(token)
@@ -116,6 +120,31 @@ class _AttachedItems:
             shadowCards += str(card)
         shadowCards += ']'
         return 'r{0}d{1}p{2}E{3}S{4}'.format(self.counter['resource'], self.counter['damage'], self.counter['progress'], equipmentCards, shadowCards)
+        
+    def getState(self):
+        '''dict representation, for syncing program states between clients'''
+        state = {}
+        
+        if self.counter['damage'] > 0:
+            state['D'] = self.counter['damage']
+        if self.counter['progress'] > 0:
+            state['P'] = self.counter['progress']
+        if self.counter['resource'] > 0:
+            state['R'] = self.counter['resource']
+        
+        if self.equipments:
+            cards = []
+            for card in self.equipments:
+                cards.append(card.getState())
+            state['E'] = cards
+        
+        if self.shadows:
+            cards = []
+            for card in self.shadows:
+                cards.append(card.getState())
+            state['S'] = cards
+        
+        return state
 
 
 class Token(QGraphicsPixmapItem):
@@ -140,9 +169,9 @@ class Card(QGraphicsPixmapItem):
         
         # workaround for Error "QPixmap: Must construct a QApplication before a QPaintDevice"
         if not hasattr(Card, 'PLAYER_CARD_BACK_IMAGE'):
-            Card.PLAYER_CARD_BACK_IMAGE = scaledCardPixmap(QPixmap('./resource/image/player_card_back.jpg'))
+            Card.PLAYER_CARD_BACK_IMAGE = scaledCardPixmap('./resource/image/player_card_back.jpg')
         if not hasattr(Card, 'ENCOUNTER_CARD_BACK_IMAGE'):
-            Card.ENCOUNTER_CARD_BACK_IMAGE = scaledCardPixmap(QPixmap('./resource/image/encounter_card_back.jpg'))
+            Card.ENCOUNTER_CARD_BACK_IMAGE = scaledCardPixmap('./resource/image/encounter_card_back.jpg')
         if not hasattr(Card, 'IMAGE_PATH_DICT'):
             Card.IMAGE_PATH_DICT = self.parseCardImagePathDict()
         
@@ -163,10 +192,10 @@ class Card(QGraphicsPixmapItem):
         else:
             imagePath = Card.IMAGE_PATH_DICT[(self.info['set'], self.info['id'])]
             if type_ == 'quest':
-                self.frontImage = scaledCardPixmap(QPixmap(imagePath[:-4] + '-A.jpg'))
-                self.backImage = scaledCardPixmap(QPixmap(imagePath[:-4] + '-B.jpg'))
+                self.frontImage = scaledCardPixmap(imagePath[:-4] + '-A.jpg')
+                self.backImage = scaledCardPixmap(imagePath[:-4] + '-B.jpg')
             else:
-                pixmap = scaledCardPixmap(QPixmap(imagePath))
+                pixmap = scaledCardPixmap(imagePath)
                 self.frontImage = pixmap
                 Card.imageDict[(set_, id)] = pixmap  # cache it
                 
@@ -234,3 +263,26 @@ class Card(QGraphicsPixmapItem):
         
     def __str__(self):
         return '[{0}]'.format(self.info['title'])
+        
+    def getState(self):
+        '''dict representation, for syncing program states between clients'''
+        state = self.attachedItems.getState()
+        state['s'] = self.info['set']
+        state['i'] = self.info['id']
+        if not self.revealed():
+            state['c'] = 1
+        if self.exhausted():
+            state['e'] = 1
+        return state
+        '''
+        keys of state:
+        s -> card set (str)
+        i -> card id  (int)
+        c -> covered   (1 if covered)
+        e -> exhausted (1 if exhausted)
+        D ->   damage token (int)
+        P -> progress token (int)
+        R -> resource token (int)
+        E -> attached cards as equipment (list of card states)
+        S -> attached cards as shadow    (list of card states)
+        '''

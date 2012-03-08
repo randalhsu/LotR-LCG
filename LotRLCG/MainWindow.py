@@ -157,7 +157,7 @@ class MainWindow(QMainWindow):
             stagingList = [(s, 96), (s, 99)]
             for card in stagingList:
                 encounterList.remove(card)
-            
+                
         elif scenarioId == 1:  # Journey Along the Anduin
             questList = [(s, 126), (s, 127), (s, 128)]
             hillTroll = (s, 82)
@@ -397,7 +397,7 @@ class MainWindow(QMainWindow):
         
         self.largeImageLabel = QLabel()
         self.largeImageLabel.setFixedSize(CARD_WIDTH, CARD_HEIGHT)
-        self.largeImageLabel.setPixmap(scaledCardPixmap(QPixmap('./resource/image/player_card_back.jpg')))
+        self.largeImageLabel.setPixmap(scaledCardPixmap('./resource/image/player_card_back.jpg'))
         self.largeImageLabel.currentCard = None
         
         self.threatDial = ThreatDial()
