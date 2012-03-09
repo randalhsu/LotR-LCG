@@ -1,10 +1,7 @@
 ﻿import sys
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtNetwork import *
-from Chatter import Chatter
 from Messaging import Client
-from MultiplayerMainWindow import *
 from xxxxGameDialog import *
 
 
@@ -49,9 +46,11 @@ class JoinGameDialog(xxxxGameDialog):
         self.client = Client(nickname, host, port, self)
         
     def clientSocketConnected(self):
+        self.topWidget.setEnabled(False)
         self.chatter.setEnabled(True)
         self.chatter.setSocket(self.client)
-        self.joinButton.setEnabled(False)
+        self.chatter.setFocus()
+        self.waitingLabel.setText(self.tr('Waiting for server to start game...'))
         
     def createUI(self):
         username = QDir.homePath().split('/')[-1]
@@ -67,8 +66,8 @@ class JoinGameDialog(xxxxGameDialog):
         self.joinButton = QPushButton('&Join Game!')
         self.joinButton.clicked.connect(self.connectToServer)
         
-        #self.chatter = Chatter(self)
         self.chatter.setEnabled(False)
+        self.waitingLabel = QLabel()
         
         topLayout = QGridLayout()
         topLayout.addWidget(nickLabel, 0, 0, 1, 1)
@@ -76,10 +75,13 @@ class JoinGameDialog(xxxxGameDialog):
         topLayout.addWidget(addressLabel, 1, 0, 1, 1)
         topLayout.addWidget(self.addressLineEdit, 1, 1, 1, 1)
         topLayout.addWidget(self.joinButton, 2, 0, 1, 2)
+        self.topWidget = QWidget()
+        self.topWidget.setLayout(topLayout)
         
         layout = QVBoxLayout()
-        layout.addLayout(topLayout)
+        layout.addWidget(self.topWidget)
         layout.addWidget(self.chatter)
+        layout.addWidget(self.waitingLabel)
         
         self.setLayout(layout)
         self.setWindowTitle(self.tr('Join Multiplayer Game'))

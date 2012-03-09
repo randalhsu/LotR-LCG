@@ -97,9 +97,10 @@ class ThreatDial(QGraphicsView):
                 self.setValue(value)
             
     def resizeEvent(self, event):
-        widthRatio = self.threatPixmap.width() / self.width()
-        heightRatio = self.threatPixmap.height() / self.height()
-        self.scaleRatio = min(widthRatio, heightRatio)
+        if self.width() != 0 and self.height() != 0:
+            widthRatio = self.threatPixmap.width() / self.width()
+            heightRatio = self.threatPixmap.height() / self.height()
+            self.scaleRatio = min(widthRatio, heightRatio)
         self.update()
         
     def update(self):

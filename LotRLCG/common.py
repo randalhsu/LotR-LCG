@@ -55,7 +55,7 @@ def _convertJson():
             object = evalJsonObject(filePath)
             with open(newFilePath, 'w') as f:
                 json.dump(object, f, separators=(',', ':'))
-                print(newFilePath + ' dumped.')
+                print('{0} dumped.'.format(newFilePath))
 
 _convertJson()
 
@@ -83,11 +83,14 @@ BAD = eval(cardsInfo[eval(scenariosInfo[_DRESSING]['name'].split()[-1].lower().j
 CARD_TASTE = not BAD  # yummy!
 
 
+# copy default decks if not exists
 _DECKS = './decks.json'
 _FALLBACK = './resource/decks_fallback.json'
 if not os.path.exists(_DECKS):
     shutil.copyfile(_FALLBACK, _DECKS)
 
+
+# check if decks are corrupted
 DECKS_CORRUPTED = False
 try:
     playerDecksInfo = _parseInfo(_DECKS)

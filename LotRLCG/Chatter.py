@@ -15,6 +15,9 @@ class Chatter(QWidget):
     def setSocket(self, socket):
         self.socket = socket
         
+    def setFocus(self):
+        self.messageLineEdit.setFocus(Qt.PopupFocusReason)
+        
     def appendMessage(self, message):
         self.textBrowser.append(message)
         
@@ -29,18 +32,18 @@ class Chatter(QWidget):
             return
             
         message = str(self.messageLineEdit.text())
+        if message.endswith('\n'):
+            message = message[:-1]
         self.socket.sendChatMessage(message)
         self.messageLineEdit.clear()
         
     def createUI(self):
         self.textBrowser = QTextBrowser()
         self.messageLineEdit = QLineEdit()
-        sendButton = QPushButton(self.tr('Send'))
-        sendButton.clicked.connect(self.send)
         self.messageLineEdit.returnPressed.connect(self.send)
         
         layout = QGridLayout()
-        layout.addWidget(self.textBrowser, 0, 0, 4, 4)
-        layout.addWidget(self.messageLineEdit, 4, 0, 1, 3)
-        layout.addWidget(sendButton, 4, 3, 1, 1)
+        layout.addWidget(self.textBrowser, 0, 0, 5, 5)
+        layout.addWidget(self.messageLineEdit, 5, 0, 1, 5)
         self.setLayout(layout)
+        self.appendSystemMessage('Type in and press Enter to send message.')

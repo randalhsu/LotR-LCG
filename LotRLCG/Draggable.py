@@ -55,7 +55,7 @@ class _AttachedItems:
             if views:
                 for view in views:
                     view.update()
-        
+                    
     def attachToken(self, token):
         self.tokens.append(token)
         tokenType = token.type_()

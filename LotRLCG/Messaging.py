@@ -10,25 +10,6 @@ def DPRINT(s):
         print(s)
 
 
-class _CommonMessaging(object):
-    def __init__(self):
-        self.nickname = ''
-        self.chatter = None
-        self.socket = None
-        self.isClosingWindow = False
-        
-    def appendMessage(self, message):
-        self.chatter.appendMessage(message)
-        
-    def appendSystemMessage(self, message):
-        self.chatter.appendSystemMessage(message)
-        
-    def clientSocketDisconnected(self):
-        if not self.isClosingWindow:
-            QMessageBox.critical(self, 'Disconnected', 'Disconnected from server!')
-
-
-
 class Client(QTcpSocket):
     def __init__(self, nickname, serverIP, serverPort, parentWidget):
         super(Client, self).__init__(parent=None)
@@ -37,7 +18,6 @@ class Client(QTcpSocket):
         
         self.connectToHost(serverIP, int(serverPort))
         self.connected.connect(self.socketConnected)
-        self.disconnected.connect(self.socketDisconnected)
         self.readyRead.connect(self.dataIncoming)
         # TODO: self disconnect: self.disconnectFromHost()
         
@@ -51,7 +31,7 @@ class Client(QTcpSocket):
         self.parent.appendSystemMessage(message)
         
     def sendChatMessage(self, message):
-        data = 'CHAT:{0}:{1}'.format(self.nickname, message)
+        data = 'CHAT:{0}:{1}\n'.format(self.nickname, message)
         self.sendData(data)
         
     def sendData(self, data):
@@ -88,8 +68,16 @@ class Client(QTcpSocket):
             content = content.rstrip()
             if content == 'CLOSE':  # data == 'SERVER:CLOSE\n'
                 QMessageBox.critical(self.parent, 'Disconnected', 'Server closed!')
-            elif content == 'STARTGAME':  # data == 'SERVER:STARTGAME\n'
+                
+            elif content == 'START_MAINWINDOW':  # data == 'SERVER:START_MAINWINDOW\n'
                 self.parent.initializeMainWindow()
+                
+            elif content.startswith('ADDRESSES'):  # example data: 'SERVER:ADDRESSES:127.0.0.1:1234,140.116.40.40:1235,210.23.32.1:57649\n'
+                self.parent.recordPlayerAddresses(content.split(':', 1)[1])
+                
+            elif content.startswith('NICKNAMES'):  # example data: 'SERVER:NICKNAMES:amulet,nick,name\n'
+                self.parent.recordPlayerNicknames(content.split(':', 1)[1])
+                
             elif content.startswith('SETUP'):  # example data: 'SERVER:SETUP:1\n'
                 scenarioId = int(content.split(':')[1])
                 self.parent.scenarioId = scenarioId
@@ -111,9 +99,6 @@ class Client(QTcpSocket):
         data = 'JOIN:{0}\n'.format(self.nickname)
         self.sendData(data)
         self.parent.clientSocketConnected()
-        
-    def socketDisconnected(self):
-        self.parent.clientSocketDisconnected()
 
 
 class Server(QTcpServer):
@@ -123,7 +108,6 @@ class Server(QTcpServer):
         
         self.setParent(parentWidget)
         self.subscribers = []  # all connected clients' sockets, one of them is from localhost
-        
         # TODO: add chatting colors
         #self.chatColors = (QColor(Qt.darkRed), QColor(Qt.darkGreen), QColor(Qt.darkBlue), QColor(Qt.darkCyan), QColor(Qt.darkMagenta))
         
@@ -147,9 +131,19 @@ class Server(QTcpServer):
             
     def handleData(self, data, sourceSocket=None):
         
-        def allPlayersData():
-            message = 'All players: ' + ', '.join([socket.nickname for socket in self.subscribers])
-            data = 'CHAT:__SYSTEM__:{0}\n'.format(message)
+        def allPlayerAddresses():
+            addresses = ['{0}:{1}'.format(socket.peerAddress().toString(), socket.peerPort()) for socket in self.subscribers]
+            data = 'SERVER:ADDRESSES:{0}\n'.format(','.join(addresses))
+            return data
+            
+        def allPlayerNicknames():
+            nicknames = [socket.nickname for socket in self.subscribers]
+            data = 'SERVER:NICKNAMES:{0}\n'.format(','.join(nicknames))
+            return data
+            
+        def inGamePlayers():
+            message = 'Players in game: ' + ', '.join([socket.nickname for socket in self.subscribers if hasattr(socket, 'nickname')])
+            data = 'CHAT:__SYSTEM__:{0}.\n'.format(message)
             return data
             
         #DPRINT('handle: ' + repr(data))
@@ -159,6 +153,7 @@ class Server(QTcpServer):
         (type_, content) = data.split(':', 1)
         
         if type_ == 'CHAT':  # example data: 'CHAT:amulet:Cave-Troll, WTF!?\n'
+            DPRINT(repr(data))
             self.broadcast(data)
                 
         elif type_ == 'JOIN':  # example data: 'JOIN:amulet\n'
@@ -173,19 +168,19 @@ class Server(QTcpServer):
                     
             data = 'CHAT:__SYSTEM__:{0} has joined the game!\n'.format(nickname)
             self.broadcast(data)
-            data = allPlayersData()
+            data = inGamePlayers()
             self.broadcast(data)
             
         elif type_ == 'QUIT':  # example data: 'QUIT:amulet\n'
             nickname = content.rstrip()
             data = 'CHAT:__SYSTEM__:{0} has left the game...\n'.format(nickname)
             self.broadcast(data)
-            data = allPlayersData()
+            data = inGamePlayers()
             self.broadcast(data)
             
         elif type_ == 'CLIENT':
             content = content.rstrip()
-            if content == 'READY':  # data == 'CLIENT:READY\n'
+            if content == 'READY':  # data == 'CLIENT:READY\n', client had selected deck to play
                 for socket in self.subscribers:
                     if socket == sourceSocket:
                         socket.readied = True
@@ -198,6 +193,10 @@ class Server(QTcpServer):
                         allReadied = False
                         break
                 if allReadied:
+                    data = allPlayerAddresses()
+                    self.broadcast(data)
+                    data = allPlayerNicknames()
+                    self.broadcast(data)
                     data = 'SERVER:SETUP:{0}\n'.format(self.parent.scenarioId)
                     self.broadcast(data)
                     
@@ -231,11 +230,11 @@ class Server(QTcpServer):
         socket.disconnected.connect(playerLeft(socket))
         socket.readyRead.connect(dataIncoming(socket))
         self.subscribers.append(socket)
-        DPRINT(str(socket.peerAddress().toString()) + ':' + str(socket.peerPort()) + ' connected!')
+        #DPRINT(str(socket.peerAddress().toString()) + ':' + str(socket.peerPort()) + ' connected!')
         
     def startGame(self):
         self.close()  # stop listening incoming connections
-        data = 'SERVER:STARTGAME\n'
+        data = 'SERVER:START_MAINWINDOW\n'
         self.broadcast(data)
         
     def farewell(self):

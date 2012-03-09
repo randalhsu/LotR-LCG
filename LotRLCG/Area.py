@@ -59,7 +59,9 @@ class Area(QGraphicsView):
             del card
         
         for card in cardList:
-            self.addCard(card)
+            self.cardList.append(card)
+            self.scene.addItem(card)
+        self.update()
         
     def shuffle(self):
         random.shuffle(self.cardList)
@@ -362,7 +364,7 @@ class Area(QGraphicsView):
             cardList.append(constructCardByState(cardState))
         self.setList(cardList)
 
-
+    
 # sorry for recursive dependencies...
 from Deck import Deck
 from DeckManipulator import DeckManipulator

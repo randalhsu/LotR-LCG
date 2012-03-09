@@ -1,10 +1,7 @@
 ﻿import sys
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtNetwork import *
-from Chatter import Chatter
 from Messaging import *
-from MultiplayerMainWindow import *
 from xxxxGameDialog import *
 
 
@@ -51,7 +48,7 @@ class HostGameDialog(xxxxGameDialog):
         
     def clientSocketConnected(self):
         self.chatter.setSocket(self.client)
-        self.hostButton.setEnabled(False)
+        self.topWidget.setEnabled(False)
         self.startButton.setDefault(True)
         
     def startGame(self):
@@ -91,13 +88,19 @@ class HostGameDialog(xxxxGameDialog):
         
         hostingLabel = QLabel(self.tr('Hosting game at'))
         self.hostingLineEdit = QLineEdit()
-        #self.chatter = Chatter(self)
         self.startButton = QPushButton(self.tr('&Start Game!'))
         self.startButton.clicked.connect(self.startGame)
         
-        topLayout = QHBoxLayout()
-        topLayout.addWidget(nickLabel)
-        topLayout.addWidget(self.nickLineEdit)
+        nicknameLayout = QHBoxLayout()
+        nicknameLayout.addWidget(nickLabel)
+        nicknameLayout.addWidget(self.nickLineEdit)
+        topLayout = QVBoxLayout()
+        topLayout.addLayout(nicknameLayout)
+        topLayout.addWidget(selectLabel)
+        topLayout.addWidget(self.ipList)
+        topLayout.addWidget(self.hostButton)
+        self.topWidget = QWidget()
+        self.topWidget.setLayout(topLayout)
         
         littleLayout = QHBoxLayout()
         littleLayout.addWidget(hostingLabel)
@@ -112,10 +115,7 @@ class HostGameDialog(xxxxGameDialog):
         self.bottomWidget.setEnabled(False)
         
         layout = QVBoxLayout()
-        layout.addLayout(topLayout)
-        layout.addWidget(selectLabel)
-        layout.addWidget(self.ipList)
-        layout.addWidget(self.hostButton)
+        layout.addWidget(self.topWidget)
         layout.addWidget(self.bottomWidget)
         self.setLayout(layout)
         self.setWindowTitle(self.tr('Host Multiplayer Game'))

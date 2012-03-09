@@ -7,12 +7,13 @@ from HostGameDialog import *
 
 
 hostGameDialog = None
-joinGameDialog = None
+joinGameDialogs = []
 
 
 def startServer():
     global hostGameDialog
-    hostGameDialog.move(0, -100)
+    hostGameDialog = HostGameDialog()
+    hostGameDialog.move(0, 0)
     hostGameDialog.show()
     hostGameDialog.hostButton.click()
     QTest.keyPress(hostGameDialog.hostingLineEdit, Qt.Key_C, Qt.ControlModifier)
@@ -20,18 +21,20 @@ def startServer():
 
 
 def startClient():
-    global joinGameDialog
-    joinGameDialog.move(joinGameDialog.width(), 0)
-    joinGameDialog.show()
-    QTest.keyPress(joinGameDialog.addressLineEdit, Qt.Key_V, Qt.ControlModifier)
-    QTest.keyRelease(joinGameDialog.addressLineEdit, Qt.Key_V, Qt.ControlModifier)
-    joinGameDialog.joinButton.click()
+    global hostGameDialog
+    for i in range(2):
+        joinGameDialog = JoinGameDialog()
+        joinGameDialog.move(hostGameDialog.width() + i * joinGameDialog.width(), 0)
+        joinGameDialog.show()
+        QTest.keyPress(joinGameDialog.addressLineEdit, Qt.Key_V, Qt.ControlModifier)
+        QTest.keyRelease(joinGameDialog.addressLineEdit, Qt.Key_V, Qt.ControlModifier)
+        joinGameDialog.joinButton.click()
+        global joinGameDialogs
+        joinGameDialogs.append(joinGameDialog)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    hostGameDialog = HostGameDialog()
-    joinGameDialog = JoinGameDialog()
     startServer()
     QTimer.singleShot(500, startClient)
     sys.exit(app.exec_())

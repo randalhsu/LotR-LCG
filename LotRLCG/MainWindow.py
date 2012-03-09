@@ -1,5 +1,4 @@
 '''
-TODO: multiplayer
 TODO: make dragging cursor correct
 TODO: journey logging
 TODO: save/load
@@ -77,11 +76,11 @@ class MainWindow(QMainWindow):
         self.deckManipulatorList.append(widget)
         
     def cleanupDeckManipulators(self):
-        try:
-            for widget in self.deckManipulatorList:
+        for widget in self.deckManipulatorList:
+            try:
                 widget.close()
-        except RuntimeError:
-            pass
+            except RuntimeError:
+                pass
         self.deckManipulatorList = []
         
     def cleanup(self):
@@ -106,12 +105,10 @@ class MainWindow(QMainWindow):
         self.scenarioId = setupDialog.selectedScenarioId()
         self.playerDeckId = setupDialog.selectedDeckId()
         self.setup()
-        self.promptMulligan()
         
     def restartGame(self):
         self.cleanup()
         self.setup()
-        self.promptMulligan()
         
     def setup(self):
         scenarioId = self.scenarioId
@@ -316,6 +313,8 @@ class MainWindow(QMainWindow):
         elif scenarioId == 10:  # Into the Pit
             self.locationDeck.addCard(self.stagingArea.draw())
         # EXPANSION
+        
+        #self.promptMulligan()
         
     def promptMulligan(self):
         if _MulliganDialog(self).exec_() == QMessageBox.AcceptRole:

@@ -1,5 +1,6 @@
 import json
 from MainWindow import MainWindow
+from MultiplayerPanel import MultiplayerPanel
 from SetupDialog import *
 
 
@@ -16,6 +17,8 @@ class MultiplayerMainWindow(MainWindow):
             server.setParent(self)
         client.setParent(self)
         
+        self.address = '{0}:{1}'.format(self.client.localAddress().toString(), self.client.localPort())
+        
         super(MultiplayerMainWindow, self).__init__(parent)
         self.changeWindowTitle()
         
@@ -31,7 +34,7 @@ class MultiplayerMainWindow(MainWindow):
             'removed': self.removedPile,
             'playerDP': self.playerDiscardPile,
         }
-        self.stateFields = tuple(['threat', 'player'] + list(self.nameAreaMapping.keys()))
+        self.stateFields = tuple(['threat', 'hand', 'player'] + list(self.nameAreaMapping.keys()))
         
         self.prevState = self.getState()
         
@@ -64,44 +67,64 @@ class MultiplayerMainWindow(MainWindow):
         data = 'CLIENT:READY\n'
         self.client.sendData(data)
         
+    def setup(self):
+        super(MultiplayerMainWindow, self).setup()
+        
+        state = self.getState()
+        for field in self.stateFields:
+            jsonState = self.dumpState(state[field])
+            data = 'STATE:{0}:{1}:{2}\n'.format(self.address, field, jsonState)
+            self.client.sendData(data)
+            
+    def getState(self):
+        state = {}
+        state['threat'] = self.threatDial.value
+        state['hand'] = len(self.handArea.getList())  # hand size
+        state['player'] = len(self.playerDeck.getList())  # deck size
+        for (name, area) in self.nameAreaMapping.items():
+            state[name] = area.getState()
+            
+        if hasattr(self, 'panel'):
+            state.update(self.panel.getState())
+        return state
+        
+    def dumpState(self, dictObject):
+        return json.dumps(dictObject, separators=(',', ':'), encoding='ascii')
+        
     def checkStateChange(self):
         state = self.getState()
         if state == self.prevState:
             return
             
-        def dumpState(state):
-            return json.dumps(state, separators=(',', ':'), encoding='ascii')
-            
-        for field in self.stateFields:
+        for field in state:
             if state[field] != self.prevState[field]:
-                print 'prev   ', self.prevState[field]
-                print 'current', state[field]
-                jsonState = dumpState(state[field])
-                data = 'STATE:{0}:{1}\n'.format(field, jsonState)
-                self.client.sendData(data)
-        self.prevState = self.getState()
-        
-    def getState(self):
-        state = {}
-        state['threat'] = self.threatDial.value
-        state['player'] = len(self.playerDeck.getList())
-        for (name, area) in self.nameAreaMapping.items():
-            state[name] = area.getState()
-        return state
+                if ':' in field:  # field is an address, modifying other player's state
+                    address = field
+                    for field_ in state[address]:
+                        if state[address][field_] != self.prevState[address][field_]:
+                            jsonState = self.dumpState(state[address][field_])
+                            data = 'STATE:{0}:{1}:{2}\n'.format(address, field_, jsonState)
+                            self.client.sendData(data)
+                            self.prevState[address][field_] = state[address][field_]
+                else:
+                    jsonState = self.dumpState(state[field])
+                    data = 'STATE:{0}:{1}:{2}\n'.format(self.address, field, jsonState)
+                    self.client.sendData(data)
+                    self.prevState[field] = state[field]
         
     def handleStateChange(self, jsonState):
-        (field, content) = jsonState.split(':', 1)
+        (ip, port, field, content) = jsonState.split(':', 3)
+        sourceAddress = '{0}:{1}'.format(ip, port)
         state = json.loads(content, encoding='ascii')
         
-        if field == 'threat':
-            pass
-        elif field == 'player':
-            pass
-        elif field in ('hero', 'engaged', 'playerDP'):
-            pass
+        if field in ('threat', 'hand', 'player', 'hero', 'engaged', 'playerDP'):
+            if sourceAddress == self.address:
+                self.nameAreaMapping[field].setState(state)
+            else:
+                if hasattr(self, 'panel'):
+                    self.panel.updateState(sourceAddress, field, state)
         elif field in ('staging', 'location', 'quest', 'encounter', 'encounterDP', 'prepare', 'removed'):
             self.nameAreaMapping[field].setState(state)
-            print len(self.nameAreaMapping[field].getList())
             
         self.prevState = self.getState()
         
@@ -111,10 +134,35 @@ class MultiplayerMainWindow(MainWindow):
     def appendSystemMessage(self, message):
         self.chatter.appendSystemMessage(message)
         
-    def clientSocketDisconnected(self):
-        pass
+    def recordPlayerAddresses(self, playerAddresses):
+        # example playerAddresses: '127.0.0.1:1234,140.116.39.40:1235,210.23.32.1:57649'
+        self.addresses = playerAddresses.split(',')
+        myAddress = '{0}:{1}'.format(self.client.localAddress().toString(), self.client.localPort())
         
+        self.nthPlayer = self.addresses.index(myAddress)  # just for self.recordPlayerNicknames()
+        self.addresses.remove(myAddress)
+        
+    def recordPlayerNicknames(self, playerNicknames):
+        # example playerNicknames: 'amulet,nick,name'
+        self.nicknames = playerNicknames.split(',')
+        del self.nicknames[self.nthPlayer]
+        self.panel = MultiplayerPanel(self.addresses, self.nicknames, self.chatter, self)
+        
+    def keyPressEvent(self, event):
+        '''press any normal key to show MultiplayerPanel'''
+        if event.modifiers() == Qt.NoModifier:
+            if hasattr(self, 'panel'):
+                self.panel.show()
+        else:
+            super(MultiplayerMainWindow, self).keyPressEvent(event)
+            
+    def resizeEvent(self, event):
+        super(MultiplayerMainWindow, self).resizeEvent(event)
+        if hasattr(self, 'panel'):
+            self.panel.resizeEvent(None)
+            
     def closeEvent(self, event):
+        self.panel.close()
         self.client.disconnectFromHost()
         if self.server:
             self.server.farewell()

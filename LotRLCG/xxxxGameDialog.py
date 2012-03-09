@@ -25,9 +25,6 @@ class xxxxGameDialog(QWidget):
     def clientSocketConnected(self):
         raise NotImplementedError
         
-    def clientSocketDisconnected(self):
-        pass
-        
     def initializeMainWindow(self):
         className = self.__class__.__name__
         server = self.server if className == 'HostGameDialog' else None
@@ -38,12 +35,13 @@ class xxxxGameDialog(QWidget):
         global mainWindows
         mainWindow = MultiplayerMainWindow(server, self.client, self.chatter)
         mainWindow.show()
-        mainWindows.append(mainWindow)
+        mainWindows.append(mainWindow)  # make it survive after this method ends...
         
     def closeEvent(self, event):
         className = self.__class__.__name__
         if self.isManuallyClosing:
-            self.client.disconnectFromHost()
+            if self.client is not None:
+                self.client.disconnectFromHost()
             if className == 'HostGameDialog':
                 self.server.farewell()
         event.accept()

@@ -90,8 +90,9 @@ class SetupDialog(QDialog):
 class ClientSetupDialog(SetupDialog):
     def __init__(self, parent=None):
         super(ClientSetupDialog, self).__init__(parent)
-        self.startButton.setText(self.tr('Ready!'))
         self.scenarioGroupBox.hide()
+        self.descriptionLabel.setText(self.deckButtons[0].description)
+        self.startButton.setText(self.tr('Ready!'))
         
     def selectedScenarioId(self):
         return -1
