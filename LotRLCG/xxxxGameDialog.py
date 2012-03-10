@@ -15,6 +15,7 @@ class xxxxGameDialog(QWidget):
         self.chatter = Chatter(self)
         self.client = None
         self.isManuallyClosing = True
+        self.setWindowIcon(QIcon('./resource/image/LotRLCG_MP.ico'))
         
     def appendMessage(self, message):
         self.chatter.appendMessage(message)

@@ -1,6 +1,3 @@
-'''
-TODO: ensure deck cards order
-'''
 import glob
 import re
 from common import *
@@ -203,7 +200,7 @@ class DeckBuilder(QMainWindow):
                     fileName = fileName.strip()
                     if fileName:
                         if (type_ == 'player' and isPlayerCard(set_, id)) or (type_ == 'encounter' and isEncounterCard(set_, id)):
-                            pixmap = scaledCardPixmap(QPixmap('./resource/image/{0}/{1}'.format(set_, fileName)))
+                            pixmap = scaledCardPixmap('./resource/image/{0}/{1}'.format(set_, fileName))
                             self.imageDict[(set_, id)] = pixmap
         self.loadingLabel.setText('')
         self.setCursor(Qt.ArrowCursor)
@@ -549,15 +546,15 @@ class DeckBuilder(QMainWindow):
         
     def changeDefaultImage(self, index_):
         if index_ == 0:  # is showing playerTab
-            self.largeImageLabel.setPixmap(scaledCardPixmap(QPixmap('./resource/image/player_card_back.jpg')))
+            self.largeImageLabel.setPixmap(scaledCardPixmap('./resource/image/player_card_back.jpg'))
         else:
-            self.largeImageLabel.setPixmap(scaledCardPixmap(QPixmap('./resource/image/encounter_card_back.jpg')))
+            self.largeImageLabel.setPixmap(scaledCardPixmap('./resource/image/encounter_card_back.jpg'))
         self.largeImageLabel.currentCard = None
         
     def createUI(self):
         self.largeImageLabel = QLabel()
         self.largeImageLabel.setFixedSize(CARD_WIDTH, CARD_HEIGHT)
-        self.largeImageLabel.setPixmap(scaledCardPixmap(QPixmap('./resource/image/player_card_back.jpg')))
+        self.largeImageLabel.setPixmap(scaledCardPixmap('./resource/image/player_card_back.jpg'))
         self.largeImageLabel.currentCard = None
         
         self.loadingLabel = QLabel()
