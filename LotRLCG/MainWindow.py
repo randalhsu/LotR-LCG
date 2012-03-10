@@ -405,8 +405,10 @@ class MainWindow(QMainWindow):
         
         resourcePhaseButton = QPushButton(self.tr('Resource Phase'))
         resourcePhaseButton.clicked.connect(self.proceedResourcePhase)
+        resourcePhaseButton.setToolTip(self.tr('Add 1 resource to each hero and draw 1 card.\nSpecial card-effects are not concerned.'))
         refreshPhaseButton = QPushButton(self.tr('Refresh Phase'))
         refreshPhaseButton.clicked.connect(self.proceedRefreshPhase)
+        refreshPhaseButton.setToolTip(self.tr('Ready all cards and raise 1 threat.\nSpecial card-effects are not concerned.'))
         self.victorySpinBox = QSpinBox()
         victoryLabel = QLabel(self.tr('&Victory:'))
         victoryLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
