@@ -371,7 +371,7 @@ class MainWindow(QMainWindow):
             self.locationDeck.addCard(self.stagingArea.draw())
         # EXPANSION
         
-        #self.promptMulligan()
+        self.promptMulligan()
         
     def promptMulligan(self):
         if _MulliganDialog(self).exec_() == QMessageBox.AcceptRole:
