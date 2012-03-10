@@ -1,6 +1,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtNetwork import *
+from common import *
 
 
 DEBUG = False
@@ -30,7 +31,7 @@ class Client(QTcpSocket):
     def checkIfConnectedToServer(self):
         if self.state() != QAbstractSocket.ConnectedState:
             self.abort()
-            QMessageBox.critical(self.parent, 'Connection Failed', 'Cannot connect to server.\n(Wrong address?)')
+            QMessageBox.critical(self.parent, self.tr('Connection Failed'), self.tr('Cannot connect to server.\n(Wrong address?)'))
             
     def appendMessage(self, message):
         self.parent.appendMessage(message)
@@ -47,7 +48,7 @@ class Client(QTcpSocket):
         assert(data.endswith('\n'))
         
         if self.state() != QAbstractSocket.ConnectedState:
-            QMessageBox.critical(self.parent, 'Networking Failed', 'Connection error')
+            QMessageBox.critical(self.parent, self.tr('Networking Failed'), self.tr('Connection error'))
             
         self.write(QByteArray(data))
         
@@ -67,13 +68,22 @@ class Client(QTcpSocket):
             return False
         (type_, content) = data.split(':', 1)
         
-        if type_ == 'CHAT':  # example data: 'CHAT:amulet:Cave-Troll, WTF!?\n'
+        if type_ == 'STATE':
+            content = content[:-1]  # trim '\n'
+            self.parent.handleStateChange(content)
+            
+        elif type_ == 'CHAT':  # example data: 'CHAT:amulet:Cave-Troll, WTF!?\n'
             self.handleChatData(data)
             
         elif type_ == 'SERVER':
             content = content.rstrip()
-            if content == 'CLOSE':  # data == 'SERVER:CLOSE\n'
-                QMessageBox.critical(self.parent, 'Disconnected', 'Server closed!')
+            if content.startswith('VERSION'):
+                version = content.split(':')[1]
+                if version != VERSION:
+                    QMessageBox.warning(self.parent, self.tr('Different Version'), self.tr('Server\'s program version is "{0}".\nAnything could happen.'.format(version)))
+                
+            elif content == 'CLOSE':  # data == 'SERVER:CLOSE\n'
+                QMessageBox.critical(self.parent, self.tr('Disconnected'), self.tr('Server closed!'))
                 
             elif content == 'INITIALIZE_MAINWINDOW':  # data == 'SERVER:INITIALIZE_MAINWINDOW\n'
                 self.parent.initializeMainWindow()
@@ -92,10 +102,6 @@ class Client(QTcpSocket):
                 self.parent.scenarioId = scenarioId
                 self.parent.restartGame()
                 
-        elif type_ == 'STATE':
-            content = content[:-1]  # trim '\n'
-            self.parent.handleStateChange(content)
-            
     def dataIncoming(self):
         while self.canReadLine():
             data = str(self.readLine())
@@ -236,6 +242,11 @@ class Server(QTcpServer):
         socket.readyRead.connect(dataIncoming(socket))
         self.subscribers.append(socket)
         DPRINT(str(socket.peerAddress().toString()) + ':' + str(socket.peerPort()) + ' connected!')
+        self.sendVersionInfo(socket)
+        
+    def sendVersionInfo(self, socket):
+        data = 'SERVER:VERSION:{0}\n'.format(VERSION)
+        self.writeDataToSocket(socket, data)
         
     def setup(self):
         data = 'SERVER:SETUP:{0}\n'.format(self.parent.scenarioId)
