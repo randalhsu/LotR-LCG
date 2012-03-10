@@ -1,7 +1,6 @@
 '''
 TODO: make dragging cursor correct
 TODO: journey logging
-TODO: save/load
 '''
 import random
 from common import *
@@ -66,6 +65,21 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.createUI()
+        
+        self.nameAreaMapping = {
+            'hand': self.handArea,
+            'hero': self.heroArea,
+            'engaged': self.engagedArea,
+            'staging': self.stagingArea,
+            'location': self.locationDeck,
+            'quest': self.questDeck,
+            'encounter': self.encounterDeck,
+            'encounterDP': self.encounterDiscardPile,
+            'prepare': self.prepareDeck,
+            'removed': self.removedPile,
+            'playerDP': self.playerDiscardPile,
+        }
+        
         self.deckManipulatorList = []  # for bookkeeping existing DeckManipulator instances
         
         self.scenarioId = 0
@@ -116,6 +130,42 @@ class MainWindow(QMainWindow):
         
     def restartGameAction(self):
         self.restartGame()
+        
+    def saveGame(self):
+        jsonState = self.dumpState(self.getState())
+        fileName = QFileDialog.getSaveFileName(self, self.tr('Save game'), 'LotRLCG.sav', 'Game Save (*.sav)')
+        if fileName:
+            try:
+                f = open(fileName, 'w')
+                f.write(jsonState)
+                f.close()
+            except IOError:
+                QMessageBox.critical(self, self.tr("Can't save game"), self.tr('Failed to write file!'))
+                
+    def loadGame(self):
+        fileName = QFileDialog.getOpenFileName(self, self.tr('Load game'), '.', 'Game Save (*.sav)')
+        if fileName:
+            with open(fileName) as f:
+                jsonState = f.read()
+                try:
+                    state = json.loads(jsonState, encoding='ascii')
+                except ValueError:
+                    QMessageBox.critical(self, self.tr("Can't load game"), self.tr('Game save corrupted!'))
+                    return
+                    
+                self.threatDial.setValue(state['threat'])
+                for (name, area) in self.nameAreaMapping.items():
+                    area.setState(state[name])
+                    
+    def dumpState(self, dictObject):
+        return json.dumps(dictObject, separators=(',', ':'), encoding='ascii')
+        
+    def getState(self):
+        state = {}
+        state['threat'] = self.threatDial.value
+        for (name, area) in self.nameAreaMapping.items():
+            state[name] = area.getState()
+        return state
         
     def setup(self):
         scenarioId = self.scenarioId
@@ -384,12 +434,20 @@ class MainWindow(QMainWindow):
         self.newGameAct.triggered.connect(self.startNewGameAction)
         self.restartGameAct = QAction(self.tr('&Restart Journey'), self)
         self.restartGameAct.triggered.connect(self.restartGameAction)
+        self.saveGameAct = QAction(self.tr('&Save Game'), self)
+        self.saveGameAct.triggered.connect(self.saveGame)
+        self.loadGameAct = QAction(self.tr('&Load Game'), self)
+        self.loadGameAct.triggered.connect(self.loadGame)
         quitAct = QAction(self.tr('&Quit'), self)
         quitAct.triggered.connect(self.close)
         
         gameMenu = self.menuBar().addMenu(self.tr('&Game'))
         gameMenu.addAction(self.newGameAct)
         gameMenu.addAction(self.restartGameAct)
+        gameMenu.addSeparator()
+        gameMenu.addAction(self.saveGameAct)
+        gameMenu.addAction(self.loadGameAct)
+        gameMenu.addSeparator()
         gameMenu.addAction(quitAct)
         
         phaseTipsAct = QAction(self.tr('&Phase Tips'), self)

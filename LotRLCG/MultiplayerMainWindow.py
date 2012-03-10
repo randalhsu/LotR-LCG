@@ -110,9 +110,6 @@ class MultiplayerMainWindow(MainWindow):
             state.update(self.panel.getState())
         return state
         
-    def dumpState(self, dictObject):
-        return json.dumps(dictObject, separators=(',', ':'), encoding='ascii')
-        
     def checkStateChange(self):
         state = self.getState()
         if state == self.prevState:
@@ -199,3 +196,5 @@ class MultiplayerMainWindow(MainWindow):
         if not self.isServer:
             self.newGameAct.setEnabled(False)
             self.restartGameAct.setEnabled(False)
+        self.saveGameAct.setEnabled(False)
+        self.loadGameAct.setEnabled(False)
