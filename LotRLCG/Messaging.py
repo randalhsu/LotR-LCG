@@ -3,7 +3,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtNetwork import *
 
 
-DEBUG = True
+DEBUG = False
 
 def DPRINT(s):
     if DEBUG:
@@ -11,6 +11,8 @@ def DPRINT(s):
 
 
 class Client(QTcpSocket):
+    TIMEOUT = 3000  # milliseconds timeout before considered connecting failed
+    
     def __init__(self, nickname, serverIP, serverPort, parentWidget):
         super(Client, self).__init__(parent=None)
         self.nickname = nickname
@@ -19,11 +21,17 @@ class Client(QTcpSocket):
         self.connectToHost(serverIP, int(serverPort))
         self.connected.connect(self.socketConnected)
         self.readyRead.connect(self.dataIncoming)
-        # TODO: self disconnect: self.disconnectFromHost()
+        
+        QTimer.singleShot(Client.TIMEOUT, self.checkIfConnectedToServer)
         
     def setParent(self, parentWidget):
         self.parent = parentWidget
         
+    def checkIfConnectedToServer(self):
+        if self.state() != QAbstractSocket.ConnectedState:
+            self.abort()
+            QMessageBox.critical(self.parent, 'Connection Failed', 'Cannot connect to server.\n(Wrong address?)')
+            
     def appendMessage(self, message):
         self.parent.appendMessage(message)
         
@@ -31,19 +39,17 @@ class Client(QTcpSocket):
         self.parent.appendSystemMessage(message)
         
     def sendChatMessage(self, message):
+        assert(isinstance(message, QByteArray))
         data = 'CHAT:{0}:{1}\n'.format(self.nickname, message)
         self.sendData(data)
         
     def sendData(self, data):
-        if not data.endswith('\n'):
-            data += '\n'
-            
+        assert(data.endswith('\n'))
+        
         if self.state() != QAbstractSocket.ConnectedState:
             QMessageBox.critical(self.parent, 'Networking Failed', 'Connection error')
-            return False
             
         self.write(QByteArray(data))
-        return True
         
     def handleChatData(self, data):
         (type_, nickname, message) = data.split(':', 2)
@@ -53,9 +59,9 @@ class Client(QTcpSocket):
         if nickname == '__SYSTEM__':
             self.parent.appendSystemMessage(message)
         else:
-            message = '{0}> {1}'.format(nickname, message)
-            self.parent.appendMessage(message)
-        
+            chatMessage = nickname + '> ' + QString.fromUtf8(message)
+            self.parent.appendMessage(chatMessage)
+            
     def handleData(self, data):
         if ':' not in data:
             return False
@@ -88,7 +94,6 @@ class Client(QTcpSocket):
                 
         elif type_ == 'STATE':
             content = content[:-1]  # trim '\n'
-            #DPRINT(repr(content))
             self.parent.handleStateChange(content)
             
     def dataIncoming(self):
@@ -124,7 +129,7 @@ class Server(QTcpServer):
         return self.serverPort()
         
     def writeDataToSocket(self, socket, data):
-        if not data.endswith('\n'):  # ISSUE: potential bug involved in Unicode?
+        if not data.endswith('\n'):
             data += '\n'
         socket.write(QByteArray(data))
         
@@ -149,14 +154,14 @@ class Server(QTcpServer):
             data = 'CHAT:__SYSTEM__:{0}.\n'.format(message)
             return data
             
-        #DPRINT('handle: ' + repr(data))
+        DPRINT('handleData: ' + repr(data))
+        
         if ':' not in data:
             return False
             
         (type_, content) = data.split(':', 1)
         
         if type_ == 'CHAT':  # example data: 'CHAT:amulet:Cave-Troll, WTF!?\n'
-            DPRINT(repr(data))
             self.broadcast(data)
                 
         elif type_ == 'JOIN':  # example data: 'JOIN:amulet\n'
@@ -213,7 +218,6 @@ class Server(QTcpServer):
             def dataIncoming_():
                 while socket.canReadLine():
                     data = str(socket.readLine())
-                    #DPRINT(str(socket.localAddress().toString()) + ':' + str(socket.localPort()))
                     self.handleData(data, socket)
             return dataIncoming_
             
@@ -231,7 +235,7 @@ class Server(QTcpServer):
         socket.disconnected.connect(playerLeft(socket))
         socket.readyRead.connect(dataIncoming(socket))
         self.subscribers.append(socket)
-        #DPRINT(str(socket.peerAddress().toString()) + ':' + str(socket.peerPort()) + ' connected!')
+        DPRINT(str(socket.peerAddress().toString()) + ':' + str(socket.peerPort()) + ' connected!')
         
     def setup(self):
         data = 'SERVER:SETUP:{0}\n'.format(self.parent.scenarioId)

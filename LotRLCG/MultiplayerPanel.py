@@ -46,11 +46,11 @@ class _PlayerStatePanel(QWidget):
         width = CARD_WIDTH * ratio
         self.discardPile.setFixedWidth(width)
         self.threatValue.setFixedWidth(width)
-        self.threatValue.setMinimumHeight(width / 2)
+        self.threatValue.setMinimumHeight(width * 2 / 5)
         self.threatValue.setMaximumHeight(width * 3 / 5)
         
     def createUI(self):
-        text = '<h2>{0}</h2>'.format(self.nickname)
+        text = '<h3>{0}</h3>'.format(self.nickname)
         nicknameLabel = QLabel(text)
         handLabel = QLabel(self.tr('Hand:'))
         self.handSizeLabel = QLabel('0')

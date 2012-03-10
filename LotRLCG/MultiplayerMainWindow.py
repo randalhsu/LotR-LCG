@@ -119,20 +119,23 @@ class MultiplayerMainWindow(MainWindow):
             return
             
         for field in state:
-            if state[field] != self.prevState[field]:
-                if ':' in field:  # field is an address, modifying other player's state
-                    address = field
-                    for field_ in state[address]:
-                        if state[address][field_] != self.prevState[address][field_]:
-                            jsonState = self.dumpState(state[address][field_])
-                            data = 'STATE:{0}:{1}:{2}\n'.format(address, field_, jsonState)
-                            self.client.sendData(data)
-                            self.prevState[address][field_] = state[address][field_]
-                else:
-                    jsonState = self.dumpState(state[field])
-                    data = 'STATE:{0}:{1}:{2}\n'.format(self.address, field, jsonState)
-                    self.client.sendData(data)
-                    self.prevState[field] = state[field]
+            try:
+                if state[field] != self.prevState[field]:
+                    if ':' in field:  # field is an address, modifying other player's state
+                        address = field
+                        for field_ in state[address]:
+                            if state[address][field_] != self.prevState[address][field_]:
+                                jsonState = self.dumpState(state[address][field_])
+                                data = 'STATE:{0}:{1}:{2}\n'.format(address, field_, jsonState)
+                                self.client.sendData(data)
+                                self.prevState[address][field_] = state[address][field_]
+                    else:
+                        jsonState = self.dumpState(state[field])
+                        data = 'STATE:{0}:{1}:{2}\n'.format(self.address, field, jsonState)
+                        self.client.sendData(data)
+                        self.prevState[field] = state[field]
+            except KeyError:
+                pass
         
     def handleStateChange(self, jsonState):
         (ip, port, field, content) = jsonState.split(':', 3)

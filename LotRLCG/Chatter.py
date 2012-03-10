@@ -1,6 +1,3 @@
-'''
-TODO: unicode chatting
-'''
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -31,9 +28,7 @@ class Chatter(QWidget):
             QMessageBox.critical(self.parent, 'Not Connected', 'Not connected to server...')
             return
             
-        message = str(self.messageLineEdit.text())
-        if message.endswith('\n'):
-            message = message[:-1]
+        message = self.messageLineEdit.text().toUtf8()
         self.socket.sendChatMessage(message)
         self.messageLineEdit.clear()
         

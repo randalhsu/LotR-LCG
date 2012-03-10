@@ -37,7 +37,7 @@ class JoinGameDialog(xxxxGameDialog):
             
         address = str(self.addressLineEdit.text()).strip()
         if not validateAddress(address):
-            QMessageBox.critical(self, 'Address?', 'Invalid address...')
+            QMessageBox.critical(self, 'Address?', 'Invalid address!')
             self.addressLineEdit.setFocus()
             return
             

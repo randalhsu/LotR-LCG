@@ -15,12 +15,12 @@ class HostGameDialog(xxxxGameDialog):
         
     def hostGame(self):
         if self.nickLineEdit.text().isEmpty():
-            QMessageBox.critical(self, 'Nickname?', 'Please give a nickname...')
+            QMessageBox.critical(self, 'Nickname?', 'Please give a nickname')
             self.nickLineEdit.setFocus()
             return
             
         if not self.ipList.currentItem():
-            QMessageBox.critical(self, 'IP?', 'Please select an IP...')
+            QMessageBox.critical(self, 'IP?', 'Please select an IP')
             return
             
         port = self.server.hostGame()
@@ -50,9 +50,6 @@ class HostGameDialog(xxxxGameDialog):
         self.chatter.setSocket(self.client)
         self.topWidget.setEnabled(False)
         self.startButton.setDefault(True)
-        
-    def startGame(self):
-        self.server.startGame()
         
     def createUI(self):
         username = QDir.homePath().split('/')[-1]
@@ -89,7 +86,7 @@ class HostGameDialog(xxxxGameDialog):
         hostingLabel = QLabel(self.tr('Hosting game at'))
         self.hostingLineEdit = QLineEdit()
         self.startButton = QPushButton(self.tr('&Start Game!'))
-        self.startButton.clicked.connect(self.startGame)
+        self.startButton.clicked.connect(self.server.startGame)
         
         nicknameLayout = QHBoxLayout()
         nicknameLayout.addWidget(nickLabel)
