@@ -84,6 +84,9 @@ class MainWindow(QMainWindow):
         
         self.scenarioId = 0
         self.playerDeckId = 0
+        self.isFirstPlayer = True  # might change in MultiplayerMainWindow
+        self.playerCount = 1  # might change in MultiplayerMainWindow
+        
         if self.__class__.__name__ == 'MainWindow':  # not true in MultiplayerMainWindow
             self.startNewGame()
         
@@ -176,12 +179,6 @@ class MainWindow(QMainWindow):
         heroList = []
         playerList = []
         
-        for encounterName in scenariosInfo[scenarioId]['encounters']:
-            for set_ in SETS:
-                for (id, card) in enumerate(cardsInfo[set_]):
-                    if card['icon'] == encounterName and card['type'] != 'quest':
-                        for i in range(card['quantity']):
-                            encounterList.append((set_, id))
         
         for (set_, id) in playerDecksInfo[self.playerDeckId]['deck']:
             if isHeroCard(set_, id):
@@ -189,152 +186,9 @@ class MainWindow(QMainWindow):
             else:
                 playerList.append((set_, id))
                 
-        random.shuffle(encounterList)
         random.shuffle(playerList)
         
-        s = ''
-        if scenarioId <= 2:
-            s = 'core'
-        elif scenarioId <= 8:
-            s = 'mirkwood'
-        elif scenarioId == 9:
-            s = 'osgiliath'
-        elif scenarioId <= 12:
-            s = 'khazaddum'
-        else:
-            s = 'dwarrowdelf'
-        # EXPANSION
-        
-        
-        if scenarioId == 0:  # Passage Through Mirkwood
-            questList = [(s, 119), (s, 120), (s, 121 + random.choice((0, 1)))]
-            stagingList = [(s, 96), (s, 99)]
-            for card in stagingList:
-                encounterList.remove(card)
-                
-        elif scenarioId == 1:  # Journey Along the Anduin
-            questList = [(s, 126), (s, 127), (s, 128)]
-            hillTroll = (s, 82)
-            stagingList.append(encounterList.pop(-1))  # draw one card from encounter deck to staging area. 1 card per player.
-            if stagingList[0] != hillTroll:
-                stagingList.append(hillTroll)
-                encounterList.remove(hillTroll)
-                
-        elif scenarioId == 2:  # Escape From Dol Guldur
-            questList = [(s, 123), (s, 124), (s, 125)]
-            prepareList = [(s, 102)]  # Nazgul of Dol Guldur
-            encounterList.remove((s, 102))
-            stagingList = [(s, 108), (s, 109), (s, 110)]  # Gandalf's Map, Dungeon Torch, Shadow Key
-            for card in stagingList:
-                encounterList.remove(card)
-            for i in range(3):
-                stagingList.append(encounterList.pop(-1))  # objective cards will be attached to their guarders later
-            stagingList.reverse()
-            
-        elif scenarioId == 3:  # The Hunt for Gollum
-            questList = [(s, 11), (s, 12), (s, 13)]
-            stagingList.append(encounterList.pop(-1))  # 1 card per player
-            
-        elif scenarioId == 4:  # Conflict at the Carrock
-            questList = [(s, 35), (s, 36)]
-            stagingList = [(s, 43)]  # The Carrock
-            encounterList.remove((s, 43))
-            prepareList = [(s, 38), (s, 39), (s, 40), (s, 41), (s, 48), (s, 48), (s, 48), (s, 48)]  # 4 Trolls and 4 Sacked!s
-            for card in prepareList:
-                encounterList.remove(card)
-                
-        elif scenarioId == 5:  # A Journey to Rhosgobel
-            questList = [(s, 60), (s, 61), (s, 62)]
-            stagingList = [(s, 65), (s, 64)]  # Rhosgobel, Wilyador
-            for card in stagingList:
-                encounterList.remove(card)
-            # Wilyador's damage tokens will be placed later
-            
-        elif scenarioId == 6:  # The Hills of Emyn Muil
-            questList = [(s, 82)]
-            stagingList = [(s, 83), (s, 84)]  # Amon Hen, Amon Lhaw
-            for card in stagingList:
-                encounterList.remove(card)
-                
-        elif scenarioId == 7:  # The Dead Marshes
-            questList = [(s, 105), (s, 106)]
-            stagingList = [(s, 107)]  # Gollum
-            encounterList.remove((s, 107))
-            stagingList.append(encounterList.pop(-1))  # 1 card per player
-            
-        elif scenarioId == 8:  # Return to Mirkwood
-            questList = [(s, 126), (s, 127), (s, 128), (s, 129)]
-            heroList.append((s, 130))  # Gollum
-            encounterList.remove((s, 130))
-            stagingList.append(encounterList.pop(-1))  # 1 card per player
-            
-        elif scenarioId == 9:  # The Massing at Osgiliath
-            questList = [(s, 16), (s, 17), (s, 18), (s, 19)]
-            stagingList = [(s, 2), (s, 3), (s, 4)]  # 3 Scouts per player
-            prepareList = [(s, 1)]  # The Witch-king
-            for card in stagingList:
-                encounterList.remove(card)
-            encounterList.remove((s, 1))
-            
-        elif scenarioId == 10:  # Into the Pit
-            questList = [(s, 64), (s, 65), (s, 66)]
-            stagingList = [(s, 16)]  # East-gate, put it to staging area and draw to location deck later
-            encounterList.remove((s, 16))
-            heroList.append((s, 41))  # Cave Torch, for first player
-            encounterList.remove((s, 41))
-            prepareList = [(s, 17), (s, 18)]  # First Hall, Bridge of Khazad-dum
-            for card in prepareList:
-                encounterList.remove(card)
-            
-        elif scenarioId == 11:  # The Seventh Level
-            questList = [(s, 67), (s, 68)]
-            heroList.append((s, 24))  # Book of Mazarbul, for first player
-            encounterList.remove((s, 24))
-            
-        elif scenarioId == 12:  # Flight from Moria
-            questList = [(s, i) for i in range(70, 77)]
-            random.shuffle(questList)
-            questList.insert(0, (s, 69))
-            
-            stagingList = [(s, 25)]  # The Nameless Fear
-            encounterList.remove((s, 25))
-            
-            foe = (s, 28)  # A Foe Beyond
-            while foe in encounterList:
-                encounterList.remove(foe)
-            encounterList.append(foe)  # 1 "A Foe Beyond" per player
-            random.shuffle(encounterList)
-            
-            stagingList.append(encounterList.pop(-1))  # 1 card per player
-            self.victorySpinBox.setValue(2)
-            
-        elif scenarioId == 13:  # The Redhorn Gate
-            questList = [(s, 11), (s, 12), (s, 13)]
-            stagingList = [(s, 15)]  # Caradhras
-            encounterList.remove((s, 15))
-            prepareList = [(s, 22), (s, 22), (s, 22), (s, 22), (s, 22)]  # 5 Snowstorms
-            for card in prepareList:
-                encounterList.remove(card)
-            heroList.append((s, 14))  # Arwen Undomiel, for first player
-            encounterList.remove((s, 14))
-            stagingList.append(encounterList.pop(-1))  # 1 card per player
-        # EXPANSION
-        
-        prepareList.reverse()
-        
         # start creating Card instances
-        for (set_, id) in reversed(questList):
-            self.questDeck.addCard(Card(cardsInfo[set_][id], revealed=True))
-            
-        for (set_, id) in encounterList:
-            self.encounterDeck.addCard(Card(cardsInfo[set_][id]))
-            
-        for (set_, id) in stagingList:
-            self.stagingArea.addCard(Card(cardsInfo[set_][id], revealed=True))
-            
-        for (set_, id) in prepareList:
-            self.prepareDeck.addCard(Card(cardsInfo[set_][id], revealed=True))
-            
         for (set_, id) in heroList:
             self.heroArea.addCard(Card(cardsInfo[set_][id], revealed=True))
             
@@ -354,24 +208,208 @@ class MainWindow(QMainWindow):
         self.threatDial.setValue(threatValue)
         
         
-        if scenarioId == 2:  # Escape From Dol Guldur
-            for i in range(3):
-                objectiveCard = self.stagingArea.draw()
-                self.stagingArea.getList()[i].attach(objectiveCard)
+        if self.isFirstPlayer:  # this is a long story...
             
-            hero = random.choice(self.heroArea.getList())
-            hero.attach(Token('damage'))
-            hero.flip()
+            for encounterName in scenariosInfo[scenarioId]['encounters']:
+                for set_ in SETS:
+                    for (id, card) in enumerate(cardsInfo[set_]):
+                        if card['icon'] == encounterName and card['type'] != 'quest':
+                            for i in range(card['quantity']):
+                                encounterList.append((set_, id))
+            random.shuffle(encounterList)
             
-        elif scenarioId == 5:  # A Journey to Rhosgobel
-            for i in range(2):
-                self.stagingArea.getList()[1].attach(Token('damage'))
+            
+            s = ''
+            if scenarioId <= 2:
+                s = 'core'
+            elif scenarioId <= 8:
+                s = 'mirkwood'
+            elif scenarioId == 9:
+                s = 'osgiliath'
+            elif scenarioId <= 12:
+                s = 'khazaddum'
+            else:
+                s = 'dwarrowdelf'
+            # EXPANSION
+            
+            if scenarioId == 0:  # Passage Through Mirkwood
+                questList = [(s, 119), (s, 120), (s, 121 + random.choice((0, 1)))]
+                stagingList = [(s, 96), (s, 99)]
+                for card in stagingList:
+                    encounterList.remove(card)
+                    
+            elif scenarioId == 1:  # Journey Along the Anduin
+                questList = [(s, 126), (s, 127), (s, 128)]
+                hillTroll = (s, 82)
+                for i in range(self.playerCount):
+                    stagingList.append(encounterList.pop(-1))  # draw one card from encounter deck to staging area. 1 card per player.
+                    
+                hillTrollAppeared = False
+                for card in stagingList:
+                    if card == hillTroll:
+                        hillTrollAppeared = True
+                if not hillTrollAppeared:
+                    stagingList.append(hillTroll)
+                    encounterList.remove(hillTroll)
+                    
+            elif scenarioId == 2:  # Escape From Dol Guldur
+                questList = [(s, 123), (s, 124), (s, 125)]
+                prepareList = [(s, 102)]  # Nazgul of Dol Guldur
+                encounterList.remove((s, 102))
+                stagingList = [(s, 108), (s, 109), (s, 110)]  # Gandalf's Map, Dungeon Torch, Shadow Key
+                for card in stagingList:
+                    encounterList.remove(card)
+                for i in range(3):
+                    stagingList.append(encounterList.pop(-1))  # objective cards will be attached to their guarders later
+                stagingList.reverse()
                 
-        elif scenarioId == 10:  # Into the Pit
-            self.locationDeck.addCard(self.stagingArea.draw())
-        # EXPANSION
-        
-        self.promptMulligan()
+            elif scenarioId == 3:  # The Hunt for Gollum
+                questList = [(s, 11), (s, 12), (s, 13)]
+                for i in range(self.playerCount):
+                    stagingList.append(encounterList.pop(-1))  # 1 card per player
+                    
+            elif scenarioId == 4:  # Conflict at the Carrock
+                questList = [(s, 35), (s, 36)]
+                stagingList = [(s, 43)]  # The Carrock
+                encounterList.remove((s, 43))
+                sacked = (s, 48)
+                prepareList = [(s, 38), (s, 39), (s, 40), (s, 41), sacked, sacked, sacked, sacked]  # 4 Trolls and 4 Sacked!s
+                for card in prepareList:
+                    encounterList.remove(card)
+                for i in range(self.playerCount):
+                    if prepareList[-1] == sacked:
+                        encounterList.append(prepareList.pop(-1))  # 1 Sacked! per player
+                random.shuffle(encounterList)
+                        
+            elif scenarioId == 5:  # A Journey to Rhosgobel
+                questList = [(s, 60), (s, 61), (s, 62)]
+                stagingList = [(s, 65), (s, 64)]  # Rhosgobel, Wilyador
+                for card in stagingList:
+                    encounterList.remove(card)
+                # Wilyador's damage tokens will be placed later
+                
+            elif scenarioId == 6:  # The Hills of Emyn Muil
+                questList = [(s, 82)]
+                stagingList = [(s, 83), (s, 84)]  # Amon Hen, Amon Lhaw
+                for card in stagingList:
+                    encounterList.remove(card)
+                    
+            elif scenarioId == 7:  # The Dead Marshes
+                questList = [(s, 105), (s, 106)]
+                stagingList = [(s, 107)]  # Gollum
+                encounterList.remove((s, 107))
+                for i in range(self.playerCount):
+                    stagingList.append(encounterList.pop(-1))  # 1 card per player
+                    
+            elif scenarioId == 8:  # Return to Mirkwood
+                questList = [(s, 126), (s, 127), (s, 128), (s, 129)]
+                gollum = (s, 130)
+                encounterList.remove((s, 130))
+                if self.playerCount == 1:
+                    heroList.append((s, 130))
+                    stagingList.append(encounterList.pop(-1))  # 1 card per player
+                else:
+                    prepareList = [(s, 130)]
+                    # in multiplayer game, choose the player guarding Gollum, then manually reveal 1 card per player
+                    
+            elif scenarioId == 9:  # The Massing at Osgiliath
+                questList = [(s, 16), (s, 17), (s, 18), (s, 19)]
+                scouts = ((s, 2), (s, 3), (s, 4))  # 3 Scouts per player
+                for i in range(min(4, self.playerCount)):
+                    for scout in scouts:
+                        stagingList.append(scout)
+                for card in stagingList:
+                    encounterList.remove(card)
+                prepareList = [(s, 1)]  # The Witch-king
+                encounterList.remove((s, 1))
+                
+            elif scenarioId == 10:  # Into the Pit
+                questList = [(s, 64), (s, 65), (s, 66)]
+                stagingList = [(s, 16)]  # East-gate, put it to staging area and draw to location deck later
+                encounterList.remove((s, 16))
+                heroList.append((s, 41))  # Cave Torch, for first player  # TODO: this is for first player
+                encounterList.remove((s, 41))
+                prepareList = [(s, 17), (s, 18)]  # First Hall, Bridge of Khazad-dum
+                for card in prepareList:
+                    encounterList.remove(card)
+                    
+            elif scenarioId == 11:  # The Seventh Level
+                questList = [(s, 67), (s, 68)]
+                heroList.append((s, 24))  # Book of Mazarbul, for first player
+                encounterList.remove((s, 24))
+                
+            elif scenarioId == 12:  # Flight from Moria
+                questList = [(s, i) for i in range(70, 77)]
+                random.shuffle(questList)
+                questList.insert(0, (s, 69))
+                
+                stagingList = [(s, 25)]  # The Nameless Fear
+                encounterList.remove((s, 25))
+                
+                foe = (s, 28)  # A Foe Beyond
+                while foe in encounterList:
+                    encounterList.remove(foe)
+                for i in range(self.playerCount):
+                    encounterList.append(foe)  # 1 "A Foe Beyond" per player
+                random.shuffle(encounterList)
+                
+                for i in range(self.playerCount):
+                    stagingList.append(encounterList.pop(-1))  # 1 card per player
+                self.victorySpinBox.setValue(2)
+                
+            elif scenarioId == 13:  # The Redhorn Gate
+                questList = [(s, 11), (s, 12), (s, 13)]
+                stagingList = [(s, 15)]  # Caradhras
+                encounterList.remove((s, 15))
+                prepareList = [(s, 22), (s, 22), (s, 22), (s, 22), (s, 22)]  # 5 Snowstorms
+                for card in prepareList:
+                    encounterList.remove(card)
+                heroList.append((s, 14))  # Arwen Undomiel, for first player  # TODO: this is for first player
+                encounterList.remove((s, 14))
+                for i in range(self.playerCount):
+                    stagingList.append(encounterList.pop(-1))  # 1 card per player
+            # EXPANSION
+            
+            prepareList.reverse()
+            
+            # start creating Card instances
+            for (set_, id) in reversed(questList):
+                self.questDeck.addCard(Card(cardsInfo[set_][id], revealed=True))
+                
+            for (set_, id) in encounterList:
+                self.encounterDeck.addCard(Card(cardsInfo[set_][id]))
+                
+            for (set_, id) in stagingList:
+                self.stagingArea.addCard(Card(cardsInfo[set_][id], revealed=True))
+                
+            for (set_, id) in prepareList:
+                self.prepareDeck.addCard(Card(cardsInfo[set_][id], revealed=True))
+                
+                
+            if scenarioId == 2:  # Escape From Dol Guldur
+                for i in range(3):
+                    objectiveCard = self.stagingArea.draw()
+                    self.stagingArea.getList()[i].attach(objectiveCard)
+                    
+                hero = random.choice(self.heroArea.getList())
+                hero.attach(Token('damage'))
+                hero.flip()
+                
+            elif scenarioId == 5:  # A Journey to Rhosgobel
+                for i in range(2):
+                    self.stagingArea.getList()[1].attach(Token('damage'))
+                    
+            elif scenarioId == 10:  # Into the Pit
+                self.locationDeck.addCard(self.stagingArea.draw())
+            # EXPANSION
+            
+        else:  # end of long 'if self.isFirstPlayer:'
+            if scenarioId == 2:  # Escape From Dol Guldur
+                hero = random.choice(self.heroArea.getList())
+                hero.attach(Token('damage'))
+                hero.flip()
+                
+        #self.promptMulligan()
         
     def promptMulligan(self):
         if _MulliganDialog(self).exec_() == QMessageBox.AcceptRole:

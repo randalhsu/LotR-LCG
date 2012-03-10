@@ -36,6 +36,8 @@ class MultiplayerMainWindow(MainWindow):
         }
         self.stateFields = tuple(['threat', 'hand', 'player'] + list(self.nameAreaMapping.keys()))
         
+        self.isFirstPlayer = True if self.isServer else False
+        
         if self.isServer:
             self.server.startNewGame()
         
@@ -91,7 +93,8 @@ class MultiplayerMainWindow(MainWindow):
         super(MultiplayerMainWindow, self).setup()
         
         state = self.getState()
-        for field in self.stateFields:
+        fields = self.stateFields if self.isServer else ('threat', 'hand', 'player', 'hero', 'engaged')
+        for field in fields:
             jsonState = self.dumpState(state[field])
             data = 'STATE:{0}:{1}:{2}\n'.format(self.address, field, jsonState)
             self.client.sendData(data)
@@ -160,6 +163,7 @@ class MultiplayerMainWindow(MainWindow):
         # example playerAddresses: '127.0.0.1:1234,140.116.39.40:1235,210.23.32.1:57649'
         self.addresses = playerAddresses.split(',')
         myAddress = '{0}:{1}'.format(self.client.localAddress().toString(), self.client.localPort())
+        self.playerCount = len(self.addresses)
         
         self.nthPlayer = self.addresses.index(myAddress)  # just for self.recordPlayerNicknames()
         self.addresses.remove(myAddress)
@@ -198,3 +202,4 @@ class MultiplayerMainWindow(MainWindow):
             self.restartGameAct.setEnabled(False)
         self.saveGameAct.setEnabled(False)
         self.loadGameAct.setEnabled(False)
+        self.setWindowIcon(QIcon('./resource/image/LotRLCG_MP.ico'))
