@@ -1,8 +1,6 @@
 '''
-TODO: multiplayer
 TODO: make dragging cursor correct
 TODO: journey logging
-TODO: save/load
 '''
 import random
 from common import *
@@ -67,21 +65,37 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.createUI()
+        
+        self.nameAreaMapping = {
+            'hand': self.handArea,
+            'hero': self.heroArea,
+            'engaged': self.engagedArea,
+            'staging': self.stagingArea,
+            'location': self.locationDeck,
+            'quest': self.questDeck,
+            'encounter': self.encounterDeck,
+            'encounterDP': self.encounterDiscardPile,
+            'prepare': self.prepareDeck,
+            'removed': self.removedPile,
+            'playerDP': self.playerDiscardPile,
+        }
+        
         self.deckManipulatorList = []  # for bookkeeping existing DeckManipulator instances
         
         self.scenarioId = 0
         self.playerDeckId = 0
-        self.startNewGame()
+        if self.__class__.__name__ == 'MainWindow':  # not true in MultiplayerMainWindow
+            self.startNewGame()
         
     def addDeckManipulator(self, widget):
         self.deckManipulatorList.append(widget)
         
     def cleanupDeckManipulators(self):
-        try:
-            for widget in self.deckManipulatorList:
+        for widget in self.deckManipulatorList:
+            try:
                 widget.close()
-        except RuntimeError:
-            pass
+            except RuntimeError:
+                pass
         self.deckManipulatorList = []
         
     def cleanup(self):
@@ -106,12 +120,52 @@ class MainWindow(QMainWindow):
         self.scenarioId = setupDialog.selectedScenarioId()
         self.playerDeckId = setupDialog.selectedDeckId()
         self.setup()
-        self.promptMulligan()
         
     def restartGame(self):
         self.cleanup()
         self.setup()
-        self.promptMulligan()
+        
+    def startNewGameAction(self):
+        self.startNewGame()
+        
+    def restartGameAction(self):
+        self.restartGame()
+        
+    def saveGame(self):
+        jsonState = self.dumpState(self.getState())
+        fileName = QFileDialog.getSaveFileName(self, self.tr('Save game'), 'LotRLCG.sav', 'Game Save (*.sav)')
+        if fileName:
+            try:
+                f = open(fileName, 'w')
+                f.write(jsonState)
+                f.close()
+            except IOError:
+                QMessageBox.critical(self, self.tr("Can't save game"), self.tr('Failed to write file!'))
+                
+    def loadGame(self):
+        fileName = QFileDialog.getOpenFileName(self, self.tr('Load game'), '.', 'Game Save (*.sav)')
+        if fileName:
+            with open(fileName) as f:
+                jsonState = f.read()
+                try:
+                    state = json.loads(jsonState, encoding='ascii')
+                except ValueError:
+                    QMessageBox.critical(self, self.tr("Can't load game"), self.tr('Game save corrupted!'))
+                    return
+                    
+                self.threatDial.setValue(state['threat'])
+                for (name, area) in self.nameAreaMapping.items():
+                    area.setState(state[name])
+                    
+    def dumpState(self, dictObject):
+        return json.dumps(dictObject, separators=(',', ':'), encoding='ascii')
+        
+    def getState(self):
+        state = {}
+        state['threat'] = self.threatDial.value
+        for (name, area) in self.nameAreaMapping.items():
+            state[name] = area.getState()
+        return state
         
     def setup(self):
         scenarioId = self.scenarioId
@@ -157,7 +211,7 @@ class MainWindow(QMainWindow):
             stagingList = [(s, 96), (s, 99)]
             for card in stagingList:
                 encounterList.remove(card)
-            
+                
         elif scenarioId == 1:  # Journey Along the Anduin
             questList = [(s, 126), (s, 127), (s, 128)]
             hillTroll = (s, 82)
@@ -317,6 +371,8 @@ class MainWindow(QMainWindow):
             self.locationDeck.addCard(self.stagingArea.draw())
         # EXPANSION
         
+        self.promptMulligan()
+        
     def promptMulligan(self):
         if _MulliganDialog(self).exec_() == QMessageBox.AcceptRole:
             for i in range(6):
@@ -374,16 +430,24 @@ class MainWindow(QMainWindow):
         about.show()
         
     def createUI(self):
-        newGameAct = QAction(self.tr('&New Journey...'), self)
-        newGameAct.triggered.connect(self.startNewGame)
-        restartGameAct = QAction(self.tr('&Restart Journey'), self)
-        restartGameAct.triggered.connect(self.restartGame)
+        self.newGameAct = QAction(self.tr('&New Journey...'), self)
+        self.newGameAct.triggered.connect(self.startNewGameAction)
+        self.restartGameAct = QAction(self.tr('&Restart Journey'), self)
+        self.restartGameAct.triggered.connect(self.restartGameAction)
+        self.saveGameAct = QAction(self.tr('&Save Game'), self)
+        self.saveGameAct.triggered.connect(self.saveGame)
+        self.loadGameAct = QAction(self.tr('&Load Game'), self)
+        self.loadGameAct.triggered.connect(self.loadGame)
         quitAct = QAction(self.tr('&Quit'), self)
         quitAct.triggered.connect(self.close)
         
         gameMenu = self.menuBar().addMenu(self.tr('&Game'))
-        gameMenu.addAction(newGameAct)
-        gameMenu.addAction(restartGameAct)
+        gameMenu.addAction(self.newGameAct)
+        gameMenu.addAction(self.restartGameAct)
+        gameMenu.addSeparator()
+        gameMenu.addAction(self.saveGameAct)
+        gameMenu.addAction(self.loadGameAct)
+        gameMenu.addSeparator()
         gameMenu.addAction(quitAct)
         
         phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
@@ -397,7 +461,7 @@ class MainWindow(QMainWindow):
         
         self.largeImageLabel = QLabel()
         self.largeImageLabel.setFixedSize(CARD_WIDTH, CARD_HEIGHT)
-        self.largeImageLabel.setPixmap(scaledCardPixmap(QPixmap('./resource/image/player_card_back.jpg')))
+        self.largeImageLabel.setPixmap(scaledCardPixmap('./resource/image/player_card_back.jpg'))
         self.largeImageLabel.currentCard = None
         
         self.threatDial = ThreatDial()
