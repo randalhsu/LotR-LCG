@@ -1,10 +1,10 @@
-If you want to trace code, maybe you can follow module import order in LotRLCG/MainWindow.py
+If you want to trace code, maybe you can follow modules' import order in LotRLCG/MainWindow.py
 
-==================================================
+======================================================
 
 Expansion set & Encounter set abbreviations:
 
-core             (Core Set)
+core             (Core Set)                 2011/04/20
  |-- passage     (Passage Through Mirkwood)
  |-- spiders     (Spiders of Mirkwood)
  |-- orcs        (Dol Guldur Orcs)
@@ -14,39 +14,40 @@ core             (Core Set)
  |-- escape      (Escape from Dol Guldur)
 
 
-mirkwood       (Shadows of Mirkwood)
- |-- gollum    (The Hunt for Gollum)
- |-- carrock   (Conflict at the Carrock)
- |-- rhosgobel (A Journey to Rhosgobel)
- |-- emynmuil  (The Hills of Emyn Muil)
- |-- marshes   (The Dead Marshes)
- |-- return    (Return to Mirkwood)
+mirkwood         (Shadows of Mirkwood)
+ |-- gollum      (The Hunt for Gollum)      2011/07/21
+ |-- carrock     (Conflict at the Carrock)  2011/08/10
+ |-- rhosgobel   (A Journey to Rhosgobel)   2011/09/01
+ |-- emynmuil    (The Hills of Emyn Muil)   2011/09/30
+ |-- marshes     (The Dead Marshes)         2011/11/02
+ |-- return      (Return to Mirkwood)       2011/11/23
 
 
-osgiliath       (The Massing at Osgiliath)
+osgiliath        (The Massing at Osgiliath) 2011/09/21
 
 
-khazaddum       (Khazad-dum)
- |-- pit        (Into the Pit)
- |-- seventh    (The Seventh Level)
- |-- flight     (Flight from Moria)
- |-- plundering (Plundering Goblins)
- |-- twists     (Twists and Turns)
- |-- moria      (Deeps of Moria)
- |-- hazards    (Hazards of the Pit)
- |-- misty      (Misty Mountains)
- |-- goblin     (Goblins of the Deep)
+khazaddum        (Khazad-dum)               2012/01/06
+ |-- pit         (Into the Pit)
+ |-- seventh     (The Seventh Level)
+ |-- flight      (Flight from Moria)
+ |-- plundering  (Plundering Goblins)
+ |-- twists      (Twists and Turns)
+ |-- moria       (Deeps of Moria)
+ |-- hazards     (Hazards of the Pit)
+ |-- misty       (Misty Mountains)
+ |-- goblin      (Goblins of the Deep)
 
 
 dwarrowdelf      (Dwarrowdelf)
- |-- redhorn     (The Redhorn Gate)
+ |-- redhorn     (The Redhorn Gate)         2012/03/01
  |-- rivendell   (Road to Rivendell)
  |-- watcher     (The Watcher in the Water)
  |-- long        (The Long Dark)
  |-- foundations (Foundations of Stone)
+ |-- flame       (Shadow and Flame)
 
 
-==================================================
+======================================================
 
 JSON structure of resource/introspection/*.js :
 
@@ -70,6 +71,6 @@ JSON structure of resource/introspection/*.js :
 	},
 }
 
-==================================================
+======================================================
 
 grep EXPANSION for future code modifications
