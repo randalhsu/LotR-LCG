@@ -1,6 +1,3 @@
-'''
-TODO: ensure deck cards order
-'''
 import glob
 import re
 from common import *
@@ -198,7 +195,7 @@ class DeckBuilder(QMainWindow):
                 lines = f.readlines()
                 for (i, fileName) in enumerate(lines):
                     id = i + 1
-                    if CARD_TASTE and not ((set_ in ('core', 'osgiliath')) or (set_ == 'mirkwood' and id <= 49)):
+                    if CARD_TASTE and not ((set_ in ('core', 'osgiliath')) or (set_ == 'mirkwood' and id <= 71)):
                         continue
                     fileName = fileName.strip()
                     if fileName:
@@ -314,7 +311,7 @@ class DeckBuilder(QMainWindow):
         playerCards = []
         for set_ in SETS:
             for (id, card) in enumerate(cardsInfo[set_]):
-                if CARD_TASTE and not ((set_ == 'core') or (set_ == 'mirkwood' and id <= 49)):
+                if CARD_TASTE and not ((set_ == 'core') or (set_ == 'mirkwood' and id <= 71)):
                     continue
                 if isPlayerCard(set_, id):
                     playerCards.append((set_, id))
@@ -337,7 +334,7 @@ class DeckBuilder(QMainWindow):
         encounterCards = []
         for set_ in SETS:
             for (id, card) in enumerate(cardsInfo[set_]):
-                if CARD_TASTE and not ((set_ in ('core', 'osgiliath')) or (set_ == 'mirkwood' and id <= 49)):
+                if CARD_TASTE and not ((set_ in ('core', 'osgiliath')) or (set_ == 'mirkwood' and id <= 71)):
                     continue
                 if isEncounterCard(set_, id):
                     encounterCards.append((set_, id))

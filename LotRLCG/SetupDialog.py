@@ -31,7 +31,7 @@ class SetupDialog(QDialog):
             button.setIcon(QIcon(QPixmap('./resource/image/icon/{0}.png'.format(scenarioNames[i]))))
             scenarioLayout.addWidget(button)
             self.scenarioButtons.append(button)
-            if CARD_TASTE and (i >= 5 and i != 9):
+            if CARD_TASTE and (i >= 6 and i != 9):
                 button.hide()
         scenarioLayout.addStretch(1)
         scenarioGroupBox.setLayout(scenarioLayout)
