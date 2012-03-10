@@ -14,6 +14,9 @@ class TokenBank(Area):
         self.addCard(self.damageToken)
         self.addCard(self.progressToken)
         
+    def dragEnterEvent(self, event):
+        event.ignore()
+        
     def update(self):
         self.resourceToken.setPos(0, 0)
         self.damageToken.setPos(self.width() / 3, 0)
