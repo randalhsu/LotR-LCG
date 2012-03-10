@@ -16,8 +16,7 @@ def startServer():
     hostGameDialog.move(0, 0)
     hostGameDialog.show()
     hostGameDialog.hostButton.click()
-    QTest.keyPress(hostGameDialog.hostingLineEdit, Qt.Key_C, Qt.ControlModifier)
-    QTest.keyRelease(hostGameDialog.hostingLineEdit, Qt.Key_C, Qt.ControlModifier)
+    QTest.keyClick(hostGameDialog.hostingLineEdit, Qt.Key_C, Qt.ControlModifier)
 
 
 def startClient():
@@ -26,8 +25,9 @@ def startClient():
         joinGameDialog = JoinGameDialog()
         joinGameDialog.move(hostGameDialog.width() + i * joinGameDialog.width(), 0)
         joinGameDialog.show()
-        QTest.keyPress(joinGameDialog.addressLineEdit, Qt.Key_V, Qt.ControlModifier)
-        QTest.keyRelease(joinGameDialog.addressLineEdit, Qt.Key_V, Qt.ControlModifier)
+        QTest.keyClick(joinGameDialog.addressLineEdit, Qt.Key_V, Qt.ControlModifier)
+        joinGameDialog.nickLineEdit.setText('')
+        QTest.keyClicks(joinGameDialog.nickLineEdit, 'client_{0}'.format(i + 1))
         joinGameDialog.joinButton.click()
         global joinGameDialogs
         joinGameDialogs.append(joinGameDialog)

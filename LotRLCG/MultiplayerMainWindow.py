@@ -36,6 +36,9 @@ class MultiplayerMainWindow(MainWindow):
         }
         self.stateFields = tuple(['threat', 'hand', 'player'] + list(self.nameAreaMapping.keys()))
         
+        if self.isServer:
+            self.server.startNewGame()
+        
         self.prevState = self.getState()
         
         timer = QTimer(self)
@@ -45,14 +48,31 @@ class MultiplayerMainWindow(MainWindow):
     def changeWindowTitle(self):
         title = str(self.windowTitle())
         if self.isServer:
-            title += ' (Server)'
+            title += ' [Server]'
         else:
-            title += ' (Client)'
+            title += ' [Client]'
+            
+        self.windowTitle = title
+        title += '  (Press any key to bring up Multiplayer Panel)'
         self.setWindowTitle(title)
         
+    def cleanup(self):
+        if hasattr(self, 'panel'):
+            self.panel.close()
+            del self.panel
+        super(MultiplayerMainWindow, self).cleanup()
+        
+    def restartGameAction(self):
+        if self.isServer:
+            self.server.setup()
+            
+    def startNewGameAction(self):
+        if self.isServer:
+            self.server.startNewGame()
+            
     def startNewGame(self):
         self.cleanup()
-        setupDialog = None
+        
         if self.isServer:
             setupDialog = SetupDialog(self)
             setupDialog.startButton.setText(self.tr('Ready!'))
@@ -76,6 +96,8 @@ class MultiplayerMainWindow(MainWindow):
             data = 'STATE:{0}:{1}:{2}\n'.format(self.address, field, jsonState)
             self.client.sendData(data)
             
+        self.panel = MultiplayerPanel(self.addresses, self.nicknames, self.chatter, self)
+        
     def getState(self):
         state = {}
         state['threat'] = self.threatDial.value
@@ -146,12 +168,12 @@ class MultiplayerMainWindow(MainWindow):
         # example playerNicknames: 'amulet,nick,name'
         self.nicknames = playerNicknames.split(',')
         del self.nicknames[self.nthPlayer]
-        self.panel = MultiplayerPanel(self.addresses, self.nicknames, self.chatter, self)
         
     def keyPressEvent(self, event):
         '''press any normal key to show MultiplayerPanel'''
         if event.modifiers() == Qt.NoModifier:
             if hasattr(self, 'panel'):
+                self.setWindowTitle(self.windowTitle)
                 self.panel.show()
         else:
             super(MultiplayerMainWindow, self).keyPressEvent(event)
@@ -162,8 +184,15 @@ class MultiplayerMainWindow(MainWindow):
             self.panel.resizeEvent(None)
             
     def closeEvent(self, event):
-        self.panel.close()
+        if hasattr(self, 'panel'):
+            self.panel.close()
         self.client.disconnectFromHost()
         if self.server:
             self.server.farewell()
         event.accept()
+        
+    def createUI(self):
+        super(MultiplayerMainWindow, self).createUI()
+        if not self.isServer:
+            self.newGameAct.setEnabled(False)
+            self.restartGameAct.setEnabled(False)

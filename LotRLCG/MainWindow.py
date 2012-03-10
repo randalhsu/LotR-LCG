@@ -70,7 +70,8 @@ class MainWindow(QMainWindow):
         
         self.scenarioId = 0
         self.playerDeckId = 0
-        self.startNewGame()
+        if self.__class__.__name__ == 'MainWindow':  # not true in MultiplayerMainWindow
+            self.startNewGame()
         
     def addDeckManipulator(self, widget):
         self.deckManipulatorList.append(widget)
@@ -109,6 +110,12 @@ class MainWindow(QMainWindow):
     def restartGame(self):
         self.cleanup()
         self.setup()
+        
+    def startNewGameAction(self):
+        self.startNewGame()
+        
+    def restartGameAction(self):
+        self.restartGame()
         
     def setup(self):
         scenarioId = self.scenarioId
@@ -373,16 +380,16 @@ class MainWindow(QMainWindow):
         about.show()
         
     def createUI(self):
-        newGameAct = QAction(self.tr('&New Journey...'), self)
-        newGameAct.triggered.connect(self.startNewGame)
-        restartGameAct = QAction(self.tr('&Restart Journey'), self)
-        restartGameAct.triggered.connect(self.restartGame)
+        self.newGameAct = QAction(self.tr('&New Journey...'), self)
+        self.newGameAct.triggered.connect(self.startNewGameAction)
+        self.restartGameAct = QAction(self.tr('&Restart Journey'), self)
+        self.restartGameAct.triggered.connect(self.restartGameAction)
         quitAct = QAction(self.tr('&Quit'), self)
         quitAct.triggered.connect(self.close)
         
         gameMenu = self.menuBar().addMenu(self.tr('&Game'))
-        gameMenu.addAction(newGameAct)
-        gameMenu.addAction(restartGameAct)
+        gameMenu.addAction(self.newGameAct)
+        gameMenu.addAction(self.restartGameAct)
         gameMenu.addAction(quitAct)
         
         phaseTipsAct = QAction(self.tr('&Phase Tips'), self)

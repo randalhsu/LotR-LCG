@@ -62,6 +62,7 @@ class Area(QGraphicsView):
             self.cardList.append(card)
             self.scene.addItem(card)
         self.update()
+        self.update()
         
     def shuffle(self):
         random.shuffle(self.cardList)

@@ -69,8 +69,11 @@ class Client(QTcpSocket):
             if content == 'CLOSE':  # data == 'SERVER:CLOSE\n'
                 QMessageBox.critical(self.parent, 'Disconnected', 'Server closed!')
                 
-            elif content == 'START_MAINWINDOW':  # data == 'SERVER:START_MAINWINDOW\n'
+            elif content == 'INITIALIZE_MAINWINDOW':  # data == 'SERVER:INITIALIZE_MAINWINDOW\n'
                 self.parent.initializeMainWindow()
+                
+            elif content == 'START_NEW_GAME':  # data == 'SERVER:START_NEW_GAME\n'
+                self.parent.startNewGame()
                 
             elif content.startswith('ADDRESSES'):  # example data: 'SERVER:ADDRESSES:127.0.0.1:1234,140.116.40.40:1235,210.23.32.1:57649\n'
                 self.parent.recordPlayerAddresses(content.split(':', 1)[1])
@@ -81,11 +84,11 @@ class Client(QTcpSocket):
             elif content.startswith('SETUP'):  # example data: 'SERVER:SETUP:1\n'
                 scenarioId = int(content.split(':')[1])
                 self.parent.scenarioId = scenarioId
-                self.parent.setup()
+                self.parent.restartGame()
                 
         elif type_ == 'STATE':
             content = content[:-1]  # trim '\n'
-            DPRINT(repr(content))
+            #DPRINT(repr(content))
             self.parent.handleStateChange(content)
             
     def dataIncoming(self):
@@ -163,7 +166,6 @@ class Server(QTcpServer):
             for socket in self.subscribers:
                 if (address, port) == (socket.peerAddress(), socket.peerPort()):
                     socket.nickname = nickname
-                    socket.readied = False
                     break
                     
             data = 'CHAT:__SYSTEM__:{0} has joined the game!\n'.format(nickname)
@@ -197,8 +199,7 @@ class Server(QTcpServer):
                     self.broadcast(data)
                     data = allPlayerNicknames()
                     self.broadcast(data)
-                    data = 'SERVER:SETUP:{0}\n'.format(self.parent.scenarioId)
-                    self.broadcast(data)
+                    self.setup()
                     
         elif type_ == 'STATE':  # game state change
             # broadcast except source
@@ -232,9 +233,25 @@ class Server(QTcpServer):
         self.subscribers.append(socket)
         #DPRINT(str(socket.peerAddress().toString()) + ':' + str(socket.peerPort()) + ' connected!')
         
+    def setup(self):
+        data = 'SERVER:SETUP:{0}\n'.format(self.parent.scenarioId)
+        self.broadcast(data)
+        
+    def startNewGame(self):
+        self.reset()
+        data = 'SERVER:START_NEW_GAME\n'
+        self.broadcast(data)
+        
+    def reset(self):
+        '''for starting new game'''
+        for socket in self.subscribers:
+            socket.readied = False
+            
     def startGame(self):
+        '''bring MultiplayerMainWindow up from xxxxGameDialog'''
         self.close()  # stop listening incoming connections
-        data = 'SERVER:START_MAINWINDOW\n'
+        self.reset()
+        data = 'SERVER:INITIALIZE_MAINWINDOW\n'
         self.broadcast(data)
         
     def farewell(self):

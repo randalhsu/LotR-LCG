@@ -130,21 +130,28 @@ class MultiplayerPanel(QDialog):
         super(MultiplayerPanel, self).keyPressEvent(event)
         
     def showEvent(self, event):
+        if hasattr(self, 'lastGeometry'):
+            self.setGeometry(self.lastGeometry)
         super(MultiplayerPanel, self).showEvent(event)
         self.chatter.setFocus()
         
     def hideEvent(self, event):
+        self.setWindowTitle(self.windowTitle)
+        self.lastGeometry = self.geometry()
         self.cleanupDeckManipulators()
         super(MultiplayerPanel, self).hideEvent(event)
         
     def closeEvent(self, event):
+        self.setWindowTitle(self.windowTitle)
+        self.lastGeometry = self.geometry()
         self.cleanupDeckManipulators()
         super(MultiplayerPanel, self).closeEvent(event)
         event.accept()
         
     def resizeEvent(self, event):
-        halfParentSize = QSize(self.parentWidget().width() * 3 / 4, self.parentWidget().height() * 3 / 4)
-        self.setMinimumSize(halfParentSize)
+        size = QSize(self.parentWidget().width() / 3, self.parentWidget().height() / 3)
+        self.setMinimumSize(size)
+        self.setMaximumSize(self.parentWidget().size())
         
         playerCount = len(self.addressToPanel)
         for (address, panel) in self.addressToPanel.items():
@@ -162,4 +169,5 @@ class MultiplayerPanel(QDialog):
         layout.addWidget(self.chatter)
         layout.addLayout(rightLayout, 1)
         self.setLayout(layout)
-        self.setWindowTitle(self.tr('Player States'))
+        self.windowTitle = self.tr('Player States')
+        self.setWindowTitle(self.windowTitle + '  (Press ESC to hide this panel)')
