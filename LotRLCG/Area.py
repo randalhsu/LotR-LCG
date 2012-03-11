@@ -41,6 +41,9 @@ class Area(QGraphicsView):
         purify(card)
         self.cardList.append(card)
         self.scene.addItem(card)
+        
+        if self.name is not None and 'Discard' in self.name:
+            card.attachedItems.removeAllTokens()
         self.update()
         
     def removeCard(self, card):

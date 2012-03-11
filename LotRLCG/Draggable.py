@@ -49,13 +49,8 @@ class _AttachedItems:
         elif isinstance(item, Token):
             self.attachToken(item)
             
-        scene = self.parent.scene()
-        if scene:
-            views = scene.views()
-            if views:
-                for view in views:
-                    view.update()
-                    
+        self.updateParent()
+        
     def attachToken(self, token):
         self.tokens.append(token)
         tokenType = token.type_()
@@ -86,8 +81,7 @@ class _AttachedItems:
         else:
             self.detachToken(item)
             
-        for view in self.parent.scene().views():
-            view.update()
+        self.updateParent()
         
     def detachCard(self, card):
         #print('Detached {0} from {1}'.format(card, self.parent))
@@ -108,7 +102,19 @@ class _AttachedItems:
                 if token.type_() == tokenType:
                     token.setPos(self.calcTokenPos(tokenType, i))
                     i += 1
+                    
+    def removeAllTokens(self):
+        while self.tokens:
+            self.detach(self.tokens[-1])
             
+    def updateParent(self):
+        scene = self.parent.scene()
+        if scene:
+            views = scene.views()
+            if views:
+                for view in views:
+                    view.update()
+                    
     def __str__(self):
         equipmentCards = '['
         for card in self.equipments:
