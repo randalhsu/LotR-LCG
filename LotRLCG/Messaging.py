@@ -39,6 +39,10 @@ class Client(QTcpSocket):
     def appendSystemMessage(self, message):
         self.parent.appendSystemMessage(message)
         
+    def sendSystemMessage(self, message):
+        data = 'CHAT:__SYSTEM__:{0}\n'.format(message)
+        self.sendData(data)
+        
     def sendChatMessage(self, message):
         assert(isinstance(message, QByteArray))
         data = 'CHAT:{0}:{1}\n'.format(self.nickname, message)

@@ -19,9 +19,7 @@ class Chatter(QWidget):
         self.textBrowser.append(message)
         
     def appendSystemMessage(self, message):
-        self.textBrowser.setFontWeight(QFont.Bold)
-        self.textBrowser.append(message)
-        self.textBrowser.setFontWeight(QFont.Normal)
+        self.textBrowser.append('<tt><b>{0}</b></tt>'.format(message))
         
     def send(self):
         if self.socket is None:

@@ -181,7 +181,10 @@ class MultiplayerMainWindow(MainWindow):
         if event.modifiers() == Qt.NoModifier:
             if hasattr(self, 'panel'):
                 self.setWindowTitle(self.windowTitle)
-                self.panel.show()
+                if event.key() == Qt.Key_Escape and self.panel.isVisible():
+                    self.panel.hide()
+                else:
+                    self.panel.show()
         else:
             super(MultiplayerMainWindow, self).keyPressEvent(event)
             

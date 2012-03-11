@@ -158,15 +158,42 @@ class MultiplayerPanel(QDialog):
             panel.setMaximumHeight(self.height() / playerCount)
             
     def createUI(self, addresses, nicknames):
+        self.chatter.setMinimumWidth(200)
+        
+        phaseLabel = QLabel(self.tr('Phase:'))
+        buttonsLayout = QHBoxLayout()
+        buttonsLayout.addWidget(phaseLabel)
+        
+        phaseNames = ('Resource', 'Planning', 'Quest', 'Travel', 'Encounter', 'Combat', 'Refresh')
+        maxPhaseNameLength = len(max(phaseNames, key=lambda name: len(name)))
+        
+        def sendPhase(phaseName):
+            def sendPhase_():
+                separators = '=' * (maxPhaseNameLength - len(phaseName))
+                message = '====={0} {1} Phase ======='.format(separators, phaseName)
+                self.parentWidget().client.sendSystemMessage(message)
+            return sendPhase_
+            
+        for name in phaseNames:
+            button = QPushButton(name[0])
+            button.clicked.connect(sendPhase(name))
+            button.setSizePolicy(QSizePolicy(QSizePolicy.Ignored, QSizePolicy.Minimum))
+            button.setFocusPolicy(Qt.NoFocus)  # otherwise pressing Enter while chatting will trigger button
+            button.setToolTip(name)
+            buttonsLayout.addWidget(button)
+            
+        leftLayout = QVBoxLayout()
+        leftLayout.addWidget(self.chatter, 1)
+        leftLayout.addLayout(buttonsLayout)
+        
         rightLayout = QVBoxLayout()
         for (address, nickname) in zip(addresses, nicknames):
             panel = _PlayerStatePanel(address, nickname)
             rightLayout.addWidget(panel)
             self.addressToPanel[address] = panel
             
-        self.chatter.setMinimumWidth(200)
         layout = QHBoxLayout()
-        layout.addWidget(self.chatter)
+        layout.addLayout(leftLayout)
         layout.addLayout(rightLayout, 1)
         self.setLayout(layout)
         self.windowTitle = self.tr('Player States')
