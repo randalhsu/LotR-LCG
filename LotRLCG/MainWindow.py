@@ -102,6 +102,7 @@ class MainWindow(QMainWindow):
         self.deckManipulatorList = []
         
     def cleanup(self):
+        self.victorySpinBox.setValue(0)
         self.cleanupDeckManipulators()
         
         for area in (self.engagedArea, self.heroArea, self.handArea, self.stagingArea, self.locationDeck, self.questDeck, self.encounterDeck, self.encounterDiscardPile, self.prepareDeck, self.removedPile, self.playerDeck, self.playerDiscardPile):
@@ -156,6 +157,7 @@ class MainWindow(QMainWindow):
                     QMessageBox.critical(self, self.tr("Can't load game"), self.tr('Game save corrupted!'))
                     return
                     
+                self.victorySpinBox.setValue(state['victory'])
                 self.threatDial.setValue(state['threat'])
                 for (name, area) in self.nameAreaMapping.items():
                     area.setState(state[name])
@@ -165,6 +167,7 @@ class MainWindow(QMainWindow):
         
     def getState(self):
         state = {}
+        state['victory'] = self.victorySpinBox.value()
         state['threat'] = self.threatDial.value
         for (name, area) in self.nameAreaMapping.items():
             state[name] = area.getState()
@@ -315,8 +318,8 @@ class MainWindow(QMainWindow):
             elif scenarioId == 9:  # The Massing at Osgiliath
                 questList = [(s, 16), (s, 17), (s, 18), (s, 19)]
                 scouts = ((s, 2), (s, 3), (s, 4))  # 3 Scouts per player
-                for i in range(min(4, self.playerCount)):
-                    for scout in scouts:
+                for scout in scouts:
+                    for i in range(min(4, self.playerCount)):
                         stagingList.append(scout)
                 for card in stagingList:
                     encounterList.remove(card)
@@ -409,7 +412,7 @@ class MainWindow(QMainWindow):
                 hero.attach(Token('damage'))
                 hero.flip()
                 
-        #self.promptMulligan()
+        self.promptMulligan()
         
     def promptMulligan(self):
         if _MulliganDialog(self).exec_() == QMessageBox.AcceptRole:

@@ -34,7 +34,7 @@ class MultiplayerMainWindow(MainWindow):
             'removed': self.removedPile,
             'playerDP': self.playerDiscardPile,
         }
-        self.stateFields = tuple(['threat', 'hand', 'player'] + list(self.nameAreaMapping.keys()))
+        self.stateFields = tuple(['victory', 'threat', 'hand', 'player'] + list(self.nameAreaMapping.keys()))
         
         self.isFirstPlayer = True if self.isServer else False
         
@@ -103,6 +103,7 @@ class MultiplayerMainWindow(MainWindow):
         
     def getState(self):
         state = {}
+        state['victory'] = self.victorySpinBox.value()
         state['threat'] = self.threatDial.value
         state['hand'] = len(self.handArea.getList())  # hand size
         state['player'] = len(self.playerDeck.getList())  # deck size
@@ -142,7 +143,9 @@ class MultiplayerMainWindow(MainWindow):
         sourceAddress = '{0}:{1}'.format(ip, port)
         state = json.loads(content, encoding='ascii')
         
-        if field in ('threat', 'hand', 'player', 'hero', 'engaged', 'playerDP'):
+        if field == 'victory':
+            self.victorySpinBox.setValue(state)
+        elif field in ('threat', 'hand', 'player', 'hero', 'engaged', 'playerDP'):
             if sourceAddress == self.address:
                 self.nameAreaMapping[field].setState(state)
             else:
