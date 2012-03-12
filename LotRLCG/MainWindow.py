@@ -55,10 +55,13 @@ class _About(QMessageBox):
 class _MulliganDialog(QMessageBox):
     def __init__(self, parent=None):
             super(_MulliganDialog, self).__init__(QMessageBox.Question, 'Take MULLIGAN?', '<b>Redraw hand?</b>', parent=parent)
-            self.addButton(self.tr("OF COURSE!"), QMessageBox.AcceptRole)
-            no = self.addButton(self.tr("I'll keep them"), QMessageBox.RejectRole)
+            yes = self.addButton(self.tr("OF COURSE!"), QMessageBox.YesRole)
+            yes.clicked.connect(self.parentWidget().takeMulligan)
+            no = self.addButton(self.tr("I'll keep them"), QMessageBox.NoRole)
             self.setDefaultButton(no)
-            self.setMinimumWidth(150)
+            
+            self.setModal(False)
+            self.setMinimumWidth(200)
 
 
 class MainWindow(QMainWindow):
@@ -406,7 +409,7 @@ class MainWindow(QMainWindow):
                 self.locationDeck.addCard(self.stagingArea.draw())
             # EXPANSION
             
-        else:  # end of long 'if self.isFirstPlayer:'
+        else:  # end of the long 'if self.isFirstPlayer:'
             if scenarioId == 2:  # Escape From Dol Guldur
                 hero = random.choice(self.heroArea.getList())
                 hero.attach(Token('damage'))
@@ -415,17 +418,20 @@ class MainWindow(QMainWindow):
         self.promptMulligan()
         
     def promptMulligan(self):
-        if _MulliganDialog(self).exec_() == QMessageBox.AcceptRole:
-            for i in range(6):
-                card = self.handArea.draw()
-                card.flip()
-                self.playerDeck.addCard(card)
-            self.playerDeck.shuffle()
-            for i in range(6):
-                card = self.playerDeck.draw()
-                card.flip()
-                self.handArea.addCard(card)
-                
+        mulliganDialog = _MulliganDialog(self)
+        mulliganDialog.show()
+        
+    def takeMulligan(self):
+        for i in range(6):
+            card = self.handArea.draw()
+            card.flip()
+            self.playerDeck.addCard(card)
+        self.playerDeck.shuffle()
+        for i in range(6):
+            card = self.playerDeck.draw()
+            card.flip()
+            self.handArea.addCard(card)
+            
     def setLargeImage(self, card):
         if card.info['type'] != 'quest':
             if self.largeImageLabel.currentCard == (card, card.revealed()):
