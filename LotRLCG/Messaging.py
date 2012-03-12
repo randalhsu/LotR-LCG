@@ -41,12 +41,9 @@ class Client(QTcpSocket):
         
     def sendData(self, data):
         assert(data.endswith('\n'))
-        
-        if self.state() != QAbstractSocket.ConnectedState:
-            QMessageBox.critical(self.parent, self.tr('Networking Failed'), self.tr('Connection error'))
+        if self.state() == QAbstractSocket.ConnectedState:
+            self.write(QByteArray(data))
             
-        self.write(QByteArray(data))
-        
     def handleChatData(self, data):
         (type_, nickname, message) = data.split(':', 2)
         if message.endswith('\n'):

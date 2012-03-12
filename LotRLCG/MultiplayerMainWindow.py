@@ -20,7 +20,6 @@ class MultiplayerMainWindow(MainWindow):
         self.address = '{0}:{1}'.format(self.client.localAddress().toString(), self.client.localPort())
         
         super(MultiplayerMainWindow, self).__init__(parent)
-        self.changeWindowTitle()
         
         self.nameAreaMapping = {
             'hero': self.heroArea,
@@ -47,15 +46,15 @@ class MultiplayerMainWindow(MainWindow):
         timer.timeout.connect(self.checkStateChange)
         timer.start(MultiplayerMainWindow.INTERVAL)
         
-    def changeWindowTitle(self):
-        title = str(self.windowTitle())
-        if self.isServer:
-            title += ' [Server]'
-        else:
-            title += ' [Client]'
-            
-        self.windowTitle = title
-        title += '  (Press any key to bring up Multiplayer Panel)'
+    def changeWindowTitleToNormal(self):
+        self.setWindowTitle(self.windowTitle)
+        
+    def changeWindowTitleToInformative(self):
+        title = self.windowTitle + '  (Press any key to bring up Multiplayer Panel)'
+        self.setWindowTitle(title)
+        
+    def changeWindowTitleToWaiting(self):
+        title = self.windowTitle + '  (Waiting for other players...)'
         self.setWindowTitle(title)
         
     def cleanup(self):
@@ -89,6 +88,8 @@ class MultiplayerMainWindow(MainWindow):
         data = 'CLIENT:READY\n'
         self.client.sendData(data)
         
+        self.changeWindowTitleToWaiting()
+        
     def setup(self):
         super(MultiplayerMainWindow, self).setup()
         
@@ -100,6 +101,7 @@ class MultiplayerMainWindow(MainWindow):
             self.client.sendData(data)
             
         self.panel = MultiplayerPanel(self.addresses, self.nicknames, self.chatter, self)
+        self.changeWindowTitleToInformative()
         
     def getState(self):
         state = {}
@@ -180,7 +182,7 @@ class MultiplayerMainWindow(MainWindow):
         '''press any normal key to show MultiplayerPanel'''
         if event.modifiers() == Qt.NoModifier:
             if hasattr(self, 'panel'):
-                self.setWindowTitle(self.windowTitle)
+                self.changeWindowTitleToNormal()
                 if event.key() == Qt.Key_Escape and self.panel.isVisible():
                     self.panel.hide()
                 else:
@@ -209,3 +211,11 @@ class MultiplayerMainWindow(MainWindow):
         self.saveGameAct.setEnabled(False)
         self.loadGameAct.setEnabled(False)
         self.setWindowIcon(QIcon('./resource/image/LotRLCG_MP.ico'))
+        
+        title = str(self.windowTitle())
+        if self.isServer:
+            title += ' [Server]'
+        else:
+            title += ' [Client]'
+        self.windowTitle = title
+        self.setWindowTitle(self.windowTitle)
