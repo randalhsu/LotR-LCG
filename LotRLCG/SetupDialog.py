@@ -4,20 +4,67 @@ from common import *
 class SetupDialog(QDialog):
     def __init__(self, parent=None):
         super(SetupDialog, self).__init__(parent)
+        self.createUI()
+        warnIfDecksCorrupted()
         
+    def selectedScenarioId(self):
+        for (id, button) in enumerate(self.scenarioButtons):
+            if button.isChecked():
+                return id
+            
+    def selectedDeckId(self):
+        for (id, button) in enumerate(self.deckButtons):
+            if button.isChecked():
+                return id
+                
+    def _deckContentToText(self, cardList):
+        iconToDisplay = {
+            'leadership': 'Leadership',
+               'tactics': '   Tactics',
+                'spirit': '    Spirit',
+                  'lore': '      Lore',
+        }
+        typeToDisplay = {
+                  'ally': 'Ally ',
+                 'event': 'Event',
+            'attachment': 'Att. ',
+        }
+        counter = collections.Counter()
+        deckSize = len(cardList)
+        
+        heroes = []
+        for (set_, id) in cardList:
+            if isHeroCard(set_, id):
+                deckSize -= 1
+                heroes.append((set_, id))
+            else:
+                counter['{0} {1}'.format(cardsInfo[set_][id]['icon'], cardsInfo[set_][id]['type'])] += 1
+                
+        maxHeroNameLength = 0
+        for (set_, id) in heroes:
+            length = len(cardsInfo[set_][id]['title'])
+            if length > maxHeroNameLength:
+                maxHeroNameLength = length
+                
+        text = ''
+        for (set_, id) in heroes:
+            name = cardsInfo[set_][id]['title']
+            spaces = ' ' * (maxHeroNameLength - len(name))
+            text += '{0}{1}  ({2})<br>'.format(spaces, name, cardsInfo[set_][id]['icon'].title())
+            
+        text += '<br>      Deck Size : {0}<br>'.format(deckSize)
+        
+        for icon in ('leadership', 'tactics', 'spirit', 'lore'):
+            for type_ in ('ally', 'event', 'attachment'):
+                text += '{0} {1}: {2}<br>'.format(iconToDisplay[icon], typeToDisplay[type_], counter['{0} {1}'.format(icon, type_)])
+                
+        return '<pre>{0}</pre>'.format(text)
+        
+    def createUI(self):
         class RadioButton(QRadioButton):
             def enterEvent(self, event):
                 self.topLevelWidget().descriptionLabel.setText(self.description)
-        
-        def deckContentToText(cardList):
-            counter = collections.Counter()
-            for (set_, id) in cardList:
-                counter[cardsInfo[set_][id]['title']] += 1
-            text = ''
-            for card in counter:
-                text += '{0}x  {1}\n'.format(counter[card], card)
-            return text
-            
+                
         self.scenarioButtons = []
         self.scenarioGroupBox = QGroupBox(self.tr('Scenario:'))
         scenarioLayout = QVBoxLayout()
@@ -42,7 +89,7 @@ class SetupDialog(QDialog):
         decksLayout = QVBoxLayout()
         for (i, deck) in enumerate(playerDecksInfo):
             button = RadioButton(deck['name'])
-            button.description = deckContentToText(deck['deck'])
+            button.description = self._deckContentToText(deck['deck'])
             if i == 0:
                 button.setChecked(True)
             decksLayout.addWidget(button)
@@ -73,18 +120,6 @@ class SetupDialog(QDialog):
         layout.addWidget(decksGroupBox)
         self.setLayout(layout)
         self.setWindowTitle(self.tr('Setting Game'))
-        
-        warnIfDecksCorrupted()
-        
-    def selectedScenarioId(self):
-        for (id, button) in enumerate(self.scenarioButtons):
-            if button.isChecked():
-                return id
-            
-    def selectedDeckId(self):
-        for (id, button) in enumerate(self.deckButtons):
-            if button.isChecked():
-                return id
 
 
 class ClientSetupDialog(SetupDialog):
