@@ -8,6 +8,8 @@ from xxxxGameDialog import *
 class JoinGameDialog(xxxxGameDialog):
     # Join game as a TCP client
     
+    TIMEOUT = 5000  # milliseconds timeout before considered connecting failed
+    
     def __init__(self, parent=None):
         super(JoinGameDialog, self).__init__(parent)
         self.createUI()
@@ -43,6 +45,19 @@ class JoinGameDialog(xxxxGameDialog):
         (host, port) = address.split(':')
         self.client = Client(nickname, host, port, self)
         
+        self.joinButton.setText(self.tr('Connecting to server...'))
+        self.joinButton.setEnabled(False)
+        
+        QTimer.singleShot(JoinGameDialog.TIMEOUT, self.checkIfConnectedToServer)
+        
+    def checkIfConnectedToServer(self):
+        if self.client.state() != QAbstractSocket.ConnectedState:
+            self.client.abort()
+            QMessageBox.critical(self, self.tr('Connection Timeout'), self.tr('Cannot connect to server!\n(Wrong address maybe?)'))
+            
+        self.joinButton.setText('&Join Game!')
+        self.joinButton.setEnabled(True)
+        
     def clientSocketConnected(self):
         self.topWidget.setEnabled(False)
         self.chatter.setEnabled(True)
@@ -57,6 +72,7 @@ class JoinGameDialog(xxxxGameDialog):
         addressLabel = QLabel(self.tr('Server address (IP:port):'))
         self.addressLineEdit = QLineEdit()
         self.addressLineEdit.selectAll()
+        self.addressLineEdit.returnPressed.connect(self.connectToServer)
         
         self.joinButton = QPushButton('&Join Game!')
         self.joinButton.clicked.connect(self.connectToServer)

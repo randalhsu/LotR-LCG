@@ -12,8 +12,6 @@ def DPRINT(s):
 
 
 class Client(QTcpSocket):
-    TIMEOUT = 3000  # milliseconds timeout before considered connecting failed
-    
     def __init__(self, nickname, serverIP, serverPort, parentWidget):
         super(Client, self).__init__(parent=None)
         self.nickname = nickname
@@ -23,16 +21,9 @@ class Client(QTcpSocket):
         self.connected.connect(self.socketConnected)
         self.readyRead.connect(self.dataIncoming)
         
-        QTimer.singleShot(Client.TIMEOUT, self.checkIfConnectedToServer)
-        
     def setParent(self, parentWidget):
         self.parent = parentWidget
         
-    def checkIfConnectedToServer(self):
-        if self.state() != QAbstractSocket.ConnectedState:
-            self.abort()
-            QMessageBox.critical(self.parent, self.tr('Connection Failed'), self.tr('Cannot connect to server.\n(Wrong address?)'))
-            
     def appendMessage(self, message):
         self.parent.appendMessage(message)
         
@@ -87,7 +78,7 @@ class Client(QTcpSocket):
                     QMessageBox.warning(self.parent, self.tr('Different Version'), self.tr('Server\'s program version is "{0}".\nAnything could happen.'.format(version)))
                 
             elif content == 'CLOSE':  # data == 'SERVER:CLOSE\n'
-                QMessageBox.critical(self.parent, self.tr('Disconnected'), self.tr('Server closed!'))
+                QMessageBox.critical(self.parent, self.tr('Disconnected'), self.tr('SERVER CLOSED!'))
                 
             elif content == 'INITIALIZE_MAINWINDOW':  # data == 'SERVER:INITIALIZE_MAINWINDOW\n'
                 self.parent.initializeMainWindow()
