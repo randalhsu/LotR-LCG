@@ -14,9 +14,7 @@ class HostGameDialog(xxxxGameDialog):
         self.createUI()
         
     def hostGame(self):
-        if self.nickLineEdit.text().isEmpty():
-            QMessageBox.critical(self, 'Nickname?', 'Please give a nickname')
-            self.nickLineEdit.setFocus()
+        if not self.validateNickname():
             return
             
         if not self.ipList.currentItem():
@@ -52,12 +50,9 @@ class HostGameDialog(xxxxGameDialog):
         self.startButton.setDefault(True)
         
     def createUI(self):
-        username = QDir.homePath().split('/')[-1]
         nickLabel = QLabel(self.tr('Your &nickname:'))
-        self.nickLineEdit = QLineEdit(username)
-        self.nickLineEdit.setValidator(QRegExpValidator(QRegExp(r'[A-Za-z0-9_\-]{1,10}')))
-        self.nickLineEdit.selectAll()
         nickLabel.setBuddy(self.nickLineEdit)
+        self.nickLineEdit.selectAll()
         
         selectLabel = QLabel(self.tr('Select an IP to host game:'))
         self.ipList = QListWidget()

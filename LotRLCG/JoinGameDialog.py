@@ -13,9 +13,7 @@ class JoinGameDialog(xxxxGameDialog):
         self.createUI()
         
     def connectToServer(self):
-        if self.nickLineEdit.text().isEmpty():
-            QMessageBox.critical(self, 'Nickname?', 'Please give a nickname...')
-            self.nickLineEdit.setFocus()
+        if not self.validateNickname():
             return
             
         def validateAddress(address):
@@ -37,7 +35,7 @@ class JoinGameDialog(xxxxGameDialog):
             
         address = str(self.addressLineEdit.text()).strip()
         if not validateAddress(address):
-            QMessageBox.critical(self, 'Address?', 'Invalid address!')
+            QMessageBox.critical(self, 'Address?', 'Invalid address!<br>Example address: <b>140.116.39.240:57258</b>')
             self.addressLineEdit.setFocus()
             return
             
@@ -53,10 +51,7 @@ class JoinGameDialog(xxxxGameDialog):
         self.waitingLabel.setText(self.tr('Waiting for server to start game...'))
         
     def createUI(self):
-        username = QDir.homePath().split('/')[-1]
         nickLabel = QLabel(self.tr('Your &nickname:'))
-        self.nickLineEdit = QLineEdit(username)
-        self.nickLineEdit.setValidator(QRegExpValidator(QRegExp(r'[A-Za-z0-9_\-]{1,10}')))
         nickLabel.setBuddy(self.nickLineEdit)
         
         addressLabel = QLabel(self.tr('Server address (IP:port):'))
