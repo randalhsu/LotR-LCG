@@ -359,7 +359,9 @@ class DeckBuilder(QMainWindow):
     def currentDeckSize(self):
         size = 0
         for card in self.currentDeck:
-            size += self.currentDeck[card]
+            (set_, id) = card
+            if not isHeroCard(set_, id):
+                size += self.currentDeck[card]
         return size
         
     def updateSizeLabel(self):
@@ -426,7 +428,7 @@ class DeckBuilder(QMainWindow):
             self.setStateLabel('{0} joined the deck!'.format(cardsInfo[setFull[set_]][id]['title']))
             
         # TODO: highlight deckTable's current row
-        # ISSUE: adding a card to empty deck cause strange rowspan
+        # ISSUE: adding a card to empty deck cause strange colspan
         self.updateSizeLabel()
         
     def removeFromDeck(self):
@@ -532,8 +534,8 @@ class DeckBuilder(QMainWindow):
             json.dump(self.decks, f, separators=(',', ':'), indent=2)
             
         info = ''
-        if len(self.decks[self.deckComboBox.currentIndex()]['deck']) < 30:
-            info = self.makeRedFont(self.tr('Warning: Deck size must be >= 30.\n'))
+        if self.currentDeckSize() < 30:
+            info = self.makeRedFont(self.tr('Warning: Deck size must be at least 30.<br>'))
             
         self.setStateLabel(info + self.tr('Decks saved to "decks.json"!'))
         self.dirty = False
@@ -638,7 +640,7 @@ class DeckBuilder(QMainWindow):
         
     def closeEvent(self, event):
         if self.dirty:
-            msgBox = QMessageBox(QMessageBox.Warning, self.tr('Unsaved Changes'), self.tr('Some changes are not saved yet.\nSave now?'), QMessageBox.Save | QMessageBox.No | QMessageBox.Cancel, self)
+            msgBox = QMessageBox(QMessageBox.Warning, self.tr('Unsaved Changes'), self.tr('Some changes are not saved yet.<br>Save now?'), QMessageBox.Save | QMessageBox.No | QMessageBox.Cancel, self)
             choice = msgBox.exec_()
             if choice == QMessageBox.Save:
                 self.save()
