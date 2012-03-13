@@ -1,0 +1,18 @@
+Program versions and major Changelog:
+
+
+2012.03.13
+  * Multiplayer Game
+  * Save/Load in Solo Game
+  * New supported expansion set:
+      - A Journey to Rhosgobel
+
+
+2012.02.24
+  * First release
+  * Solo Game and Deck Builder
+  * Supported expansion sets:
+      - Core Set
+      - The Hunt for Gollum
+	  - Conflict at the Carrock
+	  - The Massing at Osgiliath
