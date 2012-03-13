@@ -20,9 +20,9 @@ class _PlayerStatePanel(QWidget):
         if field == 'threat':
             self.threatValue.display(str(state))
         elif field == 'hand':
-            self.handSizeLabel.setText(str(state))
+            self.handValue.display(str(state))
         elif field == 'player':
-            self.deckSizeLabel.setText(str(state))
+            self.deckValue.display(str(state))
         elif field == 'hero':
             self.heroArea.setState(state)
         elif field == 'engaged':
@@ -44,20 +44,55 @@ class _PlayerStatePanel(QWidget):
         
         ratio = float(self.discardPile.height()) / CARD_HEIGHT
         width = CARD_WIDTH * ratio
-        self.discardPile.setFixedWidth(width)
-        self.threatValue.setFixedWidth(width)
-        self.threatValue.setMinimumHeight(width * 2 / 5)
-        self.threatValue.setMaximumHeight(width * 3 / 5)
+        
+        self.nicknameLabel.setMaximumWidth(width * 1.1)
+        self.discardPile.setMinimumWidth(width)
+        self.discardPile.setMaximumWidth(width * 1.1)
+        self.handValue.setMinimumWidth(width / 2)
+        self.deckValue.setMinimumWidth(width / 2)
+        self.threatValue.setMinimumWidth(width)
+        for lcd in (self.threatValue, self.handValue, self.deckValue):
+            lcd.setMinimumHeight(width * 2 / 5)
+            lcd.setMaximumHeight(width * 3 / 5)
+            
+        # then we adjust nickanmeLabel's size
+        def tooWide(fontMetrics):
+            return fontMetrics.width(self.nicknameLabel.text()) > self.nicknameLabel.width() - 10
+            
+        def tooHigh(fontMetrics):
+            return fontMetrics.height() > self.nicknameLabel.height() - 5
+            
+        font = self.nicknameLabel.font()
+        pointSize = 80
+        font.setPointSize(pointSize)
+        fm = QFontMetrics(font)
+        
+        while tooWide(fm) or tooHigh(fm):
+            if pointSize <= 10:
+                break
+            pointSize -= 2
+            font.setPointSize(pointSize)
+            fm = QFontMetrics(font)
+        self.nicknameLabel.setFont(font)
         
     def createUI(self):
-        text = '<h3>{0}</h3>'.format(self.nickname)
-        nicknameLabel = QLabel(text)
-        handLabel = QLabel(self.tr('Hand:'))
-        self.handSizeLabel = QLabel('0')
-        deckLabel = QLabel(self.tr('Deck:'))
-        self.deckSizeLabel = QLabel('0')
+        self.nicknameLabel = QLabel(self.nickname)
         
         palette = QPalette()
+        palette.setColor(QPalette.WindowText, Qt.darkCyan)
+        self.handValue = QLCDNumber(2)
+        self.handValue.setPalette(palette)
+        self.handValue.setSegmentStyle(QLCDNumber.Flat)
+        self.handValue.setToolTip(self.tr('Hand Size'))
+        self.handValue.display(6)
+        
+        palette.setColor(QPalette.WindowText, Qt.black)
+        self.deckValue = QLCDNumber(2)
+        self.deckValue.setPalette(palette)
+        self.deckValue.setSegmentStyle(QLCDNumber.Flat)
+        self.deckValue.setToolTip(self.tr('Deck Size'))
+        self.deckValue.display(30)
+        
         palette.setColor(QPalette.WindowText, Qt.red)
         self.threatValue = QLCDNumber(2)
         self.threatValue.setPalette(palette)
@@ -72,23 +107,21 @@ class _PlayerStatePanel(QWidget):
         self.discardPile = Deck('Player Discard Pile')
         self.discardPile.setBackgroundBrush(QBrush(Qt.darkYellow))
         
-        labelsLayout = QGridLayout()
-        labelsLayout.addWidget(handLabel, 0, 0, 1, 1)
-        labelsLayout.addWidget(self.handSizeLabel, 0, 1, 1, 1)
-        labelsLayout.addWidget(deckLabel, 1, 0, 1, 1)
-        labelsLayout.addWidget(self.deckSizeLabel, 1, 1, 1, 1)
+        lcdLayout = QGridLayout()
+        lcdLayout.addWidget(self.handValue, 0, 0, 1, 1)
+        lcdLayout.addWidget(self.deckValue, 0, 1, 1, 1)
+        lcdLayout.addWidget(self.threatValue, 1, 0, 1, 2)
         
         topLeftLayout = QVBoxLayout()
-        topLeftLayout.addWidget(nicknameLabel)
-        topLeftLayout.addStretch(1)
-        topLeftLayout.addLayout(labelsLayout)
-        topLeftLayout.addWidget(self.threatValue)
+        topLeftLayout.addWidget(self.nicknameLabel, 1)
+        topLeftLayout.addLayout(lcdLayout)
         
         layout = QGridLayout()
         layout.addLayout(topLeftLayout, 0, 0, 1, 1)
         layout.addWidget(self.discardPile, 1, 0, 1, 1)
         layout.addWidget(self.engagedArea, 0, 1, 1, 1)
         layout.addWidget(self.heroArea, 1, 1, 1, 1)
+        layout.setRowStretch(0, 1)
         layout.setColumnStretch(1, 1)
         self.setLayout(layout)
 
@@ -156,6 +189,7 @@ class MultiplayerPanel(QDialog):
         playerCount = len(self.addressToPanel)
         for (address, panel) in self.addressToPanel.items():
             panel.setMaximumHeight(self.height() / playerCount)
+            panel.resizeEvent(None)
             
     def createUI(self, addresses, nicknames):
         self.chatter.setMinimumWidth(200)
