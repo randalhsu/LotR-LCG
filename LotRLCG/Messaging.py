@@ -100,7 +100,7 @@ class Client(QTcpSocket):
             if content == 'HEARTBEAT':
                 data = 'CLIENT:IM_STILL_ALIVE\n'
                 self.sendData(data)
-                print repr(data)
+                self.gotHeartbeat()
                 
             elif content.startswith('VERSION'):
                 version = content.split(':')[1]
