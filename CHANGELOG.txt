@@ -14,5 +14,5 @@ Program versions and major Changelog:
   * Supported expansion sets:
       - Core Set
       - The Hunt for Gollum
-	  - Conflict at the Carrock
-	  - The Massing at Osgiliath
+      - Conflict at the Carrock
+      - The Massing at Osgiliath
