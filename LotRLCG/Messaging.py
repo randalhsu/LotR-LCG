@@ -12,10 +12,18 @@ def DPRINT(s):
 
 
 class Client(QTcpSocket):
+    HEARTBEAT_INTERVAL = 20 * 1000
+    CONSIDERED_DEAD_RETRY_COUNT = 3
+    # Server should send hearbeat check within every HEARTBEAT_INTERVAL, which is considered as server's heartbeat. If not, retryCount += 1
+    
     def __init__(self, nickname, serverIP, serverPort, parentWidget):
         super(Client, self).__init__(parent=None)
         self.nickname = nickname
         self.setParent(parentWidget)
+        
+        self.isConnected = False  # for preventing Disconnected QMessageBox popup multiple times
+        self.retryCount = 0
+        self.initializeHeartbeatTimer()
         
         self.connectToHost(serverIP, int(serverPort))
         self.connected.connect(self.socketConnected)
@@ -23,6 +31,22 @@ class Client(QTcpSocket):
         
     def setParent(self, parentWidget):
         self.parent = parentWidget
+        
+    def initializeHeartbeatTimer(self):
+        def loseHeartbeat():
+            self.retryCount += 1
+            if self.retryCount >= Client.CONSIDERED_DEAD_RETRY_COUNT:
+                if self.isConnected:
+                    QMessageBox.critical(self.parent, self.tr('Disconnected'), self.tr('Disconnected from server!'))
+                self.isConnected = False
+                
+        self.checkServerHeartbeatTimer = QTimer(self)
+        self.checkServerHeartbeatTimer.timeout.connect(loseHeartbeat)
+        
+    def gotHeartbeat(self):
+        self.retryCount = 0
+        self.checkServerHeartbeatTimer.stop()
+        self.checkServerHeartbeatTimer.start(Client.HEARTBEAT_INTERVAL)
         
     def appendMessage(self, message):
         self.parent.appendMessage(message)
@@ -51,6 +75,10 @@ class Client(QTcpSocket):
             
         if nickname == '__SYSTEM__':
             self.parent.appendSystemMessage(message)
+            
+            if 'has left the game' in data:
+                leftPlayerNickname = message.split(' ')[0]
+                QMessageBox.critical(self.parent, self.tr('Player Disconnected'), '{0} has left the game...'.format(leftPlayerNickname))
         else:
             chatMessage = nickname + '> ' + QString.fromUtf8(message)
             self.parent.appendMessage(chatMessage)
@@ -69,11 +97,16 @@ class Client(QTcpSocket):
             
         elif type_ == 'SERVER':
             content = content.rstrip()
-            if content.startswith('VERSION'):
+            if content == 'HEARTBEAT':
+                data = 'CLIENT:IM_STILL_ALIVE\n'
+                self.sendData(data)
+                print repr(data)
+                
+            elif content.startswith('VERSION'):
                 version = content.split(':')[1]
                 if version != VERSION:
                     QMessageBox.warning(self.parent, self.tr('Different Version'), self.tr('Server\'s program version is "{0}".\nAnything could happen.'.format(version)))
-                
+                    
             elif content == 'CLOSE':  # data == 'SERVER:CLOSE\n'
                 QMessageBox.critical(self.parent, self.tr('Disconnected'), self.tr('SERVER CLOSED!'))
                 
@@ -98,16 +131,24 @@ class Client(QTcpSocket):
         while self.canReadLine():
             data = str(self.readLine())
             self.handleData(data)
-        
+            
     def socketConnected(self):
         #DPRINT(str(self.localAddress().toString()) + ':' + str(self.localPort()))
         #DPRINT(str(self.peerAddress().toString()) + ':' + str(self.peerPort()))
         data = 'JOIN:{0}\n'.format(self.nickname)
         self.sendData(data)
         self.parent.clientSocketConnected()
+        
+        self.checkServerHeartbeatTimer.start(Client.HEARTBEAT_INTERVAL)
+        self.isConnected = True
 
 
 class Server(QTcpServer):
+    HEARTBEAT_INTERVAL = 15 * 1000
+    REPLAY_TIME_LIMIT = 10 * 1000
+    CONSIDERED_DEAD_RETRY_COUNT = Client.CONSIDERED_DEAD_RETRY_COUNT
+    # send heartbeat check every HEARTBEAT_INTERVAL. If client have not replied in REPLAY_TIME_LIMIT, retryCount += 1.
+    
     def __init__(self, parentWidget):
         super(Server, self).__init__()
         self.newConnection.connect(self.playerJoined)
@@ -126,14 +167,14 @@ class Server(QTcpServer):
             return -1
         return self.serverPort()
         
-    def writeDataToSocket(self, socket, data):
+    def writeDataToSocket(self, data, socket):
         if not data.endswith('\n'):
             data += '\n'
         socket.write(QByteArray(data))
         
     def broadcast(self, data):
         for socket in self.subscribers:
-            self.writeDataToSocket(socket, data)
+            self.writeDataToSocket(data, socket)
             
     def handleData(self, data, sourceSocket=None):
         
@@ -185,7 +226,10 @@ class Server(QTcpServer):
             
         elif type_ == 'CLIENT':
             content = content.rstrip()
-            if content == 'READY':  # data == 'CLIENT:READY\n', client had selected deck to play
+            if content == 'IM_STILL_ALIVE':
+                sourceSocket.replyTimer.stop()
+                
+            elif content == 'READY':  # data == 'CLIENT:READY\n', client had selected deck to play
                 for socket in self.subscribers:
                     if socket == sourceSocket:
                         socket.readied = True
@@ -208,8 +252,12 @@ class Server(QTcpServer):
             # broadcast except source
             for socket in self.subscribers:
                 if socket != sourceSocket:
-                    self.writeDataToSocket(socket, data)
-            
+                    self.writeDataToSocket(data, socket)
+                    
+    def gotHeartbeat(self, socket):
+        socket.replyTimer.stop()
+        socket.retryCount = 0
+        
     def playerJoined(self):
         
         def dataIncoming(socket):
@@ -229,6 +277,33 @@ class Server(QTcpServer):
                         break
             return playerLeft_
             
+        def checkHeartbeat(socket):
+            def checkHeartbeat_():
+                def deleteReplyTimer():
+                    if hasattr(socket, 'replyTimer'):
+                        socket.replyTimer.stop()
+                        del socket.replyTimer
+                        
+                def noReply():
+                    socket.retryCount += 1
+                    if socket.retryCount >= Server.CONSIDERED_DEAD_RETRY_COUNT:
+                        deleteReplyTimer()
+                        socket.checkHeartbeatTimer.stop()
+                        del socket.checkHeartbeatTimer
+                        playerLeft(socket)()
+                        
+                if not hasattr(socket, 'retryCount'):
+                    socket.retryCount = 0
+                deleteReplyTimer()
+                replyTimer = QTimer(socket)
+                replyTimer.timeout.connect(noReply)
+                replyTimer.start(Server.REPLAY_TIME_LIMIT)
+                socket.replyTimer = replyTimer
+                
+                data = 'SERVER:HEARTBEAT\n'
+                self.writeDataToSocket(data, socket)
+            return checkHeartbeat_
+            
         socket = self.nextPendingConnection()
         socket.disconnected.connect(playerLeft(socket))
         socket.readyRead.connect(dataIncoming(socket))
@@ -236,9 +311,14 @@ class Server(QTcpServer):
         DPRINT(str(socket.peerAddress().toString()) + ':' + str(socket.peerPort()) + ' connected!')
         self.sendVersionInfo(socket)
         
+        checkHeartbeatTimer = QTimer(self)
+        checkHeartbeatTimer.timeout.connect(checkHeartbeat(socket))
+        checkHeartbeatTimer.start(Server.HEARTBEAT_INTERVAL)
+        socket.checkHeartbeatTimer = checkHeartbeatTimer
+        
     def sendVersionInfo(self, socket):
         data = 'SERVER:VERSION:{0}\n'.format(VERSION)
-        self.writeDataToSocket(socket, data)
+        self.writeDataToSocket(data, socket)
         
     def setup(self):
         data = 'SERVER:SETUP:{0}\n'.format(self.parent.scenarioId)

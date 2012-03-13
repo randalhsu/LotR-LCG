@@ -199,7 +199,7 @@ class MultiplayerMainWindow(MainWindow):
         if hasattr(self, 'panel'):
             self.panel.close()
         self.client.disconnectFromHost()
-        if self.server:
+        if self.isServer:
             self.server.farewell()
         event.accept()
         
