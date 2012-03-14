@@ -348,5 +348,8 @@ class Server(QTcpServer):
         self.broadcast(data)
         
         for socket in self.subscribers:
-            socket.setSocketState(QAbstractSocket.UnconnectedState)
+            try:
+                socket.setSocketState(QAbstractSocket.UnconnectedState)
+            except RuntimeError:
+                pass
         self.subscribers = []
