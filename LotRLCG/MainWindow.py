@@ -340,7 +340,6 @@ class MainWindow(QMainWindow):
                 
                 for i in range(self.playerCount):
                     stagingList.append(encounterList.pop(-1))  # 1 card per player
-                self.victorySpinBox.setValue(2)
                 
             elif scenarioId == 13:  # The Redhorn Gate
                 questList = [(s, 11), (s, 12), (s, 13)]
