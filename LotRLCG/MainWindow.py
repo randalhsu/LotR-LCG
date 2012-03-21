@@ -63,6 +63,10 @@ class _MulliganDialog(QMessageBox):
             
             self.setModal(False)
             self.setMinimumWidth(200)
+            
+    def closeEvent(self, event):
+        self.parentWidget().giveUpMulligan()
+        event.accept()
 
 
 class MainWindow(QMainWindow):
@@ -227,9 +231,12 @@ class MainWindow(QMainWindow):
             card.flip()
             self.handArea.addCard(card)
             
-        self.setupEncounterCards()
+        self.mulliganDecisionIsMade()
         
     def giveUpMulligan(self):
+        self.mulliganDecisionIsMade()
+        
+    def mulliganDecisionIsMade(self):
         self.setupEncounterCards()
         
     def setupEncounterCards(self):

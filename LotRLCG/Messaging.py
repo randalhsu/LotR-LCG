@@ -250,6 +250,17 @@ class Server(QTcpServer):
                     self.broadcast(data)
                     self.setup()
                     
+            elif 'MULLIGAN' in content:  # data == 'CLIENT:IVE_MADE_MULLIGAN_DECISION\n'
+                sourceSocket.mulliganDone = True
+                # check if all Clients have made mulligan decision
+                allDone = True
+                for socket in self.subscribers:
+                    if socket.mulliganDone == False:
+                        allDone = False
+                        break
+                if allDone:
+                    self.parent.setupEncounterCards()
+                    
         elif type_ == 'STATE':  # game state change
             # broadcast except source
             for socket in self.subscribers:
@@ -323,6 +334,7 @@ class Server(QTcpServer):
         self.writeDataToSocket(data, socket)
         
     def setup(self):
+        self.reset()
         data = 'SERVER:SETUP:{0}\n'.format(self.parent.scenarioId)
         self.broadcast(data)
         
@@ -335,6 +347,7 @@ class Server(QTcpServer):
         '''for starting new game'''
         for socket in self.subscribers:
             socket.readied = False
+            socket.mulliganDone = False
             
     def startGame(self):
         '''bring MultiplayerMainWindow up from xxxxGameDialog'''

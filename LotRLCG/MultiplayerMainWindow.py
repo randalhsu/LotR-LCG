@@ -103,6 +103,10 @@ class MultiplayerMainWindow(MainWindow):
         self.panel = MultiplayerPanel(self.addresses, self.nicknames, self.chatter, self)
         self.changeWindowTitleToInformative()
         
+    def mulliganDecisionIsMade(self):
+        data = 'CLIENT:IVE_MADE_MULLIGAN_DECISION\n'
+        self.client.sendData(data)
+        
     def getState(self):
         state = {}
         state['victory'] = self.victorySpinBox.value()
