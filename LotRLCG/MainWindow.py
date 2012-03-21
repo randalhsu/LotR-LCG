@@ -276,6 +276,7 @@ class MainWindow(QMainWindow):
             stagingList = [(s, 96), (s, 99)]
             for card in stagingList:
                 encounterList.remove(card)
+            random.shuffle(encounterList)
                 
         elif scenarioId == 1:  # Journey Along the Anduin
             questList = [(s, 126), (s, 127), (s, 128)]
@@ -290,6 +291,7 @@ class MainWindow(QMainWindow):
             if not hillTrollAppeared:
                 stagingList.append(hillTroll)
                 encounterList.remove(hillTroll)
+                random.shuffle(encounterList)
                 
         elif scenarioId == 2:  # Escape From Dol Guldur
             questList = [(s, 123), (s, 124), (s, 125)]
@@ -298,13 +300,10 @@ class MainWindow(QMainWindow):
             stagingList = [(s, 108), (s, 109), (s, 110)]  # Gandalf's Map, Dungeon Torch, Shadow Key
             for card in stagingList:
                 encounterList.remove(card)
-            for i in range(3):
-                stagingList.append(encounterList.pop(-1))  # objective cards will be attached to their guarders later
-            stagingList.reverse()
-            
+                
         elif scenarioId == 3:  # The Hunt for Gollum
             questList = [(s, 11), (s, 12), (s, 13)]
-            for i in range(self.playerCount):
+            if self.playerCount == 1:
                 stagingList.append(encounterList.pop(-1))  # 1 card per player
                 
         elif scenarioId == 4:  # Conflict at the Carrock
@@ -337,9 +336,9 @@ class MainWindow(QMainWindow):
             questList = [(s, 105), (s, 106)]
             stagingList = [(s, 107)]  # Gollum
             encounterList.remove((s, 107))
-            for i in range(self.playerCount):
+            if self.playerCount == 1:
                 stagingList.append(encounterList.pop(-1))  # 1 card per player
-                
+            
         elif scenarioId == 8:  # Return to Mirkwood
             questList = [(s, 126), (s, 127), (s, 128), (s, 129)]
             gollum = (s, 130)
@@ -348,8 +347,7 @@ class MainWindow(QMainWindow):
                 heroList.append(gollum)
                 stagingList.append(encounterList.pop(-1))  # 1 card per player
             else:
-                prepareList = [gollum]
-                # in multiplayer game, choose the player guarding Gollum, then manually reveal 1 card per player
+                stagingList.append(gollum)
                 
         elif scenarioId == 9:  # The Massing at Osgiliath
             questList = [(s, 16), (s, 17), (s, 18), (s, 19)]
@@ -359,6 +357,7 @@ class MainWindow(QMainWindow):
                     stagingList.append(scout)
             for card in stagingList:
                 encounterList.remove(card)
+            random.shuffle(encounterList)
             prepareList = [(s, 1)]  # The Witch-king
             encounterList.remove((s, 1))
             
@@ -389,10 +388,9 @@ class MainWindow(QMainWindow):
             while encounterList.count(foe) > self.playerCount:  # 1 "A Foe Beyond" per player
                 encounterList.remove(foe)
             random.shuffle(encounterList)
-            
-            for i in range(self.playerCount):
+            if self.playerCount == 1:
                 stagingList.append(encounterList.pop(-1))  # 1 card per player
-            
+                
         elif scenarioId == 13:  # The Redhorn Gate
             questList = [(s, 11), (s, 12), (s, 13)]
             stagingList = [(s, 15)]  # Caradhras
@@ -402,7 +400,7 @@ class MainWindow(QMainWindow):
                 encounterList.remove(card)
             heroList.append((s, 14))  # Arwen Undomiel, for first player  # TODO: this is for first player
             encounterList.remove((s, 14))
-            for i in range(self.playerCount):
+            if self.playerCount == 1:
                 stagingList.append(encounterList.pop(-1))  # 1 card per player
         # EXPANSION
         
@@ -423,19 +421,31 @@ class MainWindow(QMainWindow):
             
         for (set_, id) in prepareList:
             self.prepareDeck.addCard(Card(cardsInfo[set_][id], revealed=True))
-            
+        
+        
         # post processing
+        title = self.tr('Manually Setup Required')
         if scenarioId == 2:  # Escape From Dol Guldur
-            for i in range(3):
-                objectiveCard = self.stagingArea.draw()
-                self.stagingArea.getList()[i].attach(objectiveCard)
+            QMessageBox.information(self, title, self.tr('Objective cards are Guarded!'))
+            
+        elif scenarioId in (3, 7, 12, 13):  # The Hunt for Gollum, The Dead Marshes, Flight from Moria, The Redhorn Gate
+            if self.playerCount > 1:
+                QMessageBox.information(self, title, self.tr('Reveal 1 card per player!'))
                 
         elif scenarioId == 5:  # A Journey to Rhosgobel
-            for i in range(2):
+            for i in range(2):  # attach 2 damage token to Wilyador
                 self.heroArea.getList()[-1].attach(Token('damage'))
                 
+        elif scenarioId == 8:  # Return to Mirkwood
+            if self.playerCount > 1:
+                QMessageBox.information(self, title, self.tr('Choose a player to guard <b>"Gollum"</b>,<br>then reveal 1 card per player.'))
+                
         elif scenarioId == 10:  # Into the Pit
-            self.locationDeck.addCard(self.stagingArea.draw())
+            self.locationDeck.addCard(self.stagingArea.draw())  # make East-gate as active location
+            QMessageBox.information(self, title, self.tr('Attach <b>"Cave Torch"</b> to a hero,<br>then reveal 1 card per player.'))
+            
+        elif scenarioId == 11:  # The Seventh Level
+            QMessageBox.information(self, title, self.tr('Attach <b>"Book of Mazarbul"</b> to a hero,<br>then reveal 1 card per player.'))
         # EXPANSION
         
     def setLargeImage(self, card):
