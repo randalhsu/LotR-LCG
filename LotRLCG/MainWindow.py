@@ -55,10 +55,11 @@ class _About(QMessageBox):
 class _MulliganDialog(QMessageBox):
     def __init__(self, parent=None):
             super(_MulliganDialog, self).__init__(QMessageBox.Question, 'Take MULLIGAN?', '<b>Redraw hand?</b>', parent=parent)
-            yes = self.addButton(self.tr("OF COURSE!"), QMessageBox.YesRole)
-            yes.clicked.connect(self.parentWidget().takeMulligan)
-            no = self.addButton(self.tr("I'll keep them"), QMessageBox.NoRole)
-            self.setDefaultButton(no)
+            yesButton = self.addButton(self.tr("OF COURSE!"), QMessageBox.YesRole)
+            yesButton.clicked.connect(self.parentWidget().takeMulligan)
+            noButton = self.addButton(self.tr("I'll keep them"), QMessageBox.NoRole)
+            noButton.clicked.connect(self.parentWidget().giveUpMulligan)
+            self.setDefaultButton(noButton)
             
             self.setModal(False)
             self.setMinimumWidth(200)
@@ -403,11 +404,6 @@ class MainWindow(QMainWindow):
             # EXPANSION
         # end of 'if self.isFirstPlayer:'
         
-        if scenarioId == 2:  # Escape From Dol Guldur
-            hero = random.choice(self.heroArea.getList())
-            hero.attach(Token('damage'))
-            hero.flip()
-            
         self.promptMulligan()
         
     def promptMulligan(self):
@@ -424,6 +420,17 @@ class MainWindow(QMainWindow):
             card = self.playerDeck.draw()
             card.flip()
             self.handArea.addCard(card)
+            
+        if self.scenarioId == 2:  # Escape From Dol Guldur
+            hero = random.choice(self.heroArea.getList())
+            hero.attach(Token('damage'))
+            hero.flip()
+            
+    def giveUpMulligan(self):
+        if self.scenarioId == 2:  # Escape From Dol Guldur
+            hero = random.choice(self.heroArea.getList())
+            hero.attach(Token('damage'))
+            hero.flip()
             
     def setLargeImage(self, card):
         if card.info['type'] != 'quest':
