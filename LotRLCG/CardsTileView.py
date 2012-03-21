@@ -39,7 +39,7 @@ class CardsTileView(Area):
             
     def dragMoveEvent(self, event):
         if event.mimeData().hasFormat('application/x-lotrlcg'):
-            assert(self.draggingItem in self.cardList)
+            assert(self.draggingItem in self.cardList or isinstance(self.draggingItem, Token))
             
             if not isinstance(self.draggingItem, Card):
                 return
