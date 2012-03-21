@@ -189,7 +189,9 @@ class Server(QTcpServer):
             return data
             
         def inGamePlayers():
-            message = 'Players in game: ' + ', '.join([socket.nickname for socket in self.subscribers if hasattr(socket, 'nickname')])
+            nicknames = [socket.nickname for socket in self.subscribers if hasattr(socket, 'nickname')]
+            playerString = 'players' if len(nicknames) > 1 else 'player'
+            message = '{0} {1} in game: '.format(len(nicknames), playerString) + ', '.join(nicknames)
             data = 'CHAT:__SYSTEM__:{0}.\n'.format(message)
             return data
             
