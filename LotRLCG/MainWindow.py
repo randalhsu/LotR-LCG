@@ -178,14 +178,11 @@ class MainWindow(QMainWindow):
         return state
         
     def setup(self):
-        scenarioId = self.scenarioId
-        questList = []
-        encounterList = []
-        stagingList = []
-        prepareList = []
+        self.setupPlayerCards()
+        
+    def setupPlayerCards(self):
         heroList = []
         playerList = []
-        
         
         for (set_, id) in playerDecksInfo[self.playerDeckId]['deck']:
             if isHeroCard(set_, id):
@@ -195,6 +192,53 @@ class MainWindow(QMainWindow):
                 
         random.shuffle(playerList)
         
+        for (set_, id) in heroList:
+            self.heroArea.addCard(Card(cardsInfo[set_][id], revealed=True))
+            
+        for (set_, id) in playerList:
+            self.playerDeck.addCard(Card(cardsInfo[set_][id]))
+            
+        for i in range(6):
+            if self.playerDeck.getList():
+                card = self.playerDeck.draw()
+                if not card.revealed():
+                    card.flip()
+                self.handArea.addCard(card)
+                
+        threatValue = 0
+        for card in self.heroArea.getList():
+           threatValue += card.info.get('cost', 0)
+        self.threatDial.setValue(threatValue)
+        
+        self.promptMulligan()
+        
+    def promptMulligan(self):
+        mulliganDialog = _MulliganDialog(self)
+        mulliganDialog.show()
+        
+    def takeMulligan(self):
+        for i in range(6):
+            card = self.handArea.draw()
+            card.flip()
+            self.playerDeck.addCard(card)
+        self.playerDeck.shuffle()
+        for i in range(6):
+            card = self.playerDeck.draw()
+            card.flip()
+            self.handArea.addCard(card)
+            
+        self.setupEncounterCards()
+        
+    def giveUpMulligan(self):
+        self.setupEncounterCards()
+        
+    def setupEncounterCards(self):
+        scenarioId = self.scenarioId
+        heroList = []
+        questList = []
+        encounterList = []
+        stagingList = []
+        prepareList = []
         
         if self.isFirstPlayer:  # this is a long story...
             
@@ -358,6 +402,9 @@ class MainWindow(QMainWindow):
             prepareList.reverse()
             
             # start creating Card instances
+            for (set_, id) in heroList:
+                self.heroArea.addCard(Card(cardsInfo[set_][id], revealed=True))
+                
             for (set_, id) in reversed(questList):
                 self.questDeck.addCard(Card(cardsInfo[set_][id], revealed=True))
                 
@@ -369,27 +416,8 @@ class MainWindow(QMainWindow):
                 
             for (set_, id) in prepareList:
                 self.prepareDeck.addCard(Card(cardsInfo[set_][id], revealed=True))
-        # end of the long 'if self.isFirstPlayer:'
-        
-        for (set_, id) in heroList:
-            self.heroArea.addCard(Card(cardsInfo[set_][id], revealed=True))
             
-        for (set_, id) in playerList:
-            self.playerDeck.addCard(Card(cardsInfo[set_][id]))
-            
-        for i in range(6):
-            if self.playerDeck.getList():
-                card = self.playerDeck.draw()
-                if not card.revealed():
-                    card.flip()
-                self.handArea.addCard(card)
-                
-        threatValue = 0
-        for card in self.heroArea.getList():
-           threatValue += card.info.get('cost', 0)
-        self.threatDial.setValue(threatValue)
-        
-        if self.isFirstPlayer:
+            # post processing
             if scenarioId == 2:  # Escape From Dol Guldur
                 for i in range(3):
                     objectiveCard = self.stagingArea.draw()
@@ -402,31 +430,8 @@ class MainWindow(QMainWindow):
             elif scenarioId == 10:  # Into the Pit
                 self.locationDeck.addCard(self.stagingArea.draw())
             # EXPANSION
-        # end of 'if self.isFirstPlayer:'
+        # end of the long 'if self.isFirstPlayer:'
         
-        self.promptMulligan()
-        
-    def promptMulligan(self):
-        mulliganDialog = _MulliganDialog(self)
-        mulliganDialog.show()
-        
-    def takeMulligan(self):
-        for i in range(6):
-            card = self.handArea.draw()
-            card.flip()
-            self.playerDeck.addCard(card)
-        self.playerDeck.shuffle()
-        for i in range(6):
-            card = self.playerDeck.draw()
-            card.flip()
-            self.handArea.addCard(card)
-            
-        if self.scenarioId == 2:  # Escape From Dol Guldur
-            hero = random.choice(self.heroArea.getList())
-            hero.attach(Token('damage'))
-            hero.flip()
-            
-    def giveUpMulligan(self):
         if self.scenarioId == 2:  # Escape From Dol Guldur
             hero = random.choice(self.heroArea.getList())
             hero.attach(Token('damage'))
