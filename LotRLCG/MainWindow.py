@@ -194,25 +194,6 @@ class MainWindow(QMainWindow):
                 
         random.shuffle(playerList)
         
-        # start creating Card instances
-        for (set_, id) in heroList:
-            self.heroArea.addCard(Card(cardsInfo[set_][id], revealed=True))
-            
-        for (set_, id) in playerList:
-            self.playerDeck.addCard(Card(cardsInfo[set_][id]))
-            
-        for i in range(6):
-            if self.playerDeck.getList():
-                card = self.playerDeck.draw()
-                if not card.revealed():
-                    card.flip()
-                self.handArea.addCard(card)
-                
-        threatValue = 0
-        for card in self.heroArea.getList():
-           threatValue += card.info.get('cost', 0)
-        self.threatDial.setValue(threatValue)
-        
         
         if self.isFirstPlayer:  # this is a long story...
             
@@ -278,21 +259,21 @@ class MainWindow(QMainWindow):
                 questList = [(s, 35), (s, 36)]
                 stagingList = [(s, 43)]  # The Carrock
                 encounterList.remove((s, 43))
-                sacked = (s, 48)
-                prepareList = [(s, 38), (s, 39), (s, 40), (s, 41), sacked, sacked, sacked, sacked]  # 4 Trolls and 4 Sacked!s
+                prepareList = [(s, 38), (s, 39), (s, 40), (s, 41)]  # 4 Trolls
                 for card in prepareList:
                     encounterList.remove(card)
-                for i in range(self.playerCount):
-                    if prepareList[-1] == sacked:
-                        encounterList.append(prepareList.pop(-1))  # 1 Sacked! per player
+                    
+                sacked = (s, 48)
+                while encounterList.count(sacked) > self.playerCount:  # 1 Sacked! per player
+                    encounterList.remove(sacked)
                 random.shuffle(encounterList)
-                        
+                
             elif scenarioId == 5:  # A Journey to Rhosgobel
                 questList = [(s, 60), (s, 61), (s, 62)]
-                stagingList = [(s, 65), (s, 64)]  # Rhosgobel, Wilyador
-                for card in stagingList:
-                    encounterList.remove(card)
-                # Wilyador's damage tokens will be placed later
+                heroList.append((s, 64))  # Wilyador, damage tokens will be placed after Card instance created  # TODO: this is for first player
+                encounterList.remove((s, 64))
+                stagingList = [(s, 65)]  # Rhosgobel
+                encounterList.remove((s, 65))
                 
             elif scenarioId == 6:  # The Hills of Emyn Muil
                 questList = [(s, 82)]
@@ -310,12 +291,12 @@ class MainWindow(QMainWindow):
             elif scenarioId == 8:  # Return to Mirkwood
                 questList = [(s, 126), (s, 127), (s, 128), (s, 129)]
                 gollum = (s, 130)
-                encounterList.remove((s, 130))
+                encounterList.remove(gollum)
                 if self.playerCount == 1:
-                    heroList.append((s, 130))
+                    heroList.append(gollum)
                     stagingList.append(encounterList.pop(-1))  # 1 card per player
                 else:
-                    prepareList = [(s, 130)]
+                    prepareList = [gollum]
                     # in multiplayer game, choose the player guarding Gollum, then manually reveal 1 card per player
                     
             elif scenarioId == 9:  # The Massing at Osgiliath
@@ -353,10 +334,8 @@ class MainWindow(QMainWindow):
                 encounterList.remove((s, 25))
                 
                 foe = (s, 28)  # A Foe Beyond
-                while foe in encounterList:
+                while encounterList.count(foe) > self.playerCount:  # 1 "A Foe Beyond" per player
                     encounterList.remove(foe)
-                for i in range(self.playerCount):
-                    encounterList.append(foe)  # 1 "A Foe Beyond" per player
                 random.shuffle(encounterList)
                 
                 for i in range(self.playerCount):
@@ -390,31 +369,46 @@ class MainWindow(QMainWindow):
                 
             for (set_, id) in prepareList:
                 self.prepareDeck.addCard(Card(cardsInfo[set_][id], revealed=True))
+        # end of the long 'if self.isFirstPlayer:'
+        
+        for (set_, id) in heroList:
+            self.heroArea.addCard(Card(cardsInfo[set_][id], revealed=True))
+            
+        for (set_, id) in playerList:
+            self.playerDeck.addCard(Card(cardsInfo[set_][id]))
+            
+        for i in range(6):
+            if self.playerDeck.getList():
+                card = self.playerDeck.draw()
+                if not card.revealed():
+                    card.flip()
+                self.handArea.addCard(card)
                 
-                
+        threatValue = 0
+        for card in self.heroArea.getList():
+           threatValue += card.info.get('cost', 0)
+        self.threatDial.setValue(threatValue)
+        
+        if self.isFirstPlayer:
             if scenarioId == 2:  # Escape From Dol Guldur
                 for i in range(3):
                     objectiveCard = self.stagingArea.draw()
                     self.stagingArea.getList()[i].attach(objectiveCard)
                     
-                hero = random.choice(self.heroArea.getList())
-                hero.attach(Token('damage'))
-                hero.flip()
-                
             elif scenarioId == 5:  # A Journey to Rhosgobel
                 for i in range(2):
-                    self.stagingArea.getList()[1].attach(Token('damage'))
+                    self.heroArea.getList()[-1].attach(Token('damage'))
                     
             elif scenarioId == 10:  # Into the Pit
                 self.locationDeck.addCard(self.stagingArea.draw())
             # EXPANSION
+        # end of 'if self.isFirstPlayer:'
+        
+        if scenarioId == 2:  # Escape From Dol Guldur
+            hero = random.choice(self.heroArea.getList())
+            hero.attach(Token('damage'))
+            hero.flip()
             
-        else:  # end of the long 'if self.isFirstPlayer:'
-            if scenarioId == 2:  # Escape From Dol Guldur
-                hero = random.choice(self.heroArea.getList())
-                hero.attach(Token('damage'))
-                hero.flip()
-                
         self.promptMulligan()
         
     def promptMulligan(self):
