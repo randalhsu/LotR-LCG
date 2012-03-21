@@ -42,7 +42,7 @@ class Area(QGraphicsView):
         self.cardList.append(card)
         self.scene.addItem(card)
         
-        if self.name is not None and 'Discard' in self.name:
+        if 'Discard' in self.name:
             card.attachedItems.removeAllTokens()
         self.update()
         
