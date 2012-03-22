@@ -1,6 +1,10 @@
 Program versions and major Changelog:
 
 
+2012.03.21
+  * Refined scenario setup
+
+
 2012.03.13
   * Multiplayer Game
   * Save/Load in Solo Game
