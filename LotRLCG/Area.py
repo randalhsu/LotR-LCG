@@ -1,6 +1,3 @@
-'''
-TODO: attached card may get resource
-'''
 import random
 from Draggable import *
 
@@ -175,8 +172,8 @@ class Area(QGraphicsView):
                 
             item = self.itemAt(event.pos())
             if item:
-                while item.parentItem():
-                    item = item.parentItem()
+                #while item.parentItem():
+                #    item = item.parentItem()
                 item.setGraphicsEffect(self.highlightEffect)
             else:
                 self.setGraphicsEffect(self.highlightEffect)
@@ -200,8 +197,9 @@ class Area(QGraphicsView):
             draggingItem = event.source().draggingItem
             targetItem = self.itemAt(event.pos())
             if targetItem:
-                while targetItem.parentItem():
-                    targetItem = targetItem.parentItem()
+                if isinstance(draggingItem, Card):
+                    while targetItem.parentItem():
+                        targetItem = targetItem.parentItem()
                     
             if not self.dndHandler(draggingItem, source, targetItem):
                 event.setDropAction(Qt.IgnoreAction)
@@ -289,9 +287,14 @@ class Area(QGraphicsView):
                         offset = OFFSET + card.fullSize()[1] - CARD_HEIGHT
                     else:
                         card.setRotation(0)
-                        if card.fullSize()[0] == CARD_HEIGHT:  # readied card with exhausted attachment
+                        # readied card with exhausted attachment
+                        if abs(card.fullSize()[0] - CARD_HEIGHT) < 10:  # highlighted Card's size will magically be changed. No idea.
                             offset = OFFSET
                             
+                    highlighting = True if abs(int(x + offset) - float(x + offset)) > 0.1 else False
+                    if highlighting:
+                        x -= card.fullSize()[0] - CARD_HEIGHT  # compensating Card's size change
+                        
                     card.setPos(x + offset, y)
                     
                     if card.exhausted():
@@ -312,7 +315,7 @@ class Area(QGraphicsView):
                             if attachedItem.rotation() == 90:
                                 attachedItem.moveBy(0, -OFFSET)
                             attachedItem.setRotation(0)
-                    
+                            
         else:  # self.orientation == Qt.Vertical:
             y = 0
             for card in self.cardList:
