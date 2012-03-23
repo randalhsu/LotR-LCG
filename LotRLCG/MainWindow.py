@@ -518,6 +518,17 @@ class MainWindow(QMainWindow):
         gameMenu.addSeparator()
         gameMenu.addAction(quitAct)
         
+        def prisonRandomHero():
+            hero = random.choice(self.heroArea.getList())
+            hero.attach(Token('damage'))
+            hero.flip()
+            
+        prisonAct = QAction(self.tr('Prison a random hero'), self)
+        prisonAct.triggered.connect(prisonRandomHero)
+        prisonAct.setToolTip(self.tr('For "Escape From Dol Guldur" scenario'))
+        utilityMenu = self.menuBar().addMenu(self.tr('&Utility'))
+        utilityMenu.addAction(prisonAct)
+        
         phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
         phaseTipsAct.triggered.connect(self.showPhaseTips)
         aboutAct = QAction(self.tr('&About'), self)
