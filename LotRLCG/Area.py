@@ -102,11 +102,6 @@ class Area(QGraphicsView):
                     manipulator = DeckManipulator(self, self.topLevelWidget())
                     manipulator.show()
                     return
-            elif self.name == 'Hero Area' and item is None:  # right click on empty space
-                if self.cardList:
-                    manipulator = DeckManipulator(self, self.topLevelWidget())
-                    manipulator.show()
-                    return
             elif isinstance(item, Card) and self.name in ('Engaged Area', 'Hero Area'):
                 if item.exhausted():
                     item.ready()
