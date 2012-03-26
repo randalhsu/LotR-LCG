@@ -27,7 +27,7 @@ class SetupDialog(QDialog):
         typeToDisplay = {
                   'ally': 'Ally ',
                  'event': 'Event',
-            'attachment': 'Att. ',
+            'attachment': 'Att  ',
         }
         counter = collections.Counter()
         deckSize = len(cardList)
@@ -78,7 +78,7 @@ class SetupDialog(QDialog):
             button.setIcon(QIcon(QPixmap('./resource/image/icon/{0}.png'.format(scenarioNames[i]))))
             scenarioLayout.addWidget(button)
             self.scenarioButtons.append(button)
-            if CARD_TASTE and (i >= 6 and i != 9):
+            if CARD_TASTE and (i >= 7 and i != 9):
                 button.hide()
         scenarioLayout.addStretch(1)
         self.scenarioGroupBox.setLayout(scenarioLayout)
