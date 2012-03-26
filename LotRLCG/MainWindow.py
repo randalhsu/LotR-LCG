@@ -491,6 +491,25 @@ class MainWindow(QMainWindow):
         self.threatDial.increaseValue()
         # TODO: pass first player token in multiplayer game
         
+    def writeSettings(self):
+        settings = QSettings('./config.ini', QSettings.IniFormat)
+        settings.beginGroup('MainWindow')
+        settings.setValue('maximized', self.isMaximized())
+        settings.setValue('size', self.size())
+        settings.setValue('pos', self.pos())
+        settings.endGroup()
+        
+    def readSettings(self):
+        settings = QSettings('./config.ini', QSettings.IniFormat)
+        settings.beginGroup('MainWindow')
+        maximized = settings.value('maximized', True).toBool()
+        if maximized:
+            self.showMaximized()
+        else:
+            self.resize(settings.value('size', QSize(1024, 728)).toSize())
+            self.move(settings.value('pos', QPoint(0, 0)).toPoint())
+        settings.endGroup()
+        
     def createUI(self):
         self.newGameAct = QAction(self.tr('&New Journey...'), self)
         self.newGameAct.triggered.connect(self.startNewGameAction)
@@ -633,6 +652,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(self.tr('The Lord of the Rings: The Card Game'))
         self.setWindowIcon(QIcon('./resource/image/LotRLCG.ico'))
         self.showMaximized()  # will trigger resizeEvent()
+        self.readSettings()
         
     def resizeEvent(self, event):
         if hasattr(self, 'locationDeck'):  # if self.createUI() is called
@@ -655,6 +675,10 @@ class MainWindow(QMainWindow):
             self.heroArea.setMinimumWidth(width)
             self.handArea.setMinimumWidth(width)
             QApplication.processEvents()  # force immediate update
+            
+    def closeEvent(self, event):
+        self.writeSettings()
+        event.accept()
 
 
 if __name__ == '__main__':

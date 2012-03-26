@@ -205,6 +205,8 @@ class MultiplayerMainWindow(MainWindow):
         self.client.disconnectFromHost()
         if self.isServer:
             self.server.farewell()
+            
+        super(MultiplayerMainWindow, self).closeEvent(event)
         event.accept()
         
     def createUI(self):
