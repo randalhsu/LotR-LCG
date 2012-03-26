@@ -25,7 +25,7 @@ setFull = {
 icons = {}  # this will contain all  name: QIcon instance
 
 def initialIcons():
-    icons['neural'] = QIcon()
+    icons['neutral'] = QIcon()
     fileList = glob.glob('./resource/image/icon/*')
     for filePath in fileList:
         filePath = filePath.replace('\\', '/')
@@ -122,11 +122,11 @@ class TypeItem(QTableWidgetItem):
 
 
 class IconItem(QTableWidgetItem):
-    PLAYERS = ('neural', 'leadership', 'tactics', 'spirit', 'lore')
+    PLAYERS = ('neutral', 'leadership', 'tactics', 'spirit', 'lore')
     ENCOUNTERS = ('spiders', 'wilderlands', 'orcs', 'passage', 'escape', 'anduin', 'sauron', 'gollum', 'carrock', 'rhosgobel', 'emynmuil', 'marshes', 'return', 'osgiliath', 'pit', 'seventh', 'flight', 'plundering', 'twists', 'moria', 'hazards', 'misty', 'goblin', 'redhorn')  # EXPANSION
     
     def __init__(self, iconName):
-        text = 'N' if iconName == 'neural' else ''
+        text = 'N' if iconName == 'neutral' else ''
         super(IconItem, self).__init__(icons[iconName], text)
         self.name = iconName
         

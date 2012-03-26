@@ -152,7 +152,7 @@
 		"quantity": 3,
 		"type": "attachment",
 		"title": "Song of Kings",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 1,
 		"traits": ["Song"],
 		"effect": {
@@ -526,7 +526,7 @@
 		"quantity": 3,
 		"type": "attachment",
 		"title": "Song of Wisdom",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 1,
 		"traits": ["Song"],
 		"effect": {
@@ -918,7 +918,7 @@
 		"unique": true,
 		"type": "ally",
 		"title": "Radagast",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 5,
 		"strength": 2,
 		"attack": 1,
@@ -1258,7 +1258,7 @@
 		"quantity": 3,
 		"type": "attachment",
 		"title": "Song of Travel",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 1,
 		"traits": ["Song"],
 		"effect": {
@@ -1608,7 +1608,7 @@
 		"quantity": 3,
 		"type": "attachment",
 		"title": "Song of Battle",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 1,
 		"traits": ["Song"],
 		"effect": {
@@ -1920,7 +1920,7 @@
 		"quantity": 3,
 		"type": "event",
 		"title": "Shadow of the Past",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 2,
 		"effect": {
 			"action": "Move the top card of the encounter discard pile to the top of the encounter deck."

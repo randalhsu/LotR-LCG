@@ -1143,7 +1143,7 @@
 		"unique": true,
 		"type": "ally",
 		"title": "Gandalf",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 5,
 		"strength": 4,
 		"attack": 4,

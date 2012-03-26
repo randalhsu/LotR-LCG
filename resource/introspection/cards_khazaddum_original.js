@@ -189,7 +189,7 @@
 		"quantity": 3,
 		"type": "attachment",
 		"title": "Boots from Erebor",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 0,
 		"traits": ["Item"],
 		"effect": {

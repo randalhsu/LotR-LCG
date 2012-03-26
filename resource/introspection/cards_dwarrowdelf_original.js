@@ -141,7 +141,7 @@
 		"quantity": 3,
 		"type": "attachment",
 		"title": "Good Meal",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 0,
 		"effect": {
 			"normal": "Attach to a Hobbit hero.",
@@ -550,7 +550,7 @@
 		"quantity": 3,
 		"type": "event",
 		"title": "The End Comes",
-		"icon": "neural",
+		"icon": "neutral",
 		"cost": 0,
 		"effect": {
 			"response": "After a Dwarf character leaves play, shuffle the encounter discard pile back into the encounter deck."
