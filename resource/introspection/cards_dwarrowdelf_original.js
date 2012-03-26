@@ -770,5 +770,23 @@
 			"normal": "Surge.\nWhile Crebain is in the staging area, encounter card effects cannot be canceled.",
 			"shadow": "Return attacking enemy to the staging area after it attacks."
 		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 52,
+		"quantity": 3,
+		"type": "enemy",
+		"title": "Wild Bear",
+		"icon": "rivendell",
+		"cost": 34,
+		"strength": 0,
+		"attack": 2,
+		"defense": 3,
+		"hp": 5,
+		"traits": ["Creature"],
+		"effect": {
+			"normal": "Ambush (After this enemy enters play, each player makes an engagement check against it.)",
+			"forced": "After Wild Bear engages a player, it makes an immediate attack."
+		}
 	}
 ]
