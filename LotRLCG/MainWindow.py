@@ -70,6 +70,9 @@ class _MulliganDialog(QMessageBox):
 
 
 class MainWindow(QMainWindow):
+    AUTOSAVE_INTERVAL = 10000
+    AUTOSAVE_PATH = './AutoSave.sav'
+    
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.createUI()
@@ -95,8 +98,29 @@ class MainWindow(QMainWindow):
         self.isFirstPlayer = True  # might change in MultiplayerMainWindow
         self.playerCount = 1  # might change in MultiplayerMainWindow
         
+        
         if self.__class__.__name__ == 'MainWindow':  # not true in MultiplayerMainWindow
-            self.startNewGame()
+            if self.checkIfprogramCrashed():
+                answer = QMessageBox.critical(self, self.tr('Program Crashed!'), self.tr('Restore last game?'), QMessageBox.Ok | QMessageBox.Cancel, QMessageBox.Ok)
+                if answer == QMessageBox.Ok:
+                    self.loadGame(MainWindow.AUTOSAVE_PATH)
+                else:
+                    self.startNewGame()
+            else:
+                self.startNewGame()
+                
+        self.prevState = self.getState()
+        def autoSave():
+            state = self.getState()
+            if state != self.prevState:
+                jsonState = self.dumpState(state)
+                with open(MainWindow.AUTOSAVE_PATH, 'w') as f:
+                    f.write(jsonState)
+                self.prevState = state
+                
+        timer = QTimer(self)
+        timer.timeout.connect(autoSave)
+        timer.start(MainWindow.AUTOSAVE_INTERVAL)
         
     def addDeckManipulator(self, widget):
         self.deckManipulatorList.append(widget)
@@ -154,8 +178,10 @@ class MainWindow(QMainWindow):
             except IOError:
                 QMessageBox.critical(self, self.tr("Can't save game"), self.tr('Failed to write file!'))
                 
-    def loadGame(self):
-        fileName = QFileDialog.getOpenFileName(self, self.tr('Load game'), '.', 'Game Save (*.sav)')
+    def loadGame(self, fileName=''):
+        if not fileName:
+            fileName = QFileDialog.getOpenFileName(self, self.tr('Load game'), '.', 'Game Save (*.sav)')
+            
         if fileName:
             with open(fileName) as f:
                 jsonState = f.read()
@@ -499,6 +525,10 @@ class MainWindow(QMainWindow):
         settings.setValue('pos', self.pos())
         settings.endGroup()
         
+        settings.beginGroup('GameState')
+        settings.setValue('crashed', False)
+        settings.endGroup()
+        
     def readSettings(self):
         settings = QSettings('./config.ini', QSettings.IniFormat)
         settings.beginGroup('MainWindow')
@@ -509,6 +539,15 @@ class MainWindow(QMainWindow):
             self.resize(settings.value('size', QSize(1024, 728)).toSize())
             self.move(settings.value('pos', QPoint(0, 0)).toPoint())
         settings.endGroup()
+        
+    def checkIfprogramCrashed(self):
+        '''did program crash on last time running?'''
+        settings = QSettings('./config.ini', QSettings.IniFormat)
+        settings.beginGroup('GameState')
+        crashed = settings.value('crashed', False).toBool()
+        settings.setValue('crashed', True)  # set it to True to detect next crash
+        settings.endGroup()
+        return crashed
         
     def createUI(self):
         self.newGameAct = QAction(self.tr('&New Journey...'), self)
