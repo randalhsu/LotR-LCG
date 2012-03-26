@@ -67,7 +67,7 @@ class SetupDialog(QDialog):
                 
         self.scenarioButtons = []
         self.scenarioGroupBox = QGroupBox(self.tr('Scenario:'))
-        scenarioLayout = QVBoxLayout()
+        scenarioLayout = QGridLayout()
         scenarioNames = [scenario['icon'] for scenario in scenariosInfo]
         
         for (i, scenario) in enumerate(scenariosInfo):
@@ -76,11 +76,13 @@ class SetupDialog(QDialog):
             if i == 0:
                 button.setChecked(True)
             button.setIcon(QIcon(QPixmap('./resource/image/icon/{0}.png'.format(scenarioNames[i]))))
-            scenarioLayout.addWidget(button)
+            scenarioLayout.addWidget(button, i % 10, i // 10, 1, 1)  # 10 buttons in a column
+            if i % 10 == 9:
+                scenarioLayout.addWidget(QLabel())
             self.scenarioButtons.append(button)
             if CARD_TASTE and (i >= 7 and i != 9):
                 button.hide()
-        scenarioLayout.addStretch(1)
+        scenarioLayout.setRowStretch(10, 1)
         self.scenarioGroupBox.setLayout(scenarioLayout)
         self.scenarioGroupBox.leaveEvent = lambda _: self.descriptionLabel.setText(self.scenarioButtons[self.selectedScenarioId()].description)
         
