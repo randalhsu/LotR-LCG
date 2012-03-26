@@ -484,14 +484,6 @@ class MainWindow(QMainWindow):
         self.threatDial.increaseValue()
         # TODO: pass first player token in multiplayer game
         
-    def showPhaseTips(self):
-        phaseTips = _PhaseTips(self)
-        phaseTips.show()
-        
-    def showAbout(self):
-        about = _About(self)
-        about.show()
-        
     def createUI(self):
         self.newGameAct = QAction(self.tr('&New Journey...'), self)
         self.newGameAct.triggered.connect(self.startNewGameAction)
@@ -529,10 +521,18 @@ class MainWindow(QMainWindow):
         utilityMenu = self.menuBar().addMenu(self.tr('&Utility'))
         utilityMenu.addAction(prisonAct)
         
+        def showPhaseTips():
+            phaseTips = _PhaseTips(self)
+            phaseTips.show()
+            
+        def showAbout():
+            about = _About(self)
+            about.show()
+            
         phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
-        phaseTipsAct.triggered.connect(self.showPhaseTips)
+        phaseTipsAct.triggered.connect(showPhaseTips)
         aboutAct = QAction(self.tr('&About'), self)
-        aboutAct.triggered.connect(self.showAbout)
+        aboutAct.triggered.connect(showAbout)
         
         helpMenu = self.menuBar().addMenu(self.tr('&Help'))
         helpMenu.addAction(phaseTipsAct)
