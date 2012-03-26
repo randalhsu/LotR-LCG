@@ -110,5 +110,13 @@
 		"icon": "redhorn",
 		"encounters": ["misty", "redhorn"],
 		"description": "Arwen wishes to visit her father Elrond, and Celeborn has bid the heroes to escort her over the Misty Mountains and safely to Rivendell. But the season grows late, and a sudden chill has descended on the three peaks that guard the Redhorn pass."
+	},
+	{
+		"set": "dwarrowdelf",
+		"difficulty": 4,
+		"name": "Road to Rivendell",
+		"icon": "rivendell",
+		"encounters": ["rivendell", "misty", "plundering"],
+		"description": "The heroes continue their journey northward to Rivendell, escorting Arwen to visit her father Elrond. But the road is long, and Orcs ambush the party along the way. With enemies hounding the heroes' steps, the weather drives the party ever closer to the looming mountains, and the dangers they hold."
 	}
 ]

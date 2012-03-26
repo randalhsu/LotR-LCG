@@ -58,6 +58,9 @@ questCards = {  # EXPANSION
         'up-the-pass-trg',
         'snowdrifts-trg',
         'the-mountains-peaks-trg',
+        'along-the-misty-mountains-rtr',
+        'orc-outpost-rtr',
+        'approaching-rivendell-rtr',
     ],
 }
 

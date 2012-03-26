@@ -402,6 +402,13 @@ class MainWindow(QMainWindow):
             encounterList.remove((s, 14))
             if self.playerCount == 1:
                 stagingList.append(encounterList.pop(-1))  # 1 card per player
+                
+        elif scenarioId == 14:  # Road to Rivendell
+            questList = [(s, 38), (s, 39), (s, 40)]
+            heroList.append((s, 41))  # Arwen Undomiel, for first player  # TODO: this is for first player
+            encounterList.remove((s, 41))
+            if self.playerCount == 1:
+                stagingList.append(encounterList.pop(-1))  # 1 card per player
         # EXPANSION
         
         prepareList.reverse()
@@ -428,7 +435,7 @@ class MainWindow(QMainWindow):
         if scenarioId == 2:  # Escape From Dol Guldur
             QMessageBox.information(self, title, self.tr('Objective cards are Guarded!'))
             
-        elif scenarioId in (3, 7, 12, 13):  # The Hunt for Gollum, The Dead Marshes, Flight from Moria, The Redhorn Gate
+        elif scenarioId in (3, 7, 12, 13, 14):  # The Hunt for Gollum, The Dead Marshes, Flight from Moria, The Redhorn Gate, Road to Rivendell
             if self.playerCount > 1:
                 QMessageBox.information(self, title, self.tr('Reveal 1 card per player!'))
                 

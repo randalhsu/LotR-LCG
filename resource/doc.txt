@@ -1,7 +1,3 @@
-If you want to trace code, maybe you can follow modules' import order in LotRLCG/MainWindow.py
-
-======================================================
-
 Expansion set & Encounter set abbreviations:
 
 core             (Core Set)                 2011/04/20
@@ -40,7 +36,7 @@ khazaddum        (Khazad-dum)               2012/01/06
 
 dwarrowdelf      (Dwarrowdelf)
  |-- redhorn     (The Redhorn Gate)         2012/03/01
- |-- rivendell   (Road to Rivendell)
+ |-- rivendell   (Road to Rivendell)        2012/03/21
  |-- watcher     (The Watcher in the Water)
  |-- long        (The Long Dark)
  |-- foundations (Foundations of Stone)
@@ -70,6 +66,10 @@ JSON structure of resource/introspection/*.js :
 		"forced": "If Goblin Sniper is in the staging area at the end of the combat phase, each player deals 1 point of damage to 1 character he controls.",
 	},
 }
+
+======================================================
+
+If you want to trace code, maybe you can follow modules' import order in LotRLCG/MainWindow.py
 
 ======================================================
 
