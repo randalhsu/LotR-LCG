@@ -488,11 +488,51 @@ class MainWindow(QMainWindow):
         phaseTips = _PhaseTips(self)
         phaseTips.show()
         
-    def showAbout(self):
-        about = _About(self)
-        about.show()
+    def createPhasesMenu(self):
+        phasesMenu = self.menuBar().addMenu(self.tr('&Phase Reminder'))
         
-    def createUI(self):
+        resource = phasesMenu.addMenu(self.tr('Resource'))
+        resource.addAction(self.tr('Add 1 resource to each hero'))
+        resource.addAction(self.tr('Draw 1 card'))
+        
+        planning = phasesMenu.addMenu(self.tr('Planning'))
+        planning.addAction(self.tr('Play ally and attachment cards (resource type must match)'))
+        
+        quest = phasesMenu.addMenu(self.tr('Quest'))
+        commit = quest.addMenu(self.tr('Commit Characters'))
+        commit.addAction(self.tr('Exhaust and commit characters to quest'))
+        staging = quest.addMenu(self.tr('Staging'))
+        staging.addAction(self.tr('Reveal 1 encounter card per player'))
+        resolution = quest.addMenu(self.tr('Quest Resolution'))
+        resolution.addAction(self.tr('Compare total committed willpower with total staging threat, add place progress tokens to location/quest or raise threat'))
+        
+        travel = phasesMenu.addMenu(self.tr('Travel'))
+        travel.addAction(self.tr('May travel to 1 location if there is no active location'))
+        
+        encounter = phasesMenu.addMenu(self.tr('Encounter'))
+        playerEngagement = encounter.addMenu(self.tr('Player Engagement'))
+        playerEngagement.addAction(self.tr('Players may choose to engage 1 enemy each'))
+        engagementCheck = encounter.addMenu(self.tr('Engagement Checks'))
+        engagementCheck.addAction(self.tr("Check for each enemy if it engages a player (Engagement cost >= Player's threat level)"))
+        
+        combat = phasesMenu.addMenu(self.tr('Combat'))
+        combat.addAction(self.tr('Deal 1 shadow card to each enemy (from highest engagement cost)'))
+        enemyAttack = combat.addMenu(self.tr('Resolve Enemy Attacks'))
+        enemyAttack.addAction(self.tr('Choose an enemy'))
+        enemyAttack.addAction(self.tr('Declare defender'))
+        enemyAttack.addAction(self.tr('Resolve shadow effect'))
+        enemyAttack.addAction(self.tr('Determine combat damage'))
+        attackEnemy = combat.addMenu(self.tr('Attack Enemies'))
+        attackEnemy.addAction(self.tr('Choose an enemy and declare attackers'))
+        attackEnemy.addAction(self.tr('Determine attack strength'))
+        attackEnemy.addAction(self.tr('Determine combat damage'))
+        
+        refresh = phasesMenu.addMenu(self.tr('Refresh'))
+        refresh.addAction(self.tr('Each player raises threat level by 1'))
+        refresh.addAction(self.tr('Ready all cards'))
+        refresh.addAction(self.tr('Pass First-player token'))
+        
+    def createMenuBar(self):
         self.newGameAct = QAction(self.tr('&New Journey...'), self)
         self.newGameAct.triggered.connect(self.startNewGameAction)
         self.newGameAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_N))
@@ -529,14 +569,24 @@ class MainWindow(QMainWindow):
         utilityMenu = self.menuBar().addMenu(self.tr('&Utility'))
         utilityMenu.addAction(prisonAct)
         
-        phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
-        phaseTipsAct.triggered.connect(self.showPhaseTips)
+        #phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
+        #phaseTipsAct.triggered.connect(self.showPhaseTips)
+        def showAbout():
+            about = _About(self)
+            about.show()
+            
         aboutAct = QAction(self.tr('&About'), self)
-        aboutAct.triggered.connect(self.showAbout)
+        aboutAct.triggered.connect(showAbout)
         
         helpMenu = self.menuBar().addMenu(self.tr('&Help'))
-        helpMenu.addAction(phaseTipsAct)
+        #helpMenu.addAction(phaseTipsAct)
         helpMenu.addAction(aboutAct)
+        
+        self.menuBar().addSeparator()
+        self.createPhasesMenu()
+        
+    def createUI(self):
+        self.createMenuBar()
         
         self.largeImageLabel = QLabel()
         self.largeImageLabel.setFixedSize(CARD_WIDTH, CARD_HEIGHT)
