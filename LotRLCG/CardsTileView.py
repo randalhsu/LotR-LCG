@@ -3,7 +3,7 @@ from Area import *
 
 class CardsTileView(Area):
     def __init__(self, deck, mainWindow, parent=None):
-        super(CardsTileView, self).__init__(name='', parent=parent)
+        super(CardsTileView, self).__init__(name=deck.name, parent=parent)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.setBackgroundBrush(deck.backgroundBrush())
         self.textList = []
