@@ -226,15 +226,25 @@ class JourneyLogger(QDialog):
             message = '{0}{1}{2}({3}->{4})'.format(part1, difference, part2, startingValue, finalValue)
         return message
         
+    def setStateLabel(self, text):
+        self.stateLabel.setText(text)
+        QTimer.singleShot(3000, lambda: self.stateLabel.setText(''))  # clear it later
+        
+    def copyPlainText(self):
+        QApplication.clipboard().setText(self.textEdit.toPlainText())
+        self.setStateLabel('Copied to clipboard!')
+        
     def saveHtmlFile(self):
         fileName = QFileDialog.getSaveFileName(self, self.tr('Save HTML'), 'JourneyLog.html', 'HTML (*.html)')
         if fileName:
-            try:
-                f = open(fileName, 'w')
-                f.write(self.textEdit.toHtml())
-                f.close()
-            except IOError:
+            file = QFile(fileName)
+            file.open(QIODevice.WriteOnly | QIODevice.Text)
+            state = file.writeData(self.textEdit.toHtml())
+            file.close()
+            if state == -1:
                 QMessageBox.critical(self, self.tr("Can't save HTML"), self.tr('Failed to write file!'))
+            else:
+                self.setStateLabel('Saved to "' + fileName[fileName.lastIndexOf('/') + 1:] + '"')
                 
     def showEvent(self, event):
         if hasattr(self, 'lastGeometry'):
@@ -249,9 +259,10 @@ class JourneyLogger(QDialog):
         clearButton = QPushButton(self.tr('Clear'))
         clearButton.clicked.connect(self.textEdit.clear)
         copyPlainTextButton = QPushButton(self.tr('Copy as Plain Text'))
-        copyPlainTextButton.clicked.connect(lambda: QApplication.clipboard().setText(self.textEdit.toPlainText()))
+        copyPlainTextButton.clicked.connect(self.copyPlainText)
         saveHtmlButton = QPushButton(self.tr('&Save as HTML'))
         saveHtmlButton.clicked.connect(self.saveHtmlFile)
+        self.stateLabel = QLabel()
         closeButton = QPushButton(self.tr('&Close'))
         closeButton.clicked.connect(self.close)
         
@@ -259,6 +270,7 @@ class JourneyLogger(QDialog):
         buttonsLayout.addWidget(clearButton)
         buttonsLayout.addWidget(copyPlainTextButton)
         buttonsLayout.addWidget(saveHtmlButton)
+        buttonsLayout.addWidget(self.stateLabel)
         buttonsLayout.addStretch(1)
         buttonsLayout.addWidget(closeButton)
         layout = QVBoxLayout()
