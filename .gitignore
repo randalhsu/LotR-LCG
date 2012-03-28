@@ -1,5 +1,5 @@
-AutoSave.sav
-config.ini
+resource/AutoSave.sav
+resource/config.ini
 decks.json
 *.pyc
 *.pyo

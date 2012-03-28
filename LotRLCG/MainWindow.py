@@ -71,7 +71,8 @@ class _MulliganDialog(QMessageBox):
 
 class MainWindow(QMainWindow):
     AUTOSAVE_INTERVAL = 10000
-    AUTOSAVE_PATH = './AutoSave.sav'
+    AUTOSAVE_PATH = './resource/AutoSave.sav'
+    CONFIG_PATH = './resource/config.ini'
     
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -101,26 +102,23 @@ class MainWindow(QMainWindow):
         
         if self.__class__.__name__ == 'MainWindow':  # not true in MultiplayerMainWindow
             if self.checkIfprogramCrashed():
-                answer = QMessageBox.critical(self, self.tr('Program Crashed!'), self.tr('Restore last game?'), QMessageBox.Ok | QMessageBox.Cancel, QMessageBox.Ok)
-                if answer == QMessageBox.Ok:
-                    self.loadGame(MainWindow.AUTOSAVE_PATH)
-                else:
-                    self.startNewGame()
+                self.loadGame(MainWindow.AUTOSAVE_PATH)
             else:
                 self.startNewGame()
                 
-        self.prevState = self.getState()
-        def autoSave():
-            state = self.getState()
-            if state != self.prevState:
-                jsonState = self.dumpState(state)
-                with open(MainWindow.AUTOSAVE_PATH, 'w') as f:
-                    f.write(jsonState)
-                self.prevState = state
-                
-        timer = QTimer(self)
-        timer.timeout.connect(autoSave)
-        timer.start(MainWindow.AUTOSAVE_INTERVAL)
+            # auto save just work in Solo game
+            self.prevState = self.getState()
+            def autoSave():
+                state = self.getState()
+                if state != self.prevState:
+                    jsonState = self.dumpState(state)
+                    with open(MainWindow.AUTOSAVE_PATH, 'w') as f:
+                        f.write(jsonState)
+                    self.prevState = state
+                    
+            timer = QTimer(self)
+            timer.timeout.connect(autoSave)
+            timer.start(MainWindow.AUTOSAVE_INTERVAL)
         
     def addDeckManipulator(self, widget):
         self.deckManipulatorList.append(widget)
@@ -545,19 +543,19 @@ class MainWindow(QMainWindow):
         # TODO: pass first player token in multiplayer game
         
     def writeSettings(self):
-        settings = QSettings('./config.ini', QSettings.IniFormat)
+        settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
         settings.beginGroup('MainWindow')
         settings.setValue('maximized', self.isMaximized())
         settings.setValue('size', self.size())
         settings.setValue('pos', self.pos())
         settings.endGroup()
         
-        settings.beginGroup('GameState')
+        settings.beginGroup('ProgramState')
         settings.setValue('crashed', False)  # if program ended up normally, this flag is set to False
         settings.endGroup()
         
     def readSettings(self):
-        settings = QSettings('./config.ini', QSettings.IniFormat)
+        settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
         settings.beginGroup('MainWindow')
         maximized = settings.value('maximized', True).toBool()
         if maximized:
@@ -569,8 +567,8 @@ class MainWindow(QMainWindow):
         
     def checkIfprogramCrashed(self):
         '''did program crash on last time running?'''
-        settings = QSettings('./config.ini', QSettings.IniFormat)
-        settings.beginGroup('GameState')
+        settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
+        settings.beginGroup('ProgramState')
         crashed = settings.value('crashed', False).toBool()
         settings.setValue('crashed', True)  # set it to True to detect next crash
         settings.endGroup()
