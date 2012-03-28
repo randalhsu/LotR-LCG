@@ -62,6 +62,10 @@ class JourneyLogger(QDialog):
             attach 1 resource token to Aragorn who already has 2 resource tokens: 'resource->[Aragorn](3)'
             remove 1 progress token from Rhosgobel which originally has 3 progress tokens: 'progress<-[Rhosgobel](2)'
             '''
+            damage = '<font color="#b22726">damage</font>'
+            resource = '<font color="#80899b">resource</font>'
+            progress = '<font color="#097b44">Progress</font>'
+            
             splitter = '->' if '->' in message else '<-'
             (tokenType, surplus) = message.split(splitter)
             (card, surplus) = surplus.split('(', 1)
@@ -69,19 +73,19 @@ class JourneyLogger(QDialog):
             
             if splitter == '->':  # adding token
                 if tokenType == 'damage':
-                    return '{0} suffered 1 damage ({1}->{2})'.format(card, count - 1, count)
+                    return '{0} suffered 1 {1} ({2}->{3})'.format(card, damage, count - 1, count)
                 elif tokenType == 'resource':
-                    return '{0} gained 1 resource ({1}->{2})'.format(card, count - 1, count)
+                    return '{0} gained 1 {1} ({2}->{3})'.format(card, resource, count - 1, count)
                 elif tokenType == 'progress':
-                    return 'Progress made at {0} ({1}->{2})'.format(card, count - 1, count)
+                    return '{0} made at {1} ({2}->{3})'.format(progress, card, count - 1, count)
                     
             elif splitter == '<-':  # removing token
                 if tokenType == 'damage':
-                    return '{0} healed 1 damage ({1}->{2})'.format(card, count + 1, count)
+                    return '{0} healed 1 {1} ({2}->{3})'.format(card, damage, count + 1, count)
                 elif tokenType == 'resource':
-                    return '{0} spent 1 resource ({1}->{2})'.format(card, count + 1, count)
+                    return '{0} spent 1 {1} ({2}->{3})'.format(card, resource, count + 1, count)
                 elif tokenType == 'progress':
-                    return 'Progress removed from {0} ({1}->{2})'.format(card, count + 1, count)
+                    return '{0} removed from {1} ({2}->{3})'.format(progress, card, count + 1, count)
             # TODO: attached card may get resource
             
         elif message.endswith(('exhausted', 'readied')):  # Card exhaust/ready
@@ -182,7 +186,7 @@ class JourneyLogger(QDialog):
                 # remove all numbers, then compare two trimmed messages
                 message1 = lastMessage
                 message2 = currentMessage
-                for pattern in ('<font.*">', '</font>', r'\d+', ' +'):
+                for pattern in ('<font.*?>', '</font>', r'\d+', ' +'):
                     message1 = re.sub(pattern, '', message1)
                     message2 = re.sub(pattern, '', message2)
                 if message1 == message2:
@@ -211,7 +215,7 @@ class JourneyLogger(QDialog):
         difference = abs(finalValue - startingValue)
         
         message = ''
-        if lastMessage.startswith('Progress'):
+        if re.match('(<font.*?>)?Progress', lastMessage):
             part1 = lastMessage[:lastMessage.rindex(' ')]
             message = '{0} ({1}->{2})'.format(part1, startingValue, finalValue)
         else:
