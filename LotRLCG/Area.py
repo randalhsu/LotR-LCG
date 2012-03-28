@@ -102,7 +102,12 @@ class Area(QGraphicsView):
         elif event.button() == Qt.RightButton:
             item = self.itemAt(event.pos())
             if isinstance(item, Token):
-                item.parentItem().detach(item)
+                card = item.parentItem()
+                card.detach(item)
+                
+                tokenType = item.type_()
+                tokenCount = card.getState().get(tokenType[0].upper(), 0)
+                self.log('{0}<-{1}({2})'.format(tokenType, repr(card), tokenCount))
                 return
             elif self.name == 'Hand Area' or isinstance(self, Deck):
                 if self.cardList:
@@ -229,9 +234,12 @@ class Area(QGraphicsView):
         
     def dndHandler(self, draggingItem, source, targetItem):
         '''drag draggingItem from sourceArea, to selfArea's targetItem. Return True on valid operation'''
+        '''this is such a crappy shit'''
         
         def constructLog(sourceAreaName, draggingCard, targetAreaName, targetCard=None):
-            draggingCardName = repr(draggingCard) if draggingCard.revealed() else '[???]'
+            draggingCardName = repr(draggingCard)
+            if not draggingCard.revealed() and draggingCard.info['type'] != 'quest':
+                draggingCardName = '[???]'
             targetCardName = ''
             if targetCard is None:
                 targetCardName = '[NONE]'
@@ -249,12 +257,20 @@ class Area(QGraphicsView):
                         source.removeCard(draggingItem)
                         purify(draggingItem)
                         targetItem.attach(draggingItem)
+                        
+                        if self.name == 'Staging Area':
+                            if not draggingItem.revealed():
+                                draggingItem.flip()
                         self.log(constructLog(source, draggingItem, self, targetItem))
                         return True
                     else:  # Card -> Deck or HandArea
                         source.removeCard(draggingItem)
                         purify(draggingItem)
                         self.addCard(draggingItem)
+                        
+                        if self.name == 'Hand Area':
+                            if not draggingItem.revealed():
+                                draggingItem.flip()
                         if source.name != self.name:
                             self.log(constructLog(source, draggingItem, self))
                         return True
@@ -262,13 +278,20 @@ class Area(QGraphicsView):
                 if isinstance(targetItem, Card):  # Token -> Card
                     purify(draggingItem)
                     targetItem.attach(draggingItem)
-                    # logging is handled by Draggable._AttachedItems class
+                    
+                    tokenType = draggingItem.type_()
+                    tokenCount = targetItem.getState().get(tokenType[0].upper(), 0)
+                    self.log('{0}->{1}({2})'.format(tokenType, repr(targetItem), tokenCount))
                     return True
         else:
             if isinstance(draggingItem, Card):  # Card -> Area
                 source.removeCard(draggingItem)
                 purify(draggingItem)
                 self.addCard(draggingItem)
+                
+                if self.name in ('Hand Area', 'Staging Area'):
+                    if not draggingItem.revealed():
+                        draggingItem.flip()
                 if source.name != self.name:
                     self.log(constructLog(source, draggingItem, self))
                 return True

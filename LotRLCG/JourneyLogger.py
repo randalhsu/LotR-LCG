@@ -6,22 +6,39 @@ class JourneyLogger(QDialog):
     def __init__(self, parent=None):
         super(JourneyLogger, self).__init__(parent)
         self.sphereColor = {
+            'neutral': 'cbbeb8',
             'leadership': '9d489b',
             'tactics': 'b71f25',
             'spirit': '00b6e3',
             'lore': '00a651',
         }
+        cardStringPattern = r'\[.*?\]'
+        self.cardPattern = re.compile('{0}|<font.*?>{0}</font>'.format(cardStringPattern))
+        self.areaPattern = re.compile('{.*?}')
+        
         self.createUI()
         self.lastMessage = ''  # last line of appended log
         
     def append(self, message):
         message = self.parseMessage(message)
+        if not message:
+            return
         if self.canBeCombinedWithLastLog(message):
-            self.combineWithLastLog(message)
-        else:
-            self.lastMessage = message
-            self.textEdit.append(message)
+            message = self.combineWithLastLog(message)
             
+        self.lastMessage = message
+        self.textEdit.append(message)
+        scrollBar = self.textEdit.verticalScrollBar()
+        scrollBar.setValue(scrollBar.maximum())  # scroll to bottom
+        
+        # handle questing status
+        if message.startswith('Completed quest'):
+            questCards = self.parentWidget().questDeck.getList()
+            if questCards:
+                self.append('Questing {0}'.format(repr(questCards[-1])))
+            else:
+                self.append('Journey done!')
+                
     def convertCardsRepresentation(self, message):
         '''replace Card representation such as [('core', 1)] in message into [Aragorn], with font color'''
         while '[(' in message:
@@ -38,7 +55,7 @@ class JourneyLogger(QDialog):
         
     def parseMessage(self, message):
         message = self.convertCardsRepresentation(message)
-        # message examples listed later do not show <font color> tag
+        # WARNING: message examples listed later do not show <font color> tag
         
         if message.startswith(('damage', 'resource', 'progress')):  # Token attach/detach
             '''message examples:
@@ -62,7 +79,7 @@ class JourneyLogger(QDialog):
                 if tokenType == 'damage':
                     return '{0} healed 1 damage ({1}->{2})'.format(card, count + 1, count)
                 elif tokenType == 'resource':
-                    return '{0} removed 1 resource ({1}->{2})'.format(card, count + 1, count)
+                    return '{0} spent 1 resource ({1}->{2})'.format(card, count + 1, count)
                 elif tokenType == 'progress':
                     return 'Progress removed from {0} ({1}->{2})'.format(card, count + 1, count)
             # TODO: attached card may get resource
@@ -87,12 +104,18 @@ class JourneyLogger(QDialog):
             flipping a shadow card: '{Engaged Area}[Forest Spider][Eyes of the Forest] revealed'
             normal flip: '{Hero Area}[NONE][Aragorn] covered'
             '''
-            parentCard = message[message.find('[') : message.find(']') + 1]
-            if message.startswith('{Engaged Area}') and message.endswith('revealed') and parentCard != '[NONE]':
-                card = message[message.rfind('[') : message.rfind(']') + 1]
+            area = re.search(self.areaPattern, message).group(0)
+            (parentCard, card) = re.findall(self.cardPattern, message)
+            
+            if area == '{Engaged Area}' and message.endswith('revealed') and parentCard != '[NONE]':
                 return "{0}'s shadow {1} revealed".format(parentCard, card)
+            elif area == '{Quest Deck}':
+                return ''
             else:
-                return message[message.index(']') + 1:]
+                message = message.replace('[NONE]', '')
+                message = message.replace(' Area}', '}')
+                message = message.replace('}', "}'s ")
+                return message
                 
         elif '->' in message: # Card movements
             '''message construction:
@@ -103,31 +126,44 @@ class JourneyLogger(QDialog):
             basic movement: '{Staging Area}[Forest Spider]->{Engaged Area}[NONE]'
             yet another example: '{Hero Area}[Faramir]->{Player Discard Pile}[NONE]'
             '''
-            cardPattern = r'\[.*?\]'
-            cards = re.findall(cardPattern, message)
-            card = cards[0]
-            destinationCard = cards[1]
+            (card, destinationCard) = re.findall(self.cardPattern, message)
+            (sourceArea, destinationArea) = re.findall(self.areaPattern, message)
             
-            areaPattern = '{.*?}'
-            areas = re.findall(areaPattern, message)
-            sourceArea = areas[0]
-            destinationArea = areas[1]
-            
+            if destinationCard != '[NONE]':  # attaching card
+                if sourceArea == '{Encounter Deck}':
+                    if destinationArea == '{Engaged Area}':
+                        return 'Deal shadow {0} to {1}'.format(card, destinationCard)
+                    elif destinationArea == '{Staging Area}':
+                        return '{0} is now guarding {1}'.format(card, destinationCard)
+                return 'Attach {0} to {1}'.format(card, destinationCard)
+                
+            if destinationArea == '{Hand Area}':
+                return 'Draw {0}'.format(card)
+            elif destinationArea == '{Hero Area}':
+                return 'Play {0}'.format(card)
+            elif destinationArea == '{Engaged Area}':
+                return 'Engaged with {0}'.format(card)
             if destinationArea == '{Active Location}':
                 return 'Travel to {0}'.format(card)
-            elif destinationArea == '{Engaged Area}':
-                if destinationCard == '[NONE]':
-                    return 'Engaged with {0}'.format(card)
-                else:
-                    if sourceArea == '{Encounter Deck}':
-                        return 'Deal shadow {0} to {1}'.format(card, destinationCard)
-            elif destinationArea == '{Staging Area}' and destinationCard == '[NONE]':
-                return 'Draw {0} to staging'.format(card)
+            elif destinationArea == '{Staging Area}':
+                return 'Draw {0} to {{Staging}}'.format(card)
             elif destinationArea == '{Encounter Discard Pile}':
                 if sourceArea == '{Active Location}':
                     return 'Explored {0}'.format(card)
                 elif sourceArea == '{Quest Deck}':
-                    return 'Defeated {0}'.format(card)
+                    return 'Completed quest {0}'.format(card)
+                else:
+                    return 'Discard {0}'.format(card)
+            elif destinationArea == '{Removed From Play}':
+                if sourceArea == '{Quest Deck}':
+                    return 'Completed quest {0}'.format(card)
+            elif destinationArea == '{Player Discard Pile}':
+                return 'Discard {0}'.format(card)
+                
+            message = message.replace('[NONE]', '')
+            message = message.replace(' Area}', '}')
+            message = message.replace('}', "}'s ", 1)
+            message = message.replace('->', ' moved to ')
             return message
             
         else:
@@ -184,19 +220,33 @@ class JourneyLogger(QDialog):
             part1 = lastMessage[:numberPos]
             part2 = lastMessage[numberPos + 1 : lastMessage.rindex('(')]
             message = '{0}{1}{2}({3}->{4})'.format(part1, difference, part2, startingValue, finalValue)
-            
-        self.lastMessage = message
-        self.textEdit.append(message)
+        return message
         
+    def saveHtmlFile(self):
+        fileName = QFileDialog.getSaveFileName(self, self.tr('Save HTML'), 'JourneyLog.html', 'HTML (*.html)')
+        if fileName:
+            try:
+                f = open(fileName, 'w')
+                f.write(self.textEdit.toHtml())
+                f.close()
+            except IOError:
+                QMessageBox.critical(self, self.tr("Can't save HTML"), self.tr('Failed to write file!'))
+                
     def createUI(self):
         self.textEdit = QTextEdit()
         clearButton = QPushButton(self.tr('Clear'))
         clearButton.clicked.connect(self.textEdit.clear)
+        copyPlainTextButton = QPushButton(self.tr('Copy as Plain Text'))
+        copyPlainTextButton.clicked.connect(lambda: QApplication.clipboard().setText(self.textEdit.toPlainText()))
+        saveHtmlButton = QPushButton(self.tr('&Save as HTML'))
+        saveHtmlButton.clicked.connect(self.saveHtmlFile)
         closeButton = QPushButton(self.tr('&Close'))
         closeButton.clicked.connect(self.close)
         
         buttonsLayout = QHBoxLayout()
         buttonsLayout.addWidget(clearButton)
+        buttonsLayout.addWidget(copyPlainTextButton)
+        buttonsLayout.addWidget(saveHtmlButton)
         buttonsLayout.addStretch(1)
         buttonsLayout.addWidget(closeButton)
         layout = QVBoxLayout()
@@ -204,6 +254,6 @@ class JourneyLogger(QDialog):
         layout.addLayout(buttonsLayout)
         self.setLayout(layout)
         
-        self.setMinimumWidth(500)
+        self.resize(500, 300)
         self.setWindowIcon(QIcon('./resource/image/token/progress.png'))
         self.setWindowTitle(self.tr('Journey Logger'))

@@ -538,15 +538,19 @@ class MainWindow(QMainWindow):
             heroesString = '{0} and {1}'.format(heroes[0], heroes[1])
         elif len(heroes) >= 3:
             heroesString = '{0} and {1}'.format(', '.join(heroes[:-1]), heroes[-1])
-        self.log('{0} started {1} journey on <b>[{2}]</b>...'.format(heroesString, pronoun, scenariosInfo[self.scenarioId]['name']))
-        
-        self.log('<tt>Threat:</tt> <font color="#f0422c">{0}</font>'.format(self.threatDial.value))
-        
+        self.log('<h3>{0} started {1} journey on <b>[{2}]</b>...</h3>'.format(heroesString, pronoun, scenariosInfo[self.scenarioId]['name']))
+        self.logCurrentState()
+        if self.questDeck.getList():
+            self.log('Questing {0}'.format(repr(self.questDeck.getList()[-1])))
+            
+    def logCurrentState(self):
+        self.log('<br>')
+        self.threatDial.appendLog()
         hand = [repr(card) for card in self.handArea.getList()]
-        self.log('<tt>Hand:</tt> {0}'.format(', '.join(hand)))
-        
+        self.log('Hand: {0}'.format(', '.join(hand)))
         staging = [repr(card) for card in self.stagingArea.getList()]
-        self.log('<tt>Staging:</tt> {0}'.format(', '.join(staging)))
+        self.log('Staging: {0}'.format(', '.join(staging)))
+        self.log('<br>')
         
     def setLargeImage(self, card):
         if card.info['type'] != 'quest':
@@ -722,7 +726,7 @@ class MainWindow(QMainWindow):
         self.encounterDeck = Deck('Encounter Deck')
         self.encounterDiscardPile = Deck('Encounter Discard Pile')
         self.tokenBank = TokenBank()
-        self.prepareDeck = Deck('Prepare Area', Qt.Horizontal)
+        self.prepareDeck = Deck('Prepare Deck', Qt.Horizontal)
         self.removedPile = Deck('Removed From Play', Qt.Horizontal)
         self.playerDeck = Deck('Player Deck')
         self.playerDiscardPile = Deck('Player Discard Pile')
