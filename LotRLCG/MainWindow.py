@@ -14,6 +14,51 @@ from SetupDialog import *
 from JourneyLogger import *
 
 
+class _ScoringDialog(QDialog):
+    def __init__(self, parent=None):
+        super(_ScoringDialog, self).__init__(parent)
+        self.createUI()
+        
+    def updateContent(self):
+        mainWindow = self.parentWidget()
+        threat = mainWindow.threatDial.value
+        dead = 0
+        for card in mainWindow.playerDiscardPile.getList():  # dead heroes are in Player Discard Pile
+            if isHeroCard(card.info['set'], card.info['id']):
+                dead += card.info['cost']
+                
+        damages = 0
+        for card in mainWindow.heroArea.getList():
+            if isHeroCard(card.info['set'], card.info['id']):
+                damages += card.getState().get('D', 0)  # damage tokens on hero
+                
+        victory = mainWindow.victorySpinBox.value()
+        
+        score = threat + dead + damages - victory
+        
+        content = '''<tt>  Final Threat Level: {0:3}<br>'''\
+                      '''+   Dead Heroes Cost: {1:3}<br>'''\
+                      '''+  Damages on Heroes: {2:3}<br>'''\
+                      '''-     Victory Points: {3:3}'''\
+                      '''<hr>'''\
+           '''<center><h2>Final Score: {4}</h2></center><br></tt>'''.format(threat, dead, damages, victory, score)
+        content = content.replace(' ', '&nbsp;')
+        self.label.setText(content)
+        
+    def showEvent(self, event):
+        self.updateContent()
+        
+    def createUI(self):
+        self.label = QLabel()
+        closeButton = QPushButton(self.tr('&Close'))
+        closeButton.clicked.connect(self.close)
+        layout = QVBoxLayout()
+        layout.addWidget(self.label)
+        layout.addWidget(closeButton)
+        self.setLayout(layout)
+        self.setWindowTitle(self.tr('Scoring'))
+
+
 class _PhaseTips(QDialog):
     def __init__(self, parent=None):
         super(_PhaseTips, self).__init__(parent)
@@ -618,14 +663,19 @@ class MainWindow(QMainWindow):
             hero.flip()
             hero.attach(Token('damage'))
             
-        prisonAct = QAction(self.tr('Prison a random hero'), self)
+        prisonAct = QAction(self.tr('Prison a random Hero'), self)
         prisonAct.triggered.connect(prisonRandomHero)
         prisonAct.setToolTip(self.tr('For "Escape From Dol Guldur" scenario'))
+        
+        self.scoringDialog = _ScoringDialog(self)
+        self.scoringAct = QAction(self.tr('Scoring...'), self)
+        self.scoringAct.triggered.connect(lambda: self.scoringDialog.show())
         
         utilityMenu = self.menuBar().addMenu(self.tr('&Utility'))
         utilityMenu.addAction(self.journeyLoggerAct)
         utilityMenu.addSeparator()
         utilityMenu.addAction(prisonAct)
+        utilityMenu.addAction(self.scoringAct)
         
         self.phaseTips = _PhaseTips(self)
         self.about = _About(self)
