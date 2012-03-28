@@ -218,9 +218,8 @@ class Area(QGraphicsView):
                 if self.name == 'Quest Deck' and isinstance(draggingItem, Token) and draggingItem.type_() == 'progress':
                     (count, ok) = QInputDialog.getInt(self, self.tr('Progressing'), self.tr('How many?'), 1, 1, 20)
                     if ok:
-                        for i in range(count - 1):  # 1 will be added by dndHandler()
-                            targetItem.attach(Token('progress'))
-                        self.dndHandler(draggingItem, source, targetItem)
+                        for i in range(count):
+                            self.dndHandler(Token('progress'), source, targetItem)
                     self.update()
                     source.update()
                     self.setCursor(Qt.OpenHandCursor)
