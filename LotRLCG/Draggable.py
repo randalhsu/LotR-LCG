@@ -56,6 +56,7 @@ class _AttachedItems:
         tokenType = token.type_()
         self.counter[tokenType] += 1
         token.setPos(self.calcTokenPos(tokenType, self.counter[tokenType]))
+        self.log('{0}->{1}({2})'.format(tokenType, repr(self.parent), self.counter[tokenType]))
         
     def attachCard(self, card):
         def attachable(child, parent):
@@ -84,7 +85,6 @@ class _AttachedItems:
         self.updateParent()
         
     def detachCard(self, card):
-        #print('Detached {0} from {1}'.format(card, self.parent))
         if card in self.equipments:
             self.equipments.remove(card)
         elif card in self.shadows:
@@ -102,7 +102,8 @@ class _AttachedItems:
                 if token.type_() == tokenType:
                     token.setPos(self.calcTokenPos(tokenType, i))
                     i += 1
-                    
+            self.log('{0}<-{1}({2})'.format(tokenType, repr(self.parent), self.counter[tokenType]))
+            
     def removeAllTokens(self):
         while self.tokens:
             self.detach(self.tokens[-1])
@@ -115,6 +116,9 @@ class _AttachedItems:
                 for view in views:
                     view.update()
                     
+    def log(self, message):
+        self.parent.scene().views()[0].window().log(message)  # wow!
+        
     def __str__(self):
         equipmentCards = '['
         for card in self.equipments:
@@ -228,13 +232,9 @@ class Card(QGraphicsPixmapItem):
         
     def exhaust(self):
         self._exhausted = True
-        #if not self.exhausted():
-        #    print('{0} exhausted'.format(self))
         
     def ready(self):
         self._exhausted = False
-        #if self.exhausted():
-        #    print('{0} readied'.format(self))
         
     def updateImage(self):
         self.setPixmap(self.currentImage())
@@ -269,6 +269,9 @@ class Card(QGraphicsPixmapItem):
         
     def __str__(self):
         return '[{0}]'.format(self.info['title'])
+        
+    def __repr__(self):
+        return '[({0},{1})]'.format(self.info['set'], self.info['id'])
         
     def getState(self):
         '''dict representation, for syncing program states between clients'''

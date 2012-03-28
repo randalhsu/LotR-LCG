@@ -58,7 +58,7 @@ class ThreatDial(QGraphicsView):
         
     def setValue(self, value):
         self.value = value
-        self.tensDigit.setText(str(value / 10))
+        self.tensDigit.setText(str(value // 10))
         self.unitsDigit.setText(str(value % 10))
         
     def increaseValue(self):
@@ -66,6 +66,9 @@ class ThreatDial(QGraphicsView):
         
     def decreaseValue(self):
         self.setValue(self.value - 1)
+        
+    def appendLog(self):
+        self.window().log('<tt>Threat:</tt> <font color="#f0422c">{0}</font>'.format(self.value))
         
     def leaveEvent(self, event):
         self.plusItem.hide()
@@ -91,11 +94,14 @@ class ThreatDial(QGraphicsView):
                 self.increaseValue()
             else:
                 self.decreaseValue()
+            self.appendLog()
+            
         elif event.button() == Qt.RightButton:
             (value, valid) = QInputDialog.getInt(self, 'Threat Dial', 'Set threat value to:', self.value, 0, 99)
             if valid:
                 self.setValue(value)
-            
+                self.appendLog()
+                
     def resizeEvent(self, event):
         if self.width() != 0 and self.height() != 0:
             widthRatio = self.threatPixmap.width() / self.width()

@@ -1,6 +1,5 @@
 '''
 TODO: make dragging cursor correct
-TODO: journey logging
 '''
 import random
 from common import *
@@ -12,6 +11,7 @@ from CardsTileView import *
 from DeckManipulator import *
 from ThreatDial import *
 from SetupDialog import *
+from JourneyLogger import *
 
 
 class _PhaseTips(QDialog):
@@ -148,6 +148,8 @@ class MainWindow(QMainWindow):
                 else:
                     break
             area.update()
+            
+        self.log('<hr><br>')
         
     def startNewGame(self):
         self.cleanup()
@@ -265,6 +267,7 @@ class MainWindow(QMainWindow):
         
     def mulliganDecisionIsMade(self):
         self.setupEncounterCards()
+        self.logInitialState()
         
     def setupEncounterCards(self):
         assert(self.isFirstPlayer)
@@ -481,6 +484,27 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, title, self.tr('Attach <b>"Book of Mazarbul"</b> to a hero,<br>then reveal 1 card per player.'))
         # EXPANSION
         
+    def logInitialState(self):
+        heroes = [repr(card) for card in self.heroArea.getList()]
+        heroesString = ''
+        pronoun = 'their'
+        if len(heroes) == 1:
+            heroesString = heroes[0]
+            pronoun = 'his/her'
+        elif len(heroes) == 2:
+            heroesString = '{0} and {1}'.format(heroes[0], heroes[1])
+        elif len(heroes) >= 3:
+            heroesString = '{0} and {1}'.format(', '.join(heroes[:-1]), heroes[-1])
+        self.log('{0} started {1} journey on <b>[{2}]</b>...'.format(heroesString, pronoun, scenariosInfo[self.scenarioId]['name']))
+        
+        self.log('<tt>Threat:</tt> <font color="#f0422c">{0}</font>'.format(self.threatDial.value))
+        
+        hand = [repr(card) for card in self.handArea.getList()]
+        self.log('<tt>Hand:</tt> {0}'.format(', '.join(hand)))
+        
+        staging = [repr(card) for card in self.stagingArea.getList()]
+        self.log('<tt>Staging:</tt> {0}'.format(', '.join(staging)))
+        
     def setLargeImage(self, card):
         if card.info['type'] != 'quest':
             if self.largeImageLabel.currentCard == (card, card.revealed()):
@@ -506,7 +530,8 @@ class MainWindow(QMainWindow):
             if not card.revealed():
                 card.flip()
             self.handArea.addCard(card)
-        
+            self.log('Draw {0}'.format(repr(card)))
+            
     def proceedRefreshPhase(self):
         for card in self.heroArea.getList():
             card.ready()
@@ -514,7 +539,9 @@ class MainWindow(QMainWindow):
                 child.ready()
         self.heroArea.update()
         self.heroArea.update()  # don't ask me why...
+        self.log('All card readied')
         self.threatDial.increaseValue()
+        self.threatDial.appendLog()
         # TODO: pass first player token in multiplayer game
         
     def writeSettings(self):
@@ -526,7 +553,7 @@ class MainWindow(QMainWindow):
         settings.endGroup()
         
         settings.beginGroup('GameState')
-        settings.setValue('crashed', False)
+        settings.setValue('crashed', False)  # if program ended up normally, this flag is set to False
         settings.endGroup()
         
     def readSettings(self):
@@ -548,6 +575,10 @@ class MainWindow(QMainWindow):
         settings.setValue('crashed', True)  # set it to True to detect next crash
         settings.endGroup()
         return crashed
+        
+    def log(self, message):
+        '''method for logging what happened. Will be rebinded to JourneyLogger in createUI()'''
+        pass
         
     def createUI(self):
         self.newGameAct = QAction(self.tr('&New Journey...'), self)
@@ -575,29 +606,36 @@ class MainWindow(QMainWindow):
         gameMenu.addSeparator()
         gameMenu.addAction(quitAct)
         
+        self.journeyLogger = JourneyLogger(self)
+        self.log = self.journeyLogger.append  # this 'log' function will be called by those who wants to write journey log
+        
+        self.journeyLoggerAct = QAction(self.tr('&Journey Logger'), self)
+        self.journeyLoggerAct.triggered.connect(lambda: self.journeyLogger.show())
+        self.journeyLoggerAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_J))
+        self.journeyLoggerAct.setIcon(QIcon('./resource/image/token/progress.png'))
+        
         def prisonRandomHero():
             hero = random.choice(self.heroArea.getList())
-            hero.attach(Token('damage'))
+            self.log('{0} is prisoned!'.format(hero))
             hero.flip()
+            hero.attach(Token('damage'))
             
         prisonAct = QAction(self.tr('Prison a random hero'), self)
         prisonAct.triggered.connect(prisonRandomHero)
         prisonAct.setToolTip(self.tr('For "Escape From Dol Guldur" scenario'))
+        
         utilityMenu = self.menuBar().addMenu(self.tr('&Utility'))
+        utilityMenu.addAction(self.journeyLoggerAct)
+        utilityMenu.addSeparator()
         utilityMenu.addAction(prisonAct)
         
-        def showPhaseTips():
-            phaseTips = _PhaseTips(self)
-            phaseTips.show()
-            
-        def showAbout():
-            about = _About(self)
-            about.show()
-            
+        self.phaseTips = _PhaseTips(self)
+        self.about = _About(self)
         phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
-        phaseTipsAct.triggered.connect(showPhaseTips)
+        phaseTipsAct.triggered.connect(lambda: self.phaseTips.show())
+        phaseTipsAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_P))
         aboutAct = QAction(self.tr('&About'), self)
-        aboutAct.triggered.connect(showAbout)
+        aboutAct.triggered.connect(lambda: self.about.show())
         
         helpMenu = self.menuBar().addMenu(self.tr('&Help'))
         helpMenu.addAction(phaseTipsAct)
@@ -619,7 +657,9 @@ class MainWindow(QMainWindow):
         refreshPhaseButton.clicked.connect(self.proceedRefreshPhase)
         refreshPhaseButton.setToolTip(self.tr('Ready all cards and raise 1 threat.\nSpecial card-effects are not concerned.'))
         refreshPhaseButton.setFocusPolicy(Qt.NoFocus)
+        
         self.victorySpinBox = QSpinBox()
+        self.victorySpinBox.valueChanged.connect(lambda: self.log('<tt>Victory:</tt> {0}'.format(self.victorySpinBox.value())))
         victoryLabel = QLabel(self.tr('&Victory:'))
         victoryLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
         victoryLabel.setBuddy(self.victorySpinBox)
