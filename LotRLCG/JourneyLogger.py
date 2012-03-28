@@ -232,6 +232,14 @@ class JourneyLogger(QDialog):
             except IOError:
                 QMessageBox.critical(self, self.tr("Can't save HTML"), self.tr('Failed to write file!'))
                 
+    def showEvent(self, event):
+        if hasattr(self, 'lastGeometry'):
+            self.setGeometry(self.lastGeometry)
+            
+    def closeEvent(self, event):
+        self.lastGeometry = self.geometry()
+        event.accept()
+        
     def createUI(self):
         self.textEdit = QTextEdit()
         clearButton = QPushButton(self.tr('Clear'))

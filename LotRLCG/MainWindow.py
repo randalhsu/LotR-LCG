@@ -36,17 +36,26 @@ class _ScoringDialog(QDialog):
         
         score = threat + dead + damages - victory
         
-        content = '''<tt>  Final Threat Level: {0:3}<br>'''\
-                      '''+   Dead Heroes Cost: {1:3}<br>'''\
-                      '''+  Damages on Heroes: {2:3}<br>'''\
-                      '''-     Victory Points: {3:3}'''\
-                      '''<hr>'''\
-           '''<center><h2>Final Score: {4}</h2></center><br></tt>'''.format(threat, dead, damages, victory, score)
+        content = '''<tt><center>'''\
+                  '''  Final Threat Level: {0:3}<br>'''\
+                  '''+   Dead Heroes Cost: {1:3}<br>'''\
+                  '''+  Damages on Heroes: {2:3}<br>'''\
+                  '''-     Victory Points: {3:3}'''\
+                  '''<hr>'''\
+                  '''<h2>Final Score: {4}</h2>'''\
+                  '''</center><br></tt>'''\
+                  .format(threat, dead, damages, victory, score)
         content = content.replace(' ', '&nbsp;')
         self.label.setText(content)
         
     def showEvent(self, event):
+        if hasattr(self, 'lastGeometry'):
+            self.setGeometry(self.lastGeometry)
         self.updateContent()
+        
+    def closeEvent(self, event):
+        self.lastGeometry = self.geometry()
+        event.accept()
         
     def createUI(self):
         self.label = QLabel()
@@ -56,6 +65,7 @@ class _ScoringDialog(QDialog):
         layout.addWidget(self.label)
         layout.addWidget(closeButton)
         self.setLayout(layout)
+        self.resize(300, 300)
         self.setWindowTitle(self.tr('Scoring'))
 
 
@@ -87,8 +97,16 @@ class _PhaseTips(QDialog):
         layout.addWidget(self.tabWidget)
         layout.addWidget(closeButton)
         self.setLayout(layout)
-        self.setMinimumWidth(500)
+        self.resize(500, 300)
         self.setWindowTitle(self.tr('Phase Tips'))
+        
+    def showEvent(self, event):
+        if hasattr(self, 'lastGeometry'):
+            self.setGeometry(self.lastGeometry)
+            
+    def closeEvent(self, event):
+        self.lastGeometry = self.geometry()
+        event.accept()
 
 
 class _About(QMessageBox):
@@ -593,10 +611,20 @@ class MainWindow(QMainWindow):
         
     def writeSettings(self):
         settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
-        settings.beginGroup('MainWindow')
-        settings.setValue('maximized', self.isMaximized())
-        settings.setValue('size', self.size())
-        settings.setValue('pos', self.pos())
+        settingMapping = {
+            'MainWindow': self,
+            'JourneyLogger': self.journeyLogger,
+            'ScoringDialog': self.scoringDialog,
+            'PhaseTips': self.phaseTips,
+        }
+        settings.beginGroup('Geometry')
+        for (name, widget) in settingMapping.items():
+            settings.beginGroup(name)
+            if name == 'MainWindow':
+                settings.setValue('maximized', widget.isMaximized())
+            settings.setValue('size', widget.size())
+            settings.setValue('pos', widget.pos())
+            settings.endGroup()
         settings.endGroup()
         
         settings.beginGroup('ProgramState')
@@ -605,6 +633,7 @@ class MainWindow(QMainWindow):
         
     def readSettings(self):
         settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
+        settings.beginGroup('Geometry')
         settings.beginGroup('MainWindow')
         maximized = settings.value('maximized', True).toBool()
         if maximized:
@@ -613,6 +642,26 @@ class MainWindow(QMainWindow):
             self.resize(settings.value('size', QSize(1024, 728)).toSize())
             self.move(settings.value('pos', QPoint(0, 0)).toPoint())
         settings.endGroup()
+        
+        settingMapping = {
+            'JourneyLogger': self.journeyLogger,
+            'PhaseTips': self.phaseTips,
+        }
+        for (name, widget) in settingMapping.items():
+            settings.beginGroup(name)
+            widget.resize(settings.value('size', QSize(500, 300)).toSize())
+            pos = settings.value('pos').toPoint()
+            if pos != QPoint():
+                widget.move(pos)
+            settings.endGroup()
+            
+        settings.beginGroup('ScoringDialog')
+        self.scoringDialog.resize(settings.value('size', QSize(300, 300)).toSize())
+        pos = settings.value('pos').toPoint()
+        if pos != QPoint():
+            self.scoringDialog.move(pos)
+        settings.endGroup()
+        settings.endGroup()  # Geometry
         
     def checkIfprogramCrashed(self):
         '''did program crash on last time running?'''
@@ -711,7 +760,7 @@ class MainWindow(QMainWindow):
         refreshPhaseButton.setFocusPolicy(Qt.NoFocus)
         
         self.victorySpinBox = QSpinBox()
-        self.victorySpinBox.valueChanged.connect(lambda: self.log('<tt>Victory:</tt> {0}'.format(self.victorySpinBox.value())))
+        self.victorySpinBox.valueChanged.connect(lambda: self.log('Victory: <font color="#3f48cc">{0}</font>'.format(self.victorySpinBox.value())))
         victoryLabel = QLabel(self.tr('&Victory:'))
         victoryLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
         victoryLabel.setBuddy(self.victorySpinBox)
