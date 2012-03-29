@@ -1,8 +1,11 @@
 Major changelog and Windows binary download:
 
 
-2012.03.21    ( http://db.tt/TDBSB8eR )
+2012.03.30    ( http://db.tt/BUUc9dGu )
+  * Journey logging in Solo Game
   * Refined scenario setup
+  * New supported expansion set:
+      - The Hills of Emyn Muil
 
 
 2012.03.13    ( http://db.tt/CiyIbB64 )
@@ -14,7 +17,8 @@ Major changelog and Windows binary download:
 
 2012.02.24    ( http://db.tt/bokQjsEZ )
   * First release
-  * Solo Game and Deck Builder
+  * Solo Game
+  * Deck Builder
   * Supported expansion sets:
       - Core Set
       - The Hunt for Gollum
