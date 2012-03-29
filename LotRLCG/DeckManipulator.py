@@ -55,6 +55,9 @@ class DeckManipulator(QDialog):
     def setLargeImage(self, card):
         self.parent.setLargeImage(card)
         
+    def log(self, message):
+        self.parentWidget().log(message)
+        
     def createUI(self):
         self.setMaximumWidth(500)
         revealAllButton = QPushButton(self.tr('&Reveal All'))

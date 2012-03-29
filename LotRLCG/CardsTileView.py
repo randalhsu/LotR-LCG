@@ -73,7 +73,8 @@ class CardsTileView(Area):
         self.removeCard(self.draggingItem)
         if self.dragSource:
             self.dragSource.addCard(self.draggingItem)
-        
+            self.log('{0}{1}->{2}[NONE]'.format(self, repr(self.draggingItem), self.dragSource))
+            
     def createTextItem(self, text):
         item = QGraphicsSimpleTextItem(text)
         item.setFont(QFont('Times', 50, QFont.Bold))

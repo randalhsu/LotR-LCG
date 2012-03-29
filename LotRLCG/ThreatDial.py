@@ -68,7 +68,7 @@ class ThreatDial(QGraphicsView):
         self.setValue(self.value - 1)
         
     def appendLog(self):
-        self.window().log('Threat: <font color="#f0422c">{0}</font>'.format(self.value))
+        self.window().log('<font color="#f0422c">Threat Level: {0}</font>'.format(self.value))
         
     def leaveEvent(self, event):
         self.plusItem.hide()

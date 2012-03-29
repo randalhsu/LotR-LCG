@@ -764,7 +764,7 @@ class MainWindow(QMainWindow):
         refreshPhaseButton.setFocusPolicy(Qt.NoFocus)
         
         self.victorySpinBox = QSpinBox()
-        self.victorySpinBox.valueChanged.connect(lambda: self.log('Victory: <font color="#3f48cc">{0}</font>'.format(self.victorySpinBox.value())))
+        self.victorySpinBox.valueChanged.connect(lambda: self.log('<font color="#3f48cc">Victory Points: {0}</font>'.format(self.victorySpinBox.value())))
         victoryLabel = QLabel(self.tr('&Victory:'))
         victoryLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
         victoryLabel.setBuddy(self.victorySpinBox)

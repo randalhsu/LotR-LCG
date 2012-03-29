@@ -49,7 +49,7 @@ class JourneyLogger(QDialog):
             (set_, id) = card.split(',')
             id = int(id)
             title = '[{0}]'.format(cardsInfo[set_][id]['title'])
-            color = self.sphereColor.get(cardsInfo[set_][id]['icon'], '000000')
+            color = self.sphereColor.get(cardsInfo[set_][id]['icon'], '804000')  # Encounter cards' default color
             message = '{0}<font color="#{1}">{2}</font>{3}'.format(message[:cardStartIndex], color, title, message[cardEndIndex:])
         return message
         
@@ -143,7 +143,7 @@ class JourneyLogger(QDialog):
                 
             if destinationArea == '{Hand Area}':
                 return 'Draw {0}'.format(card)
-            elif destinationArea == '{Hero Area}':
+            elif destinationArea == '{Hero Area}' and sourceArea == '{Hand Area}':
                 return 'Play {0}'.format(card)
             elif destinationArea == '{Engaged Area}':
                 return 'Engaged with {0}'.format(card)
@@ -177,11 +177,9 @@ class JourneyLogger(QDialog):
         # message is constructed like this: 'blahblahblah 1 blahblahblah (1->2)' or 'blahblahblah (1->2)'
         # we have to know if BLAH parts are the same
         
+        lastMessage = self.lastMessage
         if currentMessage.endswith(')'):
-            cursor = self.textEdit.textCursor()
-            cursor.movePosition(QTextCursor.StartOfLine, QTextCursor.KeepAnchor)
-            lastMessage = cursor.selectedText()
-            if lastMessage.endsWith(')'):  # isinstance(lastMessage, QString) , so use QString's method
+            if lastMessage.endswith(')'):
                 lastMessage = str(lastMessage)
                 # remove all numbers, then compare two trimmed messages
                 message1 = lastMessage
@@ -190,6 +188,11 @@ class JourneyLogger(QDialog):
                     message1 = re.sub(pattern, '', message1)
                     message2 = re.sub(pattern, '', message2)
                 if message1 == message2:
+                    return True
+        else:
+            for keyword in ('Threat', 'Victory'):
+                pattern = '<font.*?>' + keyword
+                if re.match(pattern, currentMessage) and re.match(pattern, lastMessage):
                     return True
         return False
         
@@ -203,6 +206,11 @@ class JourneyLogger(QDialog):
         cursor.removeSelectedText()  # remove last line
         cursor.deletePreviousChar()  # remove last newline
         
+        for keyword in ('Threat', 'Victory'):
+            pattern = '<font.*?>' + keyword
+            if re.match(pattern, currentMessage):
+                return currentMessage
+                
         lastMessage = self.lastMessage
         suffix = lastMessage[lastMessage.rindex('(') + 1 : -1]
         (startingValue, finalValue) = suffix.split('->')

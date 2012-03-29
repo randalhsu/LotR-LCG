@@ -236,15 +236,15 @@ class Area(QGraphicsView):
         '''this is such a crappy shit'''
         
         def constructLog(sourceAreaName, draggingCard, targetAreaName, targetCard=None):
-            draggingCardName = repr(draggingCard)
+            draggingCardRepr = repr(draggingCard)
             if not draggingCard.revealed() and draggingCard.info['type'] != 'quest':
-                draggingCardName = '[???]'
+                draggingCardRepr = '[???]'
             targetCardName = ''
             if targetCard is None:
                 targetCardName = '[NONE]'
             else:
                 targetCardName = repr(targetCard) if targetCard.revealed() else '[???]'
-            return '{0}{1}->{2}{3}'.format(sourceAreaName, draggingCardName, targetAreaName, targetCardName)
+            return '{0}{1}->{2}{3}'.format(sourceAreaName, draggingCardRepr, targetAreaName, targetCardName)
             
         if draggingItem is targetItem:
             return False
