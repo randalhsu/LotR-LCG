@@ -235,16 +235,12 @@ class JourneyLogger(QDialog):
         self.setStateLabel('Copied to clipboard!')
         
     def saveHtmlFile(self):
-        fileName = QFileDialog.getSaveFileName(self, self.tr('Save HTML'), 'JourneyLog.html', 'HTML (*.html)')
-        if fileName:
-            file = QFile(fileName)
-            file.open(QIODevice.WriteOnly | QIODevice.Text)
-            state = file.writeData(self.textEdit.toHtml())
-            file.close()
-            if state == -1:
-                QMessageBox.critical(self, self.tr("Can't save HTML"), self.tr('Failed to write file!'))
+        filePath = QFileDialog.getSaveFileName(self, self.tr('Save HTML'), 'JourneyLog.html', 'HTML (*.html)')
+        if filePath:
+            if saveFile(filePath, self.textEdit.toHtml()):
+                self.setStateLabel('Saved to "' + QFileInfo(filePath).fileName() + '"')
             else:
-                self.setStateLabel('Saved to "' + fileName[fileName.lastIndexOf('/') + 1:] + '"')
+                QMessageBox.critical(self, self.tr("Can't save HTML"), self.tr('Failed to write file!'))
                 
     def showEvent(self, event):
         if hasattr(self, 'lastGeometry'):

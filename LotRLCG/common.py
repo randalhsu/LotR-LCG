@@ -119,3 +119,13 @@ def warnIfDecksCorrupted():
     if DECKS_CORRUPTED:
         msgBox = QMessageBox(QMessageBox.Critical, self.tr('Decks Corrupted'), self.tr('Decks file "decks.json" corrupted. Loading default decks...'), QMessageBox.Ok, self)
         msgBox.exec_()
+
+
+def saveFile(filePath, contentText):
+    file = QFile(filePath)
+    file.open(QIODevice.WriteOnly | QIODevice.Text)
+    result = file.writeData(contentText)
+    file.close()
+    if result == -1:  # write file failed
+        return False
+    return True

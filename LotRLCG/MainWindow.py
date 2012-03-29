@@ -220,6 +220,8 @@ class MainWindow(QMainWindow):
         self.playerDeckId = setupDialog.selectedDeckId()
         self.setup()
         
+        self.prisonAct.setEnabled(self.scenarioId == 2)  # is it Escape From Dol Guldur?
+        
     def restartGame(self):
         self.cleanup()
         self.setup()
@@ -231,23 +233,22 @@ class MainWindow(QMainWindow):
         self.restartGame()
         
     def saveGame(self):
-        jsonState = self.dumpState(self.getState())
-        fileName = QFileDialog.getSaveFileName(self, self.tr('Save game'), 'LotRLCG.sav', 'Game Save (*.sav)')
-        if fileName:
-            try:
-                f = open(fileName, 'w')
-                f.write(jsonState)
-                f.close()
-            except IOError:
+        state = self.getState()
+        state['version'] = VERSION
+        jsonState = self.dumpState(state)
+        filePath = QFileDialog.getSaveFileName(self, self.tr('Save game'), 'LotRLCG.sav', 'Game Save (*.sav)')
+        if filePath:
+            if not saveFile(filePath, jsonState):
                 QMessageBox.critical(self, self.tr("Can't save game"), self.tr('Failed to write file!'))
                 
-    def loadGame(self, fileName=''):
-        if not fileName:
-            fileName = QFileDialog.getOpenFileName(self, self.tr('Load game'), '.', 'Game Save (*.sav)')
+    def loadGame(self, filePath=''):
+        if not filePath:
+            filePath = QFileDialog.getOpenFileName(self, self.tr('Load game'), '.', 'Game Save (*.sav)')
             
-        if fileName:
-            with open(fileName) as f:
-                jsonState = f.read()
+        if filePath:
+            file = QFile(filePath)
+            if file.open(QIODevice.ReadOnly | QIODevice.Text):
+                jsonState = str(file.readAll())
                 try:
                     state = json.loads(jsonState, encoding='ascii')
                 except ValueError:
@@ -259,6 +260,10 @@ class MainWindow(QMainWindow):
                 for (name, area) in self.nameAreaMapping.items():
                     area.setState(state[name])
                     
+                file.close()
+            else:
+                QMessageBox.critical(self, self.tr("Can't load game"), self.tr('Failed to open file!'))
+                
     def dumpState(self, dictObject):
         return json.dumps(dictObject, separators=(',', ':'), encoding='ascii')
         
@@ -272,6 +277,7 @@ class MainWindow(QMainWindow):
         
     def setup(self):
         self.setupPlayerCards()
+        self.promptMulligan()
         
     def setupPlayerCards(self):
         heroList = []
@@ -303,8 +309,6 @@ class MainWindow(QMainWindow):
         for card in self.heroArea.getList():
            threatValue += card.info.get('cost', 0)
         self.threatDial.setValue(threatValue)
-        
-        self.promptMulligan()
         
     def promptMulligan(self):
         mulliganDialog = _MulliganDialog(self)
@@ -716,9 +720,9 @@ class MainWindow(QMainWindow):
             hero.flip()
             hero.attach(Token('damage'))
             
-        prisonAct = QAction(self.tr('Prison a random Hero'), self)
-        prisonAct.triggered.connect(prisonRandomHero)
-        prisonAct.setToolTip(self.tr('For "Escape From Dol Guldur" scenario'))
+        self.prisonAct = QAction(self.tr('Prison a random Hero'), self)
+        self.prisonAct.triggered.connect(prisonRandomHero)
+        self.prisonAct.setToolTip(self.tr('For "Escape From Dol Guldur" scenario'))
         
         self.scoringDialog = _ScoringDialog(self)
         self.scoringAct = QAction(self.tr('Scoring...'), self)
@@ -727,7 +731,7 @@ class MainWindow(QMainWindow):
         utilityMenu = self.menuBar().addMenu(self.tr('&Utility'))
         utilityMenu.addAction(self.journeyLoggerAct)
         utilityMenu.addSeparator()
-        utilityMenu.addAction(prisonAct)
+        utilityMenu.addAction(self.prisonAct)
         utilityMenu.addAction(self.scoringAct)
         
         self.phaseTips = _PhaseTips(self)
