@@ -594,6 +594,8 @@ class MainWindow(QMainWindow):
         for card in self.heroArea.getList():
             if card.info['type'] == 'hero' and card.revealed():
                 card.attach(Token('resource'))
+                tokenCount = card.getState().get('R', 0)
+                self.log('{0}->{1}({2})'.format('resource', repr(card), tokenCount))
         card = self.playerDeck.draw()
         if card:
             if not card.revealed():
