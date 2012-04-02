@@ -1,3 +1,4 @@
+import glob
 from LotRLCG import *
 
 
@@ -75,13 +76,31 @@ class Launcher(QDialog):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     
+    # restoring locale setting
+    # these shit won't work if packed into a function. WTF?
+    CONFIG_PATH = './resource/config.ini'  # should be the same as MainWindow.CONFIG_PATH
+    
+    settings = QSettings(CONFIG_PATH, QSettings.IniFormat)
+    settings.beginGroup('Localization')
+    locale = str(settings.value('Interface', QLocale.system().name()).toString())  # use system's default locale
+    settings.endGroup()
+    
+    # then check if the translation file exists
+    for qmFilePath in glob.glob('./resource/translations/*.qm'):
+        qmFilePath = qmFilePath.replace('\\', '/')
+        if locale in qmFilePath:
+            break
+    else:  # use 'en_US' if not exists
+        locale = 'en_US'
+        
     qtTranslator = QTranslator()
-    qtTranslator.load('./resource/translations/qt_{0}.qm'.format(QLocale.system().name()))
+    qtTranslator.load('./resource/translations/qt_{0}.qm'.format(locale))
     app.installTranslator(qtTranslator)
     
-    myTranslator = QTranslator()
-    myTranslator.load('./resource/translations/{0}.qm'.format(QLocale.system().name()))
-    app.installTranslator(myTranslator)
+    translator = QTranslator()
+    translator.load('./resource/translations/{0}.qm'.format(locale))
+    app.installTranslator(translator)
+    # done restoring locale setting
     
     launcher = Launcher()
     launcher.show()

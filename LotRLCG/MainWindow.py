@@ -1,6 +1,7 @@
 '''
 TODO: make dragging cursor correct
 '''
+import collections
 import random
 from common import *
 from Draggable import *
@@ -616,6 +617,11 @@ class MainWindow(QMainWindow):
         
     def writeSettings(self):
         settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
+        
+        settings.beginGroup('Localization')
+        settings.setValue('Interface', self.locale)
+        settings.endGroup()
+        
         settingMapping = {
             'MainWindow': self,
             'JourneyLogger': self.journeyLogger,
@@ -684,7 +690,7 @@ class MainWindow(QMainWindow):
     def createUI(self):
         self.newGameAct = QAction(self.tr('&New Journey...'), self)
         self.newGameAct.triggered.connect(self.startNewGameAction)
-        self.newGameAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_N))
+        self.newGameAct.setShortcut(QKeySequence.New)
         self.restartGameAct = QAction(self.tr('&Restart Journey'), self)
         self.restartGameAct.triggered.connect(self.restartGameAction)
         self.restartGameAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_R))
@@ -746,6 +752,46 @@ class MainWindow(QMainWindow):
         aboutAct.triggered.connect(lambda: self.about.show())
         
         helpMenu = self.menuBar().addMenu(self.tr('?'))
+        
+        def determineCurrentLocale():
+            # the same things as in Launcher.py
+            settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
+            settings.beginGroup('Localization')
+            locale = str(settings.value('Interface', 'en_US').toString())  # use system's default locale
+            settings.endGroup()
+            
+            for qmFilePath in glob.glob('./resource/translations/*.qm'):
+                qmFilePath = qmFilePath.replace('\\', '/')
+                if locale in qmFilePath:
+                    break
+            else:  # use 'en_US' if not exists
+                locale = 'en_US'
+            return locale
+            
+        self.locale = determineCurrentLocale()
+        
+        def changeLocale(locale):
+            def changeLocale_():
+                self.locale = locale
+                QMessageBox.information(self, self.tr('Setting Changed'), self.tr('Restart program to apply change.'))
+            return changeLocale_
+            
+        languages = collections.OrderedDict()
+        languages[self.tr('English')] = 'en_US'
+        languages[self.tr('Traditional Chinese')] = 'zh_TW'
+        languages[self.tr('Simplified Chinese')] = 'zh_CN'
+        
+        interfaceLanguageMenu = helpMenu.addMenu(self.tr('Interface Langauge'))
+        languageGroup = QActionGroup(self)
+        for (language, locale) in languages.items():
+            changeLanguageAct = QAction(language, self, checkable=True)
+            changeLanguageAct.triggered.connect(changeLocale(locale))
+            languageGroup.addAction(changeLanguageAct)
+            
+            interfaceLanguageMenu.addAction(changeLanguageAct)
+            if locale == self.locale:
+                changeLanguageAct.setChecked(True)
+                
         helpMenu.addAction(aboutAct)
         
         self.largeImageLabel = QLabel()
