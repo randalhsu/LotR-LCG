@@ -115,9 +115,9 @@ def isHeroCard(set_, id):
     return cardsInfo[set_][id]['type'] == 'hero'
 
 
-def warnIfDecksCorrupted():
+def warnIfDecksCorrupted(parentWidget):
     if DECKS_CORRUPTED:
-        msgBox = QMessageBox(QMessageBox.Critical, self.tr('Decks Corrupted'), self.tr('Decks file "decks.json" corrupted. Loading default decks...'), QMessageBox.Ok, self)
+        msgBox = QMessageBox(QMessageBox.Critical, QCoreApplication.translate('QObject', 'Decks Corrupted'), QString('%1<br>%2').arg(QCoreApplication.translate('QObject', 'Decks file "decks.json" corrupted!')).arg(QCoreApplication.translate('QObject', 'Loading default decks...')), QMessageBox.Ok, parentWidget)
         msgBox.exec_()
 
 

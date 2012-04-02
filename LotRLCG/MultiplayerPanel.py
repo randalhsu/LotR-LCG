@@ -104,7 +104,7 @@ class _PlayerStatePanel(QWidget):
         self.engagedArea.setBackgroundBrush(QBrush(Qt.darkRed))
         self.heroArea = Area('Hero Area')
         self.heroArea.setBackgroundBrush(QBrush(Qt.darkBlue))
-        self.discardPile = Deck('Player Discard Pile')
+        self.discardPile = Deck('Player Discard Pile', self.tr('Player<br>Discard<br>Pile', 'Deck'))
         self.discardPile.setBackgroundBrush(QBrush(Qt.darkYellow))
         
         lcdLayout = QGridLayout()

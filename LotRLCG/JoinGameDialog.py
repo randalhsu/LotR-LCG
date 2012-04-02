@@ -53,7 +53,7 @@ class JoinGameDialog(xxxxGameDialog):
     def checkIfConnectedToServer(self):
         if self.client.state() != QAbstractSocket.ConnectedState:
             self.client.abort()
-            QMessageBox.critical(self, self.tr('Connection Timeout'), self.tr('Cannot connect to server!\n(Wrong address maybe?)'))
+            QMessageBox.critical(self, self.tr('Connection Timeout'), QString('%1<br>%2').arg(self.tr('Cannot connect to server!')).arg('(Wrong address maybe?)'))
             
         self.joinButton.setText('&Join Game!')
         self.joinButton.setEnabled(True)

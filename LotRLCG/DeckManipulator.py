@@ -64,7 +64,7 @@ class DeckManipulator(QDialog):
         coverAllButton = QPushButton(self.tr('Co&ver All'))
         self.stateLabel = QLabel()
         shuffleButton = QPushButton(self.tr('&Shuffle'))
-        closeButton = QPushButton(self.tr('&Close'))
+        closeButton = QPushButton(QCoreApplication.translate('QObject', '&Close'))
         
         revealAllButton.clicked.connect(self.revealAll)
         coverAllButton.clicked.connect(self.coverAll)

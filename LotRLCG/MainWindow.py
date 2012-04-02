@@ -36,15 +36,14 @@ class _ScoringDialog(QDialog):
         
         score = threat + dead + damages - victory
         
-        content = '''<tt><center>'''\
-                  '''  Final Threat Level: {0:3}<br>'''\
-                  '''+   Dead Heroes Cost: {1:3}<br>'''\
-                  '''+  Damages on Heroes: {2:3}<br>'''\
-                  '''-     Victory Points: {3:3}'''\
-                  '''<hr>'''\
-                  '''<h2>Final Score: {4}</h2>'''\
-                  '''</center><br></tt>'''\
-                  .format(threat, dead, damages, victory, score)
+        content = QString('<tt><center>') + \
+                  self.tr('  Final Threat Level: %1').arg(threat, 3) + QString('<br>') + \
+                  self.tr('+   Dead Heroes Cost: %1').arg(dead, 3) + QString('<br>') + \
+                  self.tr('+  Damages on Heroes: %1').arg(damages, 3) + QString('<br>') + \
+                  self.tr('-     Victory Points: %1').arg(victory, 3) + \
+                  QString('<hr>') + \
+                  QString('<h2>%1</h2>').arg(self.tr('Final Score: %1').arg(score, 3)) + \
+                  QString('</center><br></tt>')
         content = content.replace(' ', '&nbsp;')
         self.label.setText(content)
         
@@ -59,7 +58,7 @@ class _ScoringDialog(QDialog):
         
     def createUI(self):
         self.label = QLabel()
-        closeButton = QPushButton(self.tr('&Close'))
+        closeButton = QPushButton(QCoreApplication.translate('QObject', '&Close'))
         closeButton.clicked.connect(self.close)
         layout = QVBoxLayout()
         layout.addWidget(self.label)
@@ -91,7 +90,7 @@ class _PhaseTips(QDialog):
             label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
             self.tabWidget.addTab(label, phase)
         
-        closeButton = QPushButton(self.tr('&Close'))
+        closeButton = QPushButton(QCoreApplication.translate('QObject', '&Close'))
         closeButton.clicked.connect(self.close)
         layout = QVBoxLayout()
         layout.addWidget(self.tabWidget)
@@ -112,20 +111,20 @@ class _PhaseTips(QDialog):
 class _About(QMessageBox):
     def __init__(self, parent=None):
         text = '<br><center><h2>The Lord of the Rings: The Card Game</h2><big>version {0}</big><br><br>Program written by amulet (Taiwan)</center><br><br>Try <b>Left / Right / Double Click</b> and <b>Drag & Drop</b> everywhere.<br><br><a href="http://www.fantasyflightgames.com/edge_minisite_sec.asp?eidm=129&esem=4">Game rules</a> available at Fantasy Flight Games website.<br><br><code><a href="https://github.com/amulet-tw/LotR-LCG">Source code</a> licensed under GNU GPL v2.</code>'.format(VERSION)
-        super(_About, self).__init__(QMessageBox.Information, 'About', text, QMessageBox.Ok, parent)
+        super(_About, self).__init__(QMessageBox.Information, QCoreApplication.translate('_About', 'About'), text, QMessageBox.Ok, parent)
 
 
 class _MulliganDialog(QMessageBox):
     def __init__(self, parent=None):
-            super(_MulliganDialog, self).__init__(QMessageBox.Question, 'Take MULLIGAN?', '<b>Redraw hand?</b>', parent=parent)
-            yesButton = self.addButton(self.tr("OF COURSE!"), QMessageBox.YesRole)
-            yesButton.clicked.connect(self.parentWidget().takeMulligan)
-            noButton = self.addButton(self.tr("I'll keep them"), QMessageBox.NoRole)
-            noButton.clicked.connect(self.parentWidget().giveUpMulligan)
-            self.setDefaultButton(noButton)
-            
-            self.setModal(False)
-            self.setMinimumWidth(200)
+        super(_MulliganDialog, self).__init__(QMessageBox.Question, QCoreApplication.translate('_MulliganDialog', 'Take MULLIGAN?'), QString('<b>%1</b>').arg(QCoreApplication.translate('_MulliganDialog', 'Redraw hand?')), parent=parent)
+        yesButton = self.addButton(self.tr("OF COURSE!"), QMessageBox.YesRole)
+        yesButton.clicked.connect(self.parentWidget().takeMulligan)
+        noButton = self.addButton(self.tr("I'll keep them"), QMessageBox.NoRole)
+        noButton.clicked.connect(self.parentWidget().giveUpMulligan)
+        self.setDefaultButton(noButton)
+        
+        self.setModal(False)
+        self.setMinimumWidth(200)
             
     def closeEvent(self, event):
         self.parentWidget().giveUpMulligan()
@@ -539,14 +538,14 @@ class MainWindow(QMainWindow):
                 
         elif scenarioId == 8:  # Return to Mirkwood
             if self.playerCount > 1:
-                QMessageBox.information(self, title, self.tr('Choose a player to guard <b>"Gollum"</b>,<br>then reveal 1 card per player.'))
+                QMessageBox.information(self, title, QString('%1<br>%2').arg(self.tr('Choose a player to guard %1,').arg('<b>"Gollum"</b>')).arg(self.tr('then reveal 1 card per player.')))
                 
         elif scenarioId == 10:  # Into the Pit
             self.locationDeck.addCard(self.stagingArea.draw())  # make East-gate as active location
-            QMessageBox.information(self, title, self.tr('Attach <b>"Cave Torch"</b> to a hero,<br>then reveal 1 card per player.'))
+            QMessageBox.information(self, title, QString('%1<br>%2').arg(self.tr('Attach %1 to a hero,').arg('<b>"Cave Torch"</b>')).arg(self.tr('then reveal 1 card per player.')))
             
         elif scenarioId == 11:  # The Seventh Level
-            QMessageBox.information(self, title, self.tr('Attach <b>"Book of Mazarbul"</b> to a hero,<br>then reveal 1 card per player.'))
+            QMessageBox.information(self, title, QString('%1<br>%2').arg(self.tr('Attach %1 to a hero,').arg('<b>"Book of Mazarbul"</b>')).arg(self.tr('then reveal 1 card per player.')))
         # EXPANSION
         
     def logInitialState(self):
@@ -716,6 +715,11 @@ class MainWindow(QMainWindow):
         self.journeyLoggerAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_J))
         self.journeyLoggerAct.setIcon(QIcon('./resource/image/token/progress.png'))
         
+        self.phaseTips = _PhaseTips(self)
+        phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
+        phaseTipsAct.triggered.connect(lambda: self.phaseTips.show())
+        phaseTipsAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_P))
+        
         def prisonRandomHero():
             hero = random.choice(self.heroArea.getList())
             self.log('{0} is prisoned!'.format(hero))
@@ -732,20 +736,16 @@ class MainWindow(QMainWindow):
         
         utilityMenu = self.menuBar().addMenu(self.tr('&Utility'))
         utilityMenu.addAction(self.journeyLoggerAct)
+        utilityMenu.addAction(phaseTipsAct)
         utilityMenu.addSeparator()
         utilityMenu.addAction(self.prisonAct)
         utilityMenu.addAction(self.scoringAct)
         
-        self.phaseTips = _PhaseTips(self)
         self.about = _About(self)
-        phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
-        phaseTipsAct.triggered.connect(lambda: self.phaseTips.show())
-        phaseTipsAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_P))
         aboutAct = QAction(self.tr('&About'), self)
         aboutAct.triggered.connect(lambda: self.about.show())
         
-        helpMenu = self.menuBar().addMenu(self.tr('&Help'))
-        helpMenu.addAction(phaseTipsAct)
+        helpMenu = self.menuBar().addMenu(self.tr('?'))
         helpMenu.addAction(aboutAct)
         
         self.largeImageLabel = QLabel()
@@ -758,11 +758,11 @@ class MainWindow(QMainWindow):
         
         resourcePhaseButton = QPushButton(self.tr('Resource Phase'))
         resourcePhaseButton.clicked.connect(self.proceedResourcePhase)
-        resourcePhaseButton.setToolTip(self.tr('Add 1 resource to each hero and draw 1 card.\nSpecial card-effects are not concerned.'))
+        resourcePhaseButton.setToolTip(QString('%1<br>%2').arg(self.tr('Add 1 resource to each hero and draw 1 card.')).arg(self.tr('Special card-effects are not concerned.')))
         resourcePhaseButton.setFocusPolicy(Qt.NoFocus)
         refreshPhaseButton = QPushButton(self.tr('Refresh Phase'))
         refreshPhaseButton.clicked.connect(self.proceedRefreshPhase)
-        refreshPhaseButton.setToolTip(self.tr('Ready all cards and raise 1 threat.\nSpecial card-effects are not concerned.'))
+        refreshPhaseButton.setToolTip(QString('%1<br>%2').arg(self.tr('Ready all cards and raise 1 threat.')).arg(self.tr('Special card-effects are not concerned.')))
         refreshPhaseButton.setFocusPolicy(Qt.NoFocus)
         
         self.victorySpinBox = QSpinBox()
@@ -776,15 +776,15 @@ class MainWindow(QMainWindow):
         self.handArea = Area('Hand Area')
         self.stagingArea = Area('Staging Area', orientation=Qt.Vertical)
         
-        self.locationDeck = Deck('Active Location')
-        self.questDeck = Deck('Quest Deck')
-        self.encounterDeck = Deck('Encounter Deck')
-        self.encounterDiscardPile = Deck('Encounter Discard Pile')
+        self.locationDeck = Deck('Active Location', self.tr('Active<br>Location', 'Deck'))
+        self.questDeck = Deck('Quest Deck', self.tr('Quest<br>Deck', 'Deck'))
+        self.encounterDeck = Deck('Encounter Deck', self.tr('Encounter<br>Deck', 'Deck'))
+        self.encounterDiscardPile = Deck('Encounter Discard Pile', self.tr('Encounter<br>Discard<br>Pile', 'Deck'))
         self.tokenBank = TokenBank()
-        self.prepareDeck = Deck('Prepare Deck', Qt.Horizontal)
-        self.removedPile = Deck('Removed From Play', Qt.Horizontal)
-        self.playerDeck = Deck('Player Deck')
-        self.playerDiscardPile = Deck('Player Discard Pile')
+        self.prepareDeck = Deck('Prepare Deck', self.tr('Prepare<br>Deck', 'Deck'), Qt.Horizontal)
+        self.removedPile = Deck('Removed From Play', self.tr('Removed<br>From<br>Play', 'Deck'), Qt.Horizontal)
+        self.playerDeck = Deck('Player Deck', self.tr('Player<br>Deck', 'Deck'))
+        self.playerDiscardPile = Deck('Player Discard Pile', self.tr('Player<br>Discard<br>Pile', 'Deck'))
         
         self.engagedArea.setBackgroundBrush(QBrush(Qt.darkRed))
         self.heroArea.setBackgroundBrush(QBrush(Qt.darkBlue))

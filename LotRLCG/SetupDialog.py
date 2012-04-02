@@ -5,7 +5,7 @@ class SetupDialog(QDialog):
     def __init__(self, parent=None):
         super(SetupDialog, self).__init__(parent)
         self.createUI()
-        warnIfDecksCorrupted()
+        warnIfDecksCorrupted(parent)
         
     def selectedScenarioId(self):
         for (id, button) in enumerate(self.scenarioButtons):
@@ -66,7 +66,7 @@ class SetupDialog(QDialog):
                 self.topLevelWidget().descriptionLabel.setText(self.description)
                 
         self.scenarioButtons = []
-        self.scenarioGroupBox = QGroupBox(self.tr('Scenario:'))
+        self.scenarioGroupBox = QGroupBox(QCoreApplication.translate('QObject', 'Scenario:'))
         scenarioLayout = QGridLayout()
         scenarioNames = [scenario['icon'] for scenario in scenariosInfo]
         
@@ -87,7 +87,7 @@ class SetupDialog(QDialog):
         self.scenarioGroupBox.leaveEvent = lambda _: self.descriptionLabel.setText(self.scenarioButtons[self.selectedScenarioId()].description)
         
         self.deckButtons = []
-        decksGroupBox = QGroupBox(self.tr('Player Deck:'))
+        decksGroupBox = QGroupBox(QCoreApplication.translate('QObject', 'Player Deck:'))
         decksLayout = QVBoxLayout()
         for (i, deck) in enumerate(playerDecksInfo):
             button = RadioButton(deck['name'])
@@ -100,7 +100,7 @@ class SetupDialog(QDialog):
         decksGroupBox.setLayout(decksLayout)
         decksGroupBox.leaveEvent = lambda _: self.descriptionLabel.setText(self.deckButtons[self.selectedDeckId()].description)
         
-        descriptionGroupBox = QGroupBox(self.tr('Description:'))
+        descriptionGroupBox = QGroupBox(QCoreApplication.translate('QObject', 'Description:'))
         self.descriptionLabel = QLabel(self.scenarioButtons[0].description)
         self.descriptionLabel.setMinimumWidth(200)
         self.descriptionLabel.setWordWrap(True)
@@ -109,7 +109,7 @@ class SetupDialog(QDialog):
         littleLayout = QVBoxLayout()
         littleLayout.addWidget(self.descriptionLabel)
         descriptionGroupBox.setLayout(littleLayout)
-        self.startButton = QPushButton(self.tr('Start!'))
+        self.startButton = QPushButton(QCoreApplication.translate('QObject', 'Start!'))
         self.startButton.clicked.connect(self.accept)
         
         midLayout = QVBoxLayout()
@@ -121,7 +121,7 @@ class SetupDialog(QDialog):
         layout.addLayout(midLayout)
         layout.addWidget(decksGroupBox)
         self.setLayout(layout)
-        self.setWindowTitle(self.tr('Setting Game'))
+        self.setWindowTitle(QCoreApplication.translate('QObject', 'Setting Game'))
 
 
 class ClientSetupDialog(SetupDialog):
@@ -129,7 +129,7 @@ class ClientSetupDialog(SetupDialog):
         super(ClientSetupDialog, self).__init__(parent)
         self.scenarioGroupBox.hide()
         self.descriptionLabel.setText(self.deckButtons[0].description)
-        self.startButton.setText(self.tr('Ready!'))
+        self.startButton.setText(QCoreApplication.translate('QObject', 'Ready!'))
         
     def selectedScenarioId(self):
         return -1

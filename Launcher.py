@@ -74,6 +74,15 @@ class Launcher(QDialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    
+    qtTranslator = QTranslator()
+    qtTranslator.load('./resource/translations/qt_{0}.qm'.format(QLocale.system().name()))
+    app.installTranslator(qtTranslator)
+    
+    myTranslator = QTranslator()
+    myTranslator.load('./resource/translations/{0}.qm'.format(QLocale.system().name()))
+    app.installTranslator(myTranslator)
+    
     launcher = Launcher()
     launcher.show()
     sys.exit(app.exec_())

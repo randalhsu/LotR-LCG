@@ -240,13 +240,13 @@ class JourneyLogger(QDialog):
         
     def copyPlainText(self):
         QApplication.clipboard().setText(self.textEdit.toPlainText())
-        self.setStateLabel('Copied to clipboard!')
+        self.setStateLabel(self.tr('Copied to clipboard!'))
         
     def saveHtmlFile(self):
         filePath = QFileDialog.getSaveFileName(self, self.tr('Save HTML'), 'JourneyLog.html', 'HTML (*.html)')
         if filePath:
             if saveFile(filePath, self.textEdit.toHtml()):
-                self.setStateLabel('Saved to "' + QFileInfo(filePath).fileName() + '"')
+                self.setStateLabel(self.tr('Saved to "%1"'.arg(QFileInfo(filePath).fileName())))
             else:
                 QMessageBox.critical(self, self.tr("Can't save HTML"), self.tr('Failed to write file!'))
                 
@@ -267,7 +267,7 @@ class JourneyLogger(QDialog):
         saveHtmlButton = QPushButton(self.tr('&Save as HTML'))
         saveHtmlButton.clicked.connect(self.saveHtmlFile)
         self.stateLabel = QLabel()
-        closeButton = QPushButton(self.tr('&Close'))
+        closeButton = QPushButton(QCoreApplication.translate('QObject', '&Close'))
         closeButton.clicked.connect(self.close)
         
         buttonsLayout = QHBoxLayout()

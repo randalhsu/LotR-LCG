@@ -173,7 +173,7 @@ class DeckBuilder(QMainWindow):
         self.timer.setInterval(6000)
         self.timer.timeout.connect(self.clearStateLabel)
         
-        warnIfDecksCorrupted()
+        warnIfDecksCorrupted(self)
         
         QTimer.singleShot(0, self.loadPlayerCards)
         
@@ -185,9 +185,13 @@ class DeckBuilder(QMainWindow):
         
     def loadCards(self, type_):
         assert(type_ in ('player', 'encounter'))  # split loading into two types, in order to speed up program startup time
+        translations = {
+            'player': self.tr('player'),
+            'encounter': self.tr('encounter'),
+        }
         
         self.setCursor(Qt.WaitCursor)
-        self.loadingLabel.setText('Loading {0} card images...'.format(type_))
+        self.loadingLabel.setText(self.tr('Loading %1 card images...').arg(translations[type_]))
         QApplication.processEvents()  # force visual label text update
         
         for set_ in SETS:
@@ -366,15 +370,15 @@ class DeckBuilder(QMainWindow):
         
     def updateSizeLabel(self):
         dirtyMark = ' (*)' if self.dirty else ''
-        self.sizeLabel.setText('Size: {0}{1}'.format(self.currentDeckSize(), dirtyMark))
+        self.sizeLabel.setText(QString('%1: %2%3').arg(self.tr('Size')).arg(self.currentDeckSize()).arg(dirtyMark))
         
     def makeRedFont(self, text):
-        return '<font color="red">{0}</font>'.format(text)
+        return QString('<font color="red">%1</font>').arg(text)
         
     def addToDeck(self):
         idx = self.deckComboBox.currentIndex()
         if idx == -1:
-            self.setStateLabel(self.makeRedFont(self.tr('No deck. Try to Add New Deck first.')))
+            self.setStateLabel(self.makeRedFont(self.tr('No deck. Try to Add New Deck first')))
             return
             
         card = self.playerCardsTable.selectedCard()
@@ -425,7 +429,7 @@ class DeckBuilder(QMainWindow):
                     self.deckTable.scrollToItem(item)
             self.deckTable.setSortingEnabled(True)
             #self.deckTable.resizeColumnsToContents()
-            self.setStateLabel('{0} joined the deck!'.format(cardsInfo[setFull[set_]][id]['title']))
+            self.setStateLabel(self.tr('%1 joined the deck!').arg(cardsInfo[setFull[set_]][id]['title']))
             
         # TODO: highlight deckTable's current row
         # ISSUE: adding a card to empty deck cause strange colspan
@@ -453,7 +457,7 @@ class DeckBuilder(QMainWindow):
             self.setStateLabel('{0} = {1}'.format(cardsInfo[set_][id]['title'], self.currentDeck[card]))
         else:
             self.deckTable.removeRow(row)
-            self.setStateLabel('{0} has gone...'.format(cardsInfo[set_][id]['title']))
+            self.setStateLabel(self.tr('%1 has gone...').arg(cardsInfo[set_][id]['title']))
             #self.deckTable.setCurrentItem(None)
         self.updateSizeLabel()
         
@@ -467,7 +471,7 @@ class DeckBuilder(QMainWindow):
                 return
             for deck in self.decks:
                 if deckName == deck['name']:
-                    msgBox = QMessageBox(QMessageBox.Critical, self.tr('Occupied Name'), self.tr('Deck name occupied.'), QMessageBox.Ok, self)
+                    msgBox = QMessageBox(QMessageBox.Critical, self.tr('Add New Deck Failed'), self.tr('Deck name occupied!'), QMessageBox.Ok, self)
                     msgBox.exec_()
                     return
                     
@@ -477,20 +481,20 @@ class DeckBuilder(QMainWindow):
             self.deckComboBox.setCurrentIndex(self.deckComboBox.count() - 1)
             self.dirty = True
             self.updateDeckTable()
-            self.setStateLabel('New deck "{0}" added'.format(deckName))
+            self.setStateLabel(self.tr('New deck "%1" added').arg(deckName))
         
     def removeDeck(self):
         idx = self.deckComboBox.currentIndex()
         if idx == -1:
             return
         deckName = self.decks[idx]['name']
-        msgBox = QMessageBox(QMessageBox.Warning, self.tr('Remove Deck'), 'Remove "{0}"?'.format(deckName), QMessageBox.Ok | QMessageBox.Cancel, self)
+        msgBox = QMessageBox(QMessageBox.Warning, self.tr('Remove Deck'), self.tr('Remove "%1"?').arg(deckName), QMessageBox.Ok | QMessageBox.Cancel, self)
         if msgBox.exec_() == QMessageBox.Ok:
             self.decks.pop(idx)
             self.deckComboBox.removeItem(idx)
             self.dirty = True
             self.updateDeckTable()
-            self.setStateLabel('Deck "{0}" removed'.format(deckName))
+            self.setStateLabel(self.tr('Deck "%1" removed').arg(deckName))
         
     def duplicateDeck(self):
         idx = self.deckComboBox.currentIndex()
@@ -513,7 +517,7 @@ class DeckBuilder(QMainWindow):
         self.deckComboBox.update()
         self.dirty = True
         self.updateDeckTable()
-        self.setStateLabel('Deck "{0}" duplicated'.format(deckName))
+        self.setStateLabel(self.tr('Deck "%1" duplicated').arg(deckName))
         
     def updateDeckName(self, deckName):
         self.deckComboBox.setItemText(self.deckComboBox.currentIndex(), deckName)
@@ -535,7 +539,7 @@ class DeckBuilder(QMainWindow):
             
         info = ''
         if self.currentDeckSize() < 30:
-            info = self.makeRedFont(self.tr('Warning: Deck size must be at least 30.<br>'))
+            info = self.makeRedFont(QString('%1<br>').arg(self.tr('Warning: Deck size must be at least 30')))
             
         self.setStateLabel(info + self.tr('Decks saved to "decks.json"!'))
         self.dirty = False
@@ -560,7 +564,7 @@ class DeckBuilder(QMainWindow):
         self.largeImageLabel.currentCard = None
         
         self.loadingLabel = QLabel()
-        infoLabel = QLabel('Program written by amulet')
+        infoLabel = QLabel(self.tr('Program written by amulet'))
         
         leftLayout = QVBoxLayout()
         leftLayout.addWidget(self.largeImageLabel)
@@ -640,7 +644,7 @@ class DeckBuilder(QMainWindow):
         
     def closeEvent(self, event):
         if self.dirty:
-            msgBox = QMessageBox(QMessageBox.Warning, self.tr('Unsaved Changes'), self.tr('Some changes are not saved yet.<br>Save now?'), QMessageBox.Save | QMessageBox.No | QMessageBox.Cancel, self)
+            msgBox = QMessageBox(QMessageBox.Warning, self.tr('Unsaved Changes'), QString('%1<br>%2').arg(self.tr('Some changes are not saved yet.')).arg(self.tr('Save now?')), QMessageBox.Save | QMessageBox.No | QMessageBox.Cancel, self)
             choice = msgBox.exec_()
             if choice == QMessageBox.Save:
                 self.save()

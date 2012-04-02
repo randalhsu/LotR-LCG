@@ -76,7 +76,7 @@ class MultiplayerMainWindow(MainWindow):
         
         if self.isServer:
             setupDialog = SetupDialog(self)
-            setupDialog.startButton.setText(self.tr('Ready!'))
+            setupDialog.startButton.setText(QCoreApplication.translate('QObject', 'Ready!'))
             setupDialog.exec_()
             self.scenarioId = setupDialog.selectedScenarioId()
             self.playerDeckId = setupDialog.selectedDeckId()

@@ -78,7 +78,7 @@ class Client(QTcpSocket):
             
             if 'has left the game' in data:
                 leftPlayerNickname = message.split(' ')[0]
-                QMessageBox.critical(self.parent, self.tr('Player Disconnected'), '{0} has left the game...'.format(leftPlayerNickname))
+                QMessageBox.critical(self.parent, self.tr('Player Disconnected'), self.tr('%1 has left the game...'.arg(leftPlayerNickname)))
         else:
             chatMessage = nickname + '> ' + QString.fromUtf8(message)
             self.parent.appendMessage(chatMessage)
@@ -105,7 +105,7 @@ class Client(QTcpSocket):
             elif content.startswith('VERSION'):
                 version = content.split(':')[1]
                 if version != VERSION:
-                    QMessageBox.warning(self.parent, self.tr('Different Version'), self.tr('Server\'s program version is "{0}".\nAnything could happen.'.format(version)))
+                    QMessageBox.warning(self.parent, self.tr('Different Version'), QString('%1<br>%2').arg(self.tr('Server\'s program version is "%1".').arg(version)).arg(self.tr('Anything could happen.')))
                     
             elif content == 'CLOSE':  # data == 'SERVER:CLOSE\n'
                 QMessageBox.critical(self.parent, self.tr('Disconnected'), self.tr('SERVER CLOSED!'))
