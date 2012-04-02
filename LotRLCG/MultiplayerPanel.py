@@ -158,6 +158,9 @@ class MultiplayerPanel(QDialog):
     def setLargeImage(self, card):
         self.parentWidget().setLargeImage(card)
         
+    def log(self, message):
+        self.parentWidget().log(message)
+        
     def keyPressEvent(self, event):
         self.chatter.setFocus()
         super(MultiplayerPanel, self).keyPressEvent(event)
