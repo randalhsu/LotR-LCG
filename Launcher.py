@@ -38,7 +38,7 @@ class Launcher(QDialog):
         deckBuilder.show()
         
     def createUI(self):
-        icon = QIcon('./resource/image/LotRLCG.ico')
+        icon = QIcon(':/images/icons/LotRLCG.ico')
         
         soloButton = QPushButton(icon, self.tr('     &Solo Game     '))
         soloButton.clicked.connect(self.startSoloGame)
@@ -48,13 +48,13 @@ class Launcher(QDialog):
         multiplayerMenu.addAction(self.tr('&Host Game'), self.startHostingGame)
         multiplayerMenu.addAction(self.tr('&Join Game'), self.startJoiningGame)
         
-        multiplayerButton = QPushButton(QIcon('./resource/image/LotRLCG_MP.ico'), self.tr('&Multiplayer Game'))
+        multiplayerButton = QPushButton(QIcon(':/images/icons/LotRLCG_MP.ico'), self.tr('&Multiplayer Game'))
         multiplayerButton.setMenu(multiplayerMenu)
         
-        deckBuilderButton = QPushButton(QIcon('./resource/image/DeckBuilder.ico'), self.tr('    &Deck Builder    '))
+        deckBuilderButton = QPushButton(QIcon(':/images/icons/DeckBuilder.ico'), self.tr('    &Deck Builder    '))
         deckBuilderButton.clicked.connect(self.startDeckBuilder)
         
-        quitButton = QPushButton(QIcon('./resource/image/exit.ico'), self.tr('           &Quit           '))
+        quitButton = QPushButton(QIcon(':/images/icons/exit.ico'), self.tr('           &Quit           '))
         quitButton.clicked.connect(self.close)
         
         layout = QVBoxLayout()
@@ -101,6 +101,7 @@ if __name__ == '__main__':
     translator.load('./resource/translations/{0}.qm'.format(locale))
     app.installTranslator(translator)
     # done restoring locale setting
+    
     
     launcher = Launcher()
     launcher.show()

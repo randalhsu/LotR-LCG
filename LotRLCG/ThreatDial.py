@@ -12,7 +12,7 @@ class ThreatDial(QGraphicsView):
         self.scene = QGraphicsScene()
         self.setScene(self.scene)
         
-        self.threatPixmap = QPixmap('./resource/image/threatdial.png')
+        self.threatPixmap = QPixmap(':/images/threatdial.png')
         self.threatItem = None
         
         gradient = QLinearGradient()

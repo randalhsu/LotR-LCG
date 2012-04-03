@@ -8,7 +8,7 @@ class DeckManipulator(QDialog):
         parent.addDeckManipulator(self)
         self.parent = parent
         
-        self.name = deck.name
+        self.name = deck.visualName.replace('<br>', ' ')
         self.deck = deck
         self.tileView = CardsTileView(self.deck, parent, self)
         self.createUI()
@@ -91,7 +91,7 @@ class DeckManipulator(QDialog):
         layout.addWidget(self.tileView)
         layout.addLayout(bottomLayout)
         self.setLayout(layout)
-        self.setWindowTitle(self.name.replace(' ', '\n'))
+        self.setWindowTitle(self.name)
         
     def closeEvent(self, event):
         cardList = [card for card in self.tileView.cardList if isinstance(card, Card)]

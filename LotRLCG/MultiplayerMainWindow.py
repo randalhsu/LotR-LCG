@@ -217,7 +217,7 @@ class MultiplayerMainWindow(MainWindow):
         self.saveGameAct.setEnabled(False)
         self.loadGameAct.setEnabled(False)
         self.journeyLoggerAct.setEnabled(False)
-        self.setWindowIcon(QIcon('./resource/image/LotRLCG_MP.ico'))
+        self.setWindowIcon(QIcon(':/images/icons/LotRLCG_MP.ico'))
         
         title = str(self.windowTitle())
         if self.isServer:

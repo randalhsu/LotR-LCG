@@ -1,6 +1,5 @@
 import collections
 import glob
-import hashlib
 import json
 import os
 import shutil
@@ -28,14 +27,14 @@ PADDING = 10
 OFFSET = (CARD_HEIGHT - CARD_WIDTH) / 2
 
 
-def scaledCardPixmap(imagePath):
+def getCardPixmap(imageResourcePath):
     pixmap = None
-    if os.path.exists(imagePath):
-        pixmap = QPixmap(imagePath)
+    if QFile(imageResourcePath).exists():
+        pixmap = QPixmap(imageResourcePath)
     else:
-        pixmap = QPixmap('./resource/image/error.png')
-        print('File not exists: {0}'.format(imagePath))
-    return pixmap.scaled(CARD_WIDTH, CARD_HEIGHT, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+        pixmap = QPixmap(':/images/error.png')
+        print('File not exists: {0}'.format(imageResourcePath))
+    return pixmap
 
 
 def _convertJson():
@@ -69,18 +68,6 @@ for set_ in SETS:
     cardsInfo[set_] = _parseInfo('./resource/introspection/cards_{0}.json'.format(set_))
 
 scenariosInfo = _parseInfo('./resource/introspection/scenarios.json')
-
-
-# a recipe...
-_SPICE1 = hashlib.md5('Fantasy Flight Games ').hexdigest()
-_SPICE2 = hashlib.md5('The Lord of the Rings: The Card GamE').hexdigest()
-_SAUCE1 = sum([int(c) for c in _SPICE1 if c.isdigit()])
-_SAUCE2 = sum([int(c) for c in _SPICE2 if c.isdigit()])
-_DRESSING = int(_SPICE1[(int(_SPICE1[2]) + int(_SPICE1[3])) / 2])
-_MIXED_SAUCE = (_SAUCE1 + _SAUCE2) / _DRESSING
-
-BAD = eval(cardsInfo[eval(scenariosInfo[_DRESSING]['name'].split()[-1].lower().join(("'",) * 2))][_MIXED_SAUCE]['title'].split()[0])
-CARD_TASTE = not BAD  # yummy!
 
 
 # copy default decks if not exists

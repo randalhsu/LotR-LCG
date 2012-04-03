@@ -1,6 +1,7 @@
 import glob
 import re
 from common import *
+import cards
 
 
 CARD_FIELDS = ('set', 'id', 'title', 'type', 'icon', 'cost', 'strength', 'attack', 'defense', 'hp', 'traits', 'effect')
@@ -22,15 +23,16 @@ setFull = {
 }
 
 
-icons = {}  # this will contain all  name: QIcon instance
+icons = {'neutral': QIcon()}  # this will contain all  name: QIcon instance
 
-def initialIcons():
-    icons['neutral'] = QIcon()
-    fileList = glob.glob('./resource/image/icon/*')
-    for filePath in fileList:
-        filePath = filePath.replace('\\', '/')
-        iconName = filePath.split('/')[-1][:-4]
-        icons[iconName] = QIcon(filePath)
+def getIcon(name):
+    global icons
+    if name in icons:
+        return icons[name]
+        
+    icon = QIcon(':/images/icons/{0}.png'.format(name))
+    icons[name] = icon
+    return icon
 
 
 class TableWidget(QTableWidget):
@@ -46,7 +48,7 @@ class TableWidget(QTableWidget):
         for (col, text) in enumerate(self.HEADER):
             item = None
             if text in ('Threat', 'WP', 'ATK', 'DEF'):
-                item = QTableWidgetItem(QIcon('./resource/image/icon/{0}.png'.format(text)), '')
+                item = QTableWidgetItem(QIcon(':/images/icons/{0}.png'.format(text)), '')
             else:
                 item = QTableWidgetItem(text)
             self.setHorizontalHeaderItem(col, item)
@@ -127,7 +129,7 @@ class IconItem(QTableWidgetItem):
     
     def __init__(self, iconName):
         text = 'N' if iconName == 'neutral' else ''
-        super(IconItem, self).__init__(icons[iconName], text)
+        super(IconItem, self).__init__(getIcon(iconName), text)
         self.name = iconName
         
     def __lt__(self, rhs):
@@ -158,8 +160,6 @@ class NumericItem(QTableWidgetItem):
 class DeckBuilder(QMainWindow):
     def __init__(self, parent=None):
         super(DeckBuilder, self).__init__(parent)
-        
-        initialIcons()
         self.imageDict = {}  # this will contain all  (set_, id): QPixmap instance
         
         self.decks = playerDecksInfo
@@ -179,7 +179,7 @@ class DeckBuilder(QMainWindow):
         
     def loadPlayerCards(self):
         self.loadCards('player')
-
+        
     def loadEncounterCards(self):
         self.loadCards('encounter')
         
@@ -195,17 +195,14 @@ class DeckBuilder(QMainWindow):
         QApplication.processEvents()  # force visual label text update
         
         for set_ in SETS:
-            with open('./resource/card_image_path_{0}.txt'.format(set_)) as f:
-                lines = f.readlines()
-                for (i, fileName) in enumerate(lines):
-                    id = i + 1
-                    if CARD_TASTE and not ((set_ in ('core', 'osgiliath')) or (set_ == 'mirkwood' and id <= 94)):
-                        continue
-                    fileName = fileName.strip()
-                    if fileName:
-                        if (type_ == 'player' and isPlayerCard(set_, id)) or (type_ == 'encounter' and isEncounterCard(set_, id)):
-                            pixmap = scaledCardPixmap('./resource/image/{0}/{1}'.format(set_, fileName))
-                            self.imageDict[(set_, id)] = pixmap
+            for i in range(200):
+                id = i + 1
+                if QFile(':/{0}/{1}.jpg'.format(set_, id)).exists():
+                    if (type_ == 'player' and isPlayerCard(set_, id)) or (type_ == 'encounter' and isEncounterCard(set_, id)):
+                        pixmap = getCardPixmap(':/{0}/{1}.jpg'.format(set_, id))
+                        self.imageDict[(set_, id)] = pixmap
+                else:
+                    break
         self.loadingLabel.setText('')
         self.setCursor(Qt.ArrowCursor)
         
@@ -315,10 +312,9 @@ class DeckBuilder(QMainWindow):
         playerCards = []
         for set_ in SETS:
             for (id, card) in enumerate(cardsInfo[set_]):
-                if CARD_TASTE and not ((set_ == 'core') or (set_ == 'mirkwood' and id <= 94)):
-                    continue
                 if isPlayerCard(set_, id):
-                    playerCards.append((set_, id))
+                    if QFile(':/{0}/{1}.jpg'.format(set_, id)).exists():
+                        playerCards.append((set_, id))
                     
         tableWidget = TableWidget(len(playerCards), 0, self)
         
@@ -338,10 +334,9 @@ class DeckBuilder(QMainWindow):
         encounterCards = []
         for set_ in SETS:
             for (id, card) in enumerate(cardsInfo[set_]):
-                if CARD_TASTE and not ((set_ in ('core', 'osgiliath')) or (set_ == 'mirkwood' and id <= 94)):
-                    continue
                 if isEncounterCard(set_, id):
-                    encounterCards.append((set_, id))
+                    if QFile(':/{0}/{1}.jpg'.format(set_, id)).exists():
+                        encounterCards.append((set_, id))
                     
         tableWidget = EncounterTableWidget(len(encounterCards), 0, self)
         
@@ -552,15 +547,15 @@ class DeckBuilder(QMainWindow):
         
     def changeDefaultImage(self, index_):
         if index_ == 0:  # is showing playerTab
-            self.largeImageLabel.setPixmap(scaledCardPixmap('./resource/image/player_card_back.jpg'))
+            self.largeImageLabel.setPixmap(getCardPixmap(':/images/player_card_back.jpg'))
         else:
-            self.largeImageLabel.setPixmap(scaledCardPixmap('./resource/image/encounter_card_back.jpg'))
+            self.largeImageLabel.setPixmap(getCardPixmap(':/images/encounter_card_back.jpg'))
         self.largeImageLabel.currentCard = None
         
     def createUI(self):
         self.largeImageLabel = QLabel()
         self.largeImageLabel.setFixedSize(CARD_WIDTH, CARD_HEIGHT)
-        self.largeImageLabel.setPixmap(scaledCardPixmap('./resource/image/player_card_back.jpg'))
+        self.largeImageLabel.setPixmap(getCardPixmap(':/images/player_card_back.jpg'))
         self.largeImageLabel.currentCard = None
         
         self.loadingLabel = QLabel()
@@ -577,10 +572,10 @@ class DeckBuilder(QMainWindow):
         self.playerCardsTable = self.createPlayerCardsTable()
         
         sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
-        addButton = QPushButton(QIcon(QPixmap('./resource/image/right_arrow.png')), '')
+        addButton = QPushButton(QIcon(QPixmap(':/images/icons/right_arrow.png')), '')
         addButton.setSizePolicy(sizePolicy)
         addButton.clicked.connect(self.addToDeck)
-        removeButton = QPushButton(QIcon(QPixmap('./resource/image/left_arrow.png')), '')
+        removeButton = QPushButton(QIcon(QPixmap(':/images/icons/left_arrow.png')), '')
         removeButton.setSizePolicy(sizePolicy)
         removeButton.clicked.connect(self.removeFromDeck)
         
@@ -636,7 +631,7 @@ class DeckBuilder(QMainWindow):
         
         self.setCentralWidget(centralWidget)
         self.setWindowTitle(self.tr("LotR LCG Deck Builder"))
-        self.setWindowIcon(QIcon('./resource/image/DeckBuilder.ico'))
+        self.setWindowIcon(QIcon(':/images/icons/DeckBuilder.ico'))
         self.showMaximized()
         
     def focusOutEvent(self, event):

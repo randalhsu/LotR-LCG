@@ -1,0 +1,52 @@
+﻿<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+	<file>images/empty.png</file>
+	<file>images/error.png</file>
+	<file>images/player_card_back.jpg</file>
+	<file>images/encounter_card_back.jpg</file>
+	<file>images/threatdial.png</file>
+	<file>images/icons/anduin.png</file>
+	<file>images/icons/ATK.png</file>
+	<file>images/icons/carrock.png</file>
+	<file>images/icons/DeckBuilder.ico</file>
+	<file>images/icons/DEF.png</file>
+	<file>images/icons/emynmuil.png</file>
+	<file>images/icons/escape.png</file>
+	<file>images/icons/exit.ico</file>
+	<file>images/icons/flight.png</file>
+	<file>images/icons/goblin.png</file>
+	<file>images/icons/gollum.png</file>
+	<file>images/icons/hazards.png</file>
+	<file>images/icons/leadership.png</file>
+	<file>images/icons/left_arrow.png</file>
+	<file>images/icons/lore.png</file>
+	<file>images/icons/LotRLCG.ico</file>
+	<file>images/icons/LotRLCG_MP.ico</file>
+	<file>images/icons/marshes.png</file>
+	<file>images/icons/misty.png</file>
+	<file>images/icons/moria.png</file>
+	<file>images/icons/orcs.png</file>
+	<file>images/icons/osgiliath.png</file>
+	<file>images/icons/passage.png</file>
+	<file>images/icons/pit.png</file>
+	<file>images/icons/plundering.png</file>
+	<file>images/icons/redhorn.png</file>
+	<file>images/icons/return.png</file>
+	<file>images/icons/rhosgobel.png</file>
+	<file>images/icons/right_arrow.png</file>
+	<file>images/icons/rivendell.png</file>
+	<file>images/icons/sauron.png</file>
+	<file>images/icons/seventh.png</file>
+	<file>images/icons/spiders.png</file>
+	<file>images/icons/spirit.png</file>
+	<file>images/icons/tactics.png</file>
+	<file>images/icons/Threat.png</file>
+	<file>images/icons/twists.png</file>
+	<file>images/icons/wilderlands.png</file>
+	<file>images/icons/WP.png</file>
+	<file>images/tokens/damage.png</file>
+	<file>images/tokens/first_player.png</file>
+	<file>images/tokens/progress.png</file>
+	<file>images/tokens/resource.png</file>
+</qresource>
+</RCC>

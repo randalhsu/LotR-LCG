@@ -155,7 +155,7 @@ class _AttachedItems:
 class Token(QGraphicsPixmapItem):
     def __init__(self, tokenType, parent=None):
         assert(tokenType in ('damage', 'progress', 'resource'))
-        super(Token, self).__init__(QPixmap('./resource/image/token/{0}.png'.format(tokenType)), parent)
+        super(Token, self).__init__(QPixmap(':/images/tokens/{0}.png'.format(tokenType)), parent)
         self.setFlag(QGraphicsItem.ItemIgnoresParentOpacity)
         self._type = tokenType
         
@@ -174,11 +174,9 @@ class Card(QGraphicsPixmapItem):
         
         # workaround for Error "QPixmap: Must construct a QApplication before a QPaintDevice"
         if not hasattr(Card, 'PLAYER_CARD_BACK_IMAGE'):
-            Card.PLAYER_CARD_BACK_IMAGE = scaledCardPixmap('./resource/image/player_card_back.jpg')
+            Card.PLAYER_CARD_BACK_IMAGE = getCardPixmap(':/images/player_card_back.jpg')
         if not hasattr(Card, 'ENCOUNTER_CARD_BACK_IMAGE'):
-            Card.ENCOUNTER_CARD_BACK_IMAGE = scaledCardPixmap('./resource/image/encounter_card_back.jpg')
-        if not hasattr(Card, 'IMAGE_PATH_DICT'):
-            Card.IMAGE_PATH_DICT = self.parseCardImagePathDict()
+            Card.ENCOUNTER_CARD_BACK_IMAGE = getCardPixmap(':/images/encounter_card_back.jpg')
         
         self.setTransformOriginPoint(CARD_WIDTH / 2, CARD_HEIGHT / 2)
         self.setTransformationMode(Qt.SmoothTransformation)
@@ -195,12 +193,11 @@ class Card(QGraphicsPixmapItem):
         if (set_, id) in Card.imageDict and type_ != 'quest':  # QPixmap already cached
             self.frontImage = Card.imageDict[(set_, id)]
         else:
-            imagePath = Card.IMAGE_PATH_DICT[(self.info['set'], self.info['id'])]
             if type_ == 'quest':
-                self.frontImage = scaledCardPixmap(imagePath[:-4] + '-A.jpg')
-                self.backImage = scaledCardPixmap(imagePath[:-4] + '-B.jpg')
+                self.frontImage = getCardPixmap(':/{0}/{1}-A.jpg'.format(set_, id))
+                self.backImage = getCardPixmap(':/{0}/{1}-B.jpg'.format(set_, id))
             else:
-                pixmap = scaledCardPixmap(imagePath)
+                pixmap = getCardPixmap(':/{0}/{1}.jpg'.format(set_, id))
                 self.frontImage = pixmap
                 Card.imageDict[(set_, id)] = pixmap  # cache it
                 
@@ -250,17 +247,6 @@ class Card(QGraphicsPixmapItem):
         '''occupied tuple(width, height), including all its children (attached cards)'''
         rect = self.boundingRect() | self.childrenBoundingRect()
         return (rect.width(), rect.height())
-        
-    def parseCardImagePathDict(self):
-        pathDict = {}
-        for set_ in cardsInfo:
-            with open('./resource/card_image_path_{0}.txt'.format(set_)) as f:
-                lines = f.readlines()
-                for (id, fileName) in enumerate(lines):
-                    fileName = fileName.strip()
-                    if fileName:
-                        pathDict[(set_, id + 1)] = './resource/image/{0}/{1}'.format(set_, fileName)
-        return pathDict
         
     def __str__(self):
         return '[{0}]'.format(self.info['title'])

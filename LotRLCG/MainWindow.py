@@ -719,7 +719,7 @@ class MainWindow(QMainWindow):
         self.journeyLoggerAct = QAction(self.tr('&Journey Logger'), self)
         self.journeyLoggerAct.triggered.connect(lambda: self.journeyLogger.show())
         self.journeyLoggerAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_J))
-        self.journeyLoggerAct.setIcon(QIcon('./resource/image/token/progress.png'))
+        self.journeyLoggerAct.setIcon(QIcon(':/images/tokens/progress.png'))
         
         self.phaseTips = _PhaseTips(self)
         phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
@@ -796,7 +796,7 @@ class MainWindow(QMainWindow):
         
         self.largeImageLabel = QLabel()
         self.largeImageLabel.setFixedSize(CARD_WIDTH, CARD_HEIGHT)
-        self.largeImageLabel.setPixmap(scaledCardPixmap('./resource/image/player_card_back.jpg'))
+        self.largeImageLabel.setPixmap(QPixmap(':/images/player_card_back.jpg'))
         self.largeImageLabel.currentCard = None
         
         self.threatDial = ThreatDial()
@@ -882,7 +882,7 @@ class MainWindow(QMainWindow):
         
         self.setCentralWidget(centralWidget)
         self.setWindowTitle(self.tr('The Lord of the Rings: The Card Game'))
-        self.setWindowIcon(QIcon('./resource/image/LotRLCG.ico'))
+        self.setWindowIcon(QIcon(':/images/icons/LotRLCG.ico'))
         self.showMaximized()  # will trigger resizeEvent()
         self.readSettings()
         

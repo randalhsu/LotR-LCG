@@ -8,9 +8,9 @@ class SetupDialog(QDialog):
         warnIfDecksCorrupted(parent)
         
     def selectedScenarioId(self):
-        for (id, button) in enumerate(self.scenarioButtons):
+        for button in self.scenarioButtons:
             if button.isChecked():
-                return id
+                return button.id
             
     def selectedDeckId(self):
         for (id, button) in enumerate(self.deckButtons):
@@ -70,18 +70,23 @@ class SetupDialog(QDialog):
         scenarioLayout = QGridLayout()
         scenarioNames = [scenario['icon'] for scenario in scenariosInfo]
         
+        testCases = (('core', 119), ('core', 126), ('core', 123), ('mirkwood', 11), ('mirkwood', 35), ('mirkwood', 60), ('mirkwood', 82), ('mirkwood', 105), ('mirkwood', 126), ('osgiliath', 16), ('khazaddum', 64), ('khazaddum', 67), ('khazaddum', 69), ('dwarrowdelf', 11), ('dwarrowdelf', 38))
+        scenarioExists = [QFile(':/{0}/{1}.jpg'.format(set_, id)).exists() for (set_, id) in testCases]
+        
         for (i, scenario) in enumerate(scenariosInfo):
+            if not scenarioExists[i]:
+                continue
+            n = len(self.scenarioButtons)
             button = RadioButton(scenario['name'])
             button.description = '{0}\nDifficulty = {1}\n\n{2}'.format(scenario['name'], scenario['difficulty'], scenario['description'])
-            if i == 0:
+            if n == 0:
                 button.setChecked(True)
-            button.setIcon(QIcon(QPixmap('./resource/image/icon/{0}.png'.format(scenarioNames[i]))))
-            scenarioLayout.addWidget(button, i % 10, i // 10, 1, 1)  # 10 buttons in a column
-            if i % 10 == 9:
+            button.setIcon(QIcon(QPixmap(':/images/icons/{0}.png'.format(scenarioNames[i]))))
+            scenarioLayout.addWidget(button, n % 10, n // 10, 1, 1)  # 10 buttons in a column
+            if n % 10 == 9:
                 scenarioLayout.addWidget(QLabel())
             self.scenarioButtons.append(button)
-            if CARD_TASTE and (i >= 7 and i != 9):
-                button.hide()
+            button.id = i
         scenarioLayout.setRowStretch(10, 1)
         self.scenarioGroupBox.setLayout(scenarioLayout)
         self.scenarioGroupBox.leaveEvent = lambda _: self.descriptionLabel.setText(self.scenarioButtons[self.selectedScenarioId()].description)

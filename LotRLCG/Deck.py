@@ -4,9 +4,10 @@ from Area import *
 class Deck(Area):
     def __init__(self, name, visualName, orientation=Qt.Vertical, parent=None):
         super(Deck, self).__init__(name, parent=parent)
+        self.visualName = visualName
         self.orientation = orientation
         
-        self.emptyItem = QGraphicsPixmapItem(scaledCardPixmap('./resource/image/empty.png'))
+        self.emptyItem = QGraphicsPixmapItem(getCardPixmap(':/images/empty.png'))
         self.emptyItem.setPos(0, 0)
         self.emptyItem.setZValue(-1)
         self.scene.addItem(self.emptyItem)

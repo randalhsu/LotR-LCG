@@ -15,7 +15,7 @@ class xxxxGameDialog(QWidget):
         self.chatter = Chatter(self)
         self.client = None
         self.isManuallyClosing = True
-        self.setWindowIcon(QIcon('./resource/image/LotRLCG_MP.ico'))
+        self.setWindowIcon(QIcon(':/images/icons/LotRLCG_MP.ico'))
         
         self.nicknameRegExp = QRegExp(r'[A-Za-z0-9_\-]{1,10}')
         username = QDir.homePath().split('/')[-1]

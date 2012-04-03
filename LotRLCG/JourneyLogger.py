@@ -283,5 +283,5 @@ class JourneyLogger(QDialog):
         self.setLayout(layout)
         
         self.resize(500, 300)
-        self.setWindowIcon(QIcon('./resource/image/token/progress.png'))
+        self.setWindowIcon(QIcon(':/images/tokens/progress.png'))
         self.setWindowTitle(self.tr('Journey Logger'))
