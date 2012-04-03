@@ -753,23 +753,27 @@ class MainWindow(QMainWindow):
         
         helpMenu = self.menuBar().addMenu(self.tr('?'))
         
-        def determineCurrentLocale():
-            # the same things as in Launcher.py
+        def currentLocaleSetting():
             settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
             settings.beginGroup('Localization')
-            locale = str(settings.value('Interface', 'en_US').toString())  # use system's default locale
+            locale = str(settings.value('Interface', 'None').toString())
             settings.endGroup()
-            
-            for qmFilePath in glob.glob('./resource/translations/*.qm'):
-                qmFilePath = qmFilePath.replace('\\', '/')
-                if locale in qmFilePath:
-                    break
-            else:  # use 'en_US' if not exists
-                locale = 'en_US'
             return locale
             
-        self.locale = determineCurrentLocale()
-        
+        def detectUsableLocalization():
+            locale = QLocale().system().name()
+            for qmFilePath in glob.glob('./resource/translations/*.qm'):
+                qmFilePath = qmFilePath.replace('\\', '/')
+                qm = qmFilePath[qmFilePath.rindex('/') + 1 : -3]
+                qm = qm.replace('qt_', '')
+                if locale == qm:
+                    return locale
+            return 'en_US'
+            
+        self.locale = currentLocaleSetting()
+        if self.locale == 'None':  # first start up
+            self.locale = detectUsableLocalization()
+            
         def changeLocale(locale):
             def changeLocale_():
                 self.locale = locale
