@@ -50,11 +50,11 @@ class MultiplayerMainWindow(MainWindow):
         self.setWindowTitle(self.windowTitle)
         
     def changeWindowTitleToInformative(self):
-        title = self.windowTitle + '  (Press any key to bring up Multiplayer Panel)'
+        title = self.tr('%1  (Press any key to bring up Multiplayer Panel)').arg(self.windowTitle)
         self.setWindowTitle(title)
         
     def changeWindowTitleToWaiting(self):
-        title = self.windowTitle + '  (Waiting for other players...)'
+        title = self.tr('%1  (Waiting for other players ready...)').arg(self.windowTitle)
         self.setWindowTitle(title)
         
     def cleanup(self):
@@ -219,10 +219,10 @@ class MultiplayerMainWindow(MainWindow):
         self.journeyLoggerAct.setEnabled(False)
         self.setWindowIcon(QIcon(':/images/icons/LotRLCG_MP.ico'))
         
-        title = str(self.windowTitle())
+        title = self.windowTitle()
         if self.isServer:
-            title += ' [Server]'
+            title = self.tr('%1 [Server]').arg(title)
         else:
-            title += ' [Client]'
+            title = self.tr('%1 [Client]').arg(title)
         self.windowTitle = title
         self.setWindowTitle(self.windowTitle)

@@ -234,4 +234,4 @@ class MultiplayerPanel(QDialog):
         layout.addLayout(rightLayout, 1)
         self.setLayout(layout)
         self.windowTitle = self.tr('Player States')
-        self.setWindowTitle(self.windowTitle + '  (Press ESC to hide this panel)')
+        self.setWindowTitle(self.tr('%1  (Press ESC to hide this panel)').arg(self.windowTitle))

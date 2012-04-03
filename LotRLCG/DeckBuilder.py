@@ -315,7 +315,7 @@ class DeckBuilder(QMainWindow):
                 if isPlayerCard(set_, id):
                     if QFile(':/{0}/{1}.jpg'.format(set_, id)).exists():
                         playerCards.append((set_, id))
-                    
+                        
         tableWidget = TableWidget(len(playerCards), 0, self)
         
         for (row, (set_, id)) in enumerate(playerCards):
@@ -458,8 +458,14 @@ class DeckBuilder(QMainWindow):
         
     def addNewDeck(self):
         (deckName, ok) = QInputDialog.getText(self, self.tr('Add New Deck'), self.tr('Deck Name:'))
-        deckName = str(deckName)
         if ok and deckName:
+            try:
+                deckName = str(deckName)
+            except UnicodeEncodeError:
+                msgBox = QMessageBox(QMessageBox.Critical, self.tr('ASCII Only'), self.tr('Please use alphanumeric characters'), QMessageBox.Ok, self)
+                msgBox.exec_()
+                return
+                
             if '"' in deckName or '\\' in deckName:  # these characters may break json format
                 msgBox = QMessageBox(QMessageBox.Critical, self.tr('Invalid Characters'), self.tr('Invalid characters: " and \\'), QMessageBox.Ok, self)
                 msgBox.exec_()
@@ -544,7 +550,7 @@ class DeckBuilder(QMainWindow):
         self.changeDefaultImage(index_)
         if index_ == 1 and ('core', 74) not in self.imageDict:  # check if Encounter Cards are not loaded yet
             QTimer.singleShot(10, self.loadEncounterCards)
-        
+            
     def changeDefaultImage(self, index_):
         if index_ == 0:  # is showing playerTab
             self.largeImageLabel.setPixmap(getCardPixmap(':/images/player_card_back.jpg'))
@@ -630,7 +636,7 @@ class DeckBuilder(QMainWindow):
         centralWidget.setLayout(layout)
         
         self.setCentralWidget(centralWidget)
-        self.setWindowTitle(self.tr("LotR LCG Deck Builder"))
+        self.setWindowTitle(self.tr('LotR LCG Deck Builder'))
         self.setWindowIcon(QIcon(':/images/icons/DeckBuilder.ico'))
         self.showMaximized()
         
