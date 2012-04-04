@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="2.0" language="zh_TW" sourcelanguage="en_US">
 <context>
-    <name>Area</name>
-    <message>
-        <location filename="../../LotRLCG/Area.py" line="219"/>
-        <source>Progressing</source>
-        <translation>獲得進展</translation>
-    </message>
-    <message>
-        <location filename="../../LotRLCG/Area.py" line="219"/>
-        <source>How many?</source>
-        <translation>多少？</translation>
-    </message>
-</context>
-<context>
     <name>Client</name>
     <message>
         <location filename="../../LotRLCG/Messaging.py" line="111"/>
@@ -257,34 +244,39 @@
 <context>
     <name>DeckManipulator</name>
     <message>
-        <location filename="../../LotRLCG/DeckManipulator.py" line="45"/>
+        <location filename="../../LotRLCG/DeckManipulator.py" line="49"/>
         <source>Shuffled!</source>
         <translation>已洗牌!</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckManipulator.py" line="53"/>
+        <location filename="../../LotRLCG/DeckManipulator.py" line="57"/>
         <source>Cards moved</source>
         <translation>已移動卡牌</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckManipulator.py" line="63"/>
+        <location filename="../../LotRLCG/DeckManipulator.py" line="67"/>
         <source>&amp;Reveal All</source>
         <translation>全部展示</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckManipulator.py" line="64"/>
+        <location filename="../../LotRLCG/DeckManipulator.py" line="68"/>
         <source>Co&amp;ver All</source>
         <translation>全部覆蓋</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckManipulator.py" line="66"/>
+        <location filename="../../LotRLCG/DeckManipulator.py" line="70"/>
         <source>&amp;Shuffle</source>
         <translation>洗牌</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckManipulator.py" line="83"/>
+        <location filename="../../LotRLCG/DeckManipulator.py" line="87"/>
         <source>Move to &amp;Encounter Deck</source>
         <translation>全部移回遭遇牌堆</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/DeckManipulator.py" line="13"/>
+        <source>Hand</source>
+        <translation>手牌</translation>
     </message>
 </context>
 <context>
@@ -577,37 +569,37 @@
         <translation>關於</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="805"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="809"/>
         <source>Resource Phase</source>
         <translation>資源階段</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="807"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="811"/>
         <source>Add 1 resource to each hero and draw 1 card.</source>
         <translation>每個英雄獲得 1 資源, 然後抽一張牌.</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="811"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="815"/>
         <source>Special card-effects are not concerned.</source>
         <translation>不考慮特殊卡牌效果</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="809"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="813"/>
         <source>Refresh Phase</source>
         <translation>更新階段</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="811"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="815"/>
         <source>Ready all cards and raise 1 threat.</source>
         <translation>重置所有卡牌, 並增加 1 點威脅值.</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="816"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="820"/>
         <source>&amp;Victory:</source>
         <translation>勝利點</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="884"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="888"/>
         <source>The Lord of the Rings: The Card Game</source>
         <translation>《魔戒》卡牌版</translation>
     </message>
@@ -617,80 +609,80 @@
         <translation>?</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="825"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="829"/>
         <source>Active&lt;br&gt;Location</source>
         <comment>Deck</comment>
         <translation>活動區域</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="826"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="830"/>
         <source>Quest&lt;br&gt;Deck</source>
         <comment>Deck</comment>
         <translation>任務牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="827"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="831"/>
         <source>Encounter&lt;br&gt;Deck</source>
         <comment>Deck</comment>
         <translation>遭遇牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="828"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="832"/>
         <source>Encounter&lt;br&gt;Discard&lt;br&gt;Pile</source>
         <comment>Deck</comment>
         <translation>遭遇牌&lt;br&gt;棄牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="830"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="834"/>
         <source>Prepare&lt;br&gt;Deck</source>
         <comment>Deck</comment>
         <translation>準備區</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="831"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="835"/>
         <source>Removed&lt;br&gt;From&lt;br&gt;Play</source>
         <comment>Deck</comment>
         <translation>已移除</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="832"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="836"/>
         <source>Player&lt;br&gt;Deck</source>
         <comment>Deck</comment>
         <translation>玩家牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="833"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="837"/>
         <source>Player&lt;br&gt;Discard&lt;br&gt;Pile</source>
         <comment>Deck</comment>
         <translation>玩家牌&lt;br&gt;棄牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="776"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="780"/>
         <source>Restart program to apply change.</source>
         <translation>程式會在重啟後變更語言.</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="784"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="788"/>
         <source>Interface Langauge</source>
         <translation>介面語言</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="776"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="780"/>
         <source>Setting Changed</source>
         <translation>設定變更</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="780"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="784"/>
         <source>English</source>
         <translation>英文</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="781"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="785"/>
         <source>Traditional Chinese</source>
         <translation>繁體中文</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="782"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="786"/>
         <source>Simplified Chinese</source>
         <translation>簡體中文</translation>
     </message>
@@ -787,6 +779,16 @@
         <location filename="../../LotRLCG/SetupDialog.py" line="129"/>
         <source>Setting Game</source>
         <translation>遊戲設置</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/Area.py" line="219"/>
+        <source>Progressing</source>
+        <translation>任務進展</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/Area.py" line="219"/>
+        <source>How many?</source>
+        <translation>獲得多少進展？</translation>
     </message>
 </context>
 <context>

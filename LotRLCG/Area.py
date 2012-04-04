@@ -216,7 +216,7 @@ class Area(QGraphicsView):
                     
                 # if dragging a progress Token to Quest Deck
                 if self.name == 'Quest Deck' and isinstance(draggingItem, Token) and draggingItem.type_() == 'progress':
-                    (count, ok) = QInputDialog.getInt(self, self.tr('Progressing'), self.tr('How many?'), 1, 1, 20)
+                    (count, ok) = QInputDialog.getInt(self, QCoreApplication.translate('QObject', 'Progressing'), QCoreApplication.translate('QObject', 'How many?'), 1, 1, 20)
                     if ok:
                         for i in range(count):
                             self.dndHandler(Token('progress'), source, targetItem)

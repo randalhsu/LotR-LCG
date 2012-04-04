@@ -7,8 +7,12 @@ class DeckManipulator(QDialog):
         self.setAttribute(Qt.WA_DeleteOnClose)
         parent.addDeckManipulator(self)
         self.parent = parent
-        
-        self.name = deck.visualName.replace('<br>', ' ')
+        if hasattr(deck, 'visualName'):
+            self.name = deck.visualName.replace('<br>', ' ')
+        elif deck.name == 'Hand Area':
+            self.name = self.tr('Hand')
+        else:
+            self.name = deck.name
         self.deck = deck
         self.tileView = CardsTileView(self.deck, parent, self)
         self.createUI()
