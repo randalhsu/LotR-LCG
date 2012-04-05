@@ -18,12 +18,12 @@ class HostGameDialog(xxxxGameDialog):
             return
             
         if not self.ipList.currentItem():
-            QMessageBox.critical(self, 'IP?', 'Please select an IP')
+            QMessageBox.critical(self, self.tr('IP?'), self.tr('Please select an IP'))
             return
             
         port = self.server.hostGame()
         if port == -1:
-            QMessageBox.critical(self, 'Networking Failed', 'Unable to host game...')
+            QMessageBox.critical(self, self.tr('Networking Failed'), self.tr('Unable to host game...'))
             return
             
         ip = self.ipList.currentItem().text()
@@ -57,21 +57,10 @@ class HostGameDialog(xxxxGameDialog):
         selectLabel = QLabel(self.tr('Select an IP to host game:'))
         self.ipList = QListWidget()
         
-        def isValidIP(ip):
-            unusefuls = ['10.', '169.254.', '192.168.']
-            for classC in range(16, 32):
-                unusefuls.append('172.{0}.'.format(classC))
-                
-            for unuseful in unusefuls:
-                if ip.startswith(unuseful):
-                    return False
-            return True
-        
         for address in QNetworkInterface.allAddresses():
             if address.protocol() == QAbstractSocket.IPv4Protocol:
                 ip = str(address.toString())
-                if isValidIP(ip):
-                    self.ipList.addItem(ip)
+                self.ipList.addItem(ip)
         if self.ipList.count() > 1:
             self.ipList.setCurrentRow(0)
             

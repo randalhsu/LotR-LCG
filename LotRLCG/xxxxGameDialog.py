@@ -32,12 +32,12 @@ class xxxxGameDialog(QWidget):
     def validateNickname(self):
         nickname = self.nickLineEdit.text()
         if nickname.isEmpty():
-            QMessageBox.critical(self, 'Nickname?', 'Please give a nickname!')
+            QMessageBox.critical(self, self.tr('Nickname?'), self.tr('Please give a nickname!'))
             self.nickLineEdit.setFocus()
             return False
             
         if not self.nicknameRegExp.exactMatch(nickname):
-            QMessageBox.critical(self, 'Nickname?', 'Valid characters: A-Z, a-z, 0-9, dash, underscore')
+            QMessageBox.critical(self, self.tr('Nickname?'), self.tr('Valid characters: A-Z, a-z, 0-9, dash, underscore'))
             self.nickLineEdit.setFocus()
             return False
             

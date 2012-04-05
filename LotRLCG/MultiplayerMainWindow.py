@@ -50,11 +50,11 @@ class MultiplayerMainWindow(MainWindow):
         self.setWindowTitle(self.windowTitle)
         
     def changeWindowTitleToInformative(self):
-        title = self.tr('%1  (Press any key to bring up Multiplayer Panel)').arg(self.windowTitle)
+        title = QCoreApplication.translate('QObject', '%1  (Press any key to bring up Multiplayer Panel)').arg(self.windowTitle)
         self.setWindowTitle(title)
         
     def changeWindowTitleToWaiting(self):
-        title = self.tr('%1  (Waiting for other players ready...)').arg(self.windowTitle)
+        title = QCoreApplication.translate('QObject', '%1  (Waiting for other players ready...)').arg(self.windowTitle)
         self.setWindowTitle(title)
         
     def cleanup(self):
@@ -221,8 +221,8 @@ class MultiplayerMainWindow(MainWindow):
         
         title = self.windowTitle()
         if self.isServer:
-            title = self.tr('%1 [Server]').arg(title)
+            title = QCoreApplication.translate('QObject', '%1 [Server]').arg(title)
         else:
-            title = self.tr('%1 [Client]').arg(title)
+            title = QCoreApplication.translate('QObject', '%1 [Client]').arg(title)
         self.windowTitle = title
         self.setWindowTitle(self.windowTitle)
