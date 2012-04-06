@@ -37,7 +37,7 @@ class JoinGameDialog(xxxxGameDialog):
             
         address = str(self.addressLineEdit.text()).strip()
         if not validateAddress(address):
-            QMessageBox.critical(self, self.tr('Address?'), self.tr('Invalid address!<br>Example address: <b>140.116.39.240:57258</b>'))
+            QMessageBox.critical(self, self.tr('Address?'), QString('%1<br>%2 <b>140.116.39.240:57258</b>').arg(self.tr('Invalid address!')).arg(self.tr('Example address:')))
             self.addressLineEdit.setFocus()
             return
             
@@ -54,12 +54,12 @@ class JoinGameDialog(xxxxGameDialog):
         if self.client.state() != QAbstractSocket.ConnectedState:
             self.client.abort()
             QMessageBox.critical(self, self.tr('Connection Timeout'), QString('%1<br>%2').arg(self.tr('Cannot connect to server!')).arg(self.tr('(Wrong address maybe?)')))
+            self.joinButton.setText(self.tr('&Join Game!'))
+            self.joinButton.setEnabled(True)
             
-        self.joinButton.setText(self.tr('&Join Game!'))
-        self.joinButton.setEnabled(True)
-        
     def clientSocketConnected(self):
         self.topWidget.setEnabled(False)
+        self.joinButton.setText(self.tr('Connected to server!'))
         self.chatter.setEnabled(True)
         self.chatter.setSocket(self.client)
         self.chatter.setFocus()

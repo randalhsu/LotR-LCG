@@ -19,11 +19,11 @@ class Chatter(QWidget):
         self.textBrowser.append(message)
         
     def appendSystemMessage(self, message):
-        self.textBrowser.append('<tt><b>{0}</b></tt>'.format(message))
+        self.textBrowser.append(QString('<tt><b>%1</b></tt>').arg(message))
         
     def send(self):
         if self.socket is None:
-            QMessageBox.critical(self.parent, 'Not Connected', 'Not connected to server...')
+            QMessageBox.critical(self.parent, self.tr('Not Connected'), self.tr('Not connected to server...'))
             return
             
         message = self.messageLineEdit.text().toUtf8()
@@ -39,4 +39,4 @@ class Chatter(QWidget):
         layout.addWidget(self.textBrowser, 0, 0, 5, 5)
         layout.addWidget(self.messageLineEdit, 5, 0, 1, 5)
         self.setLayout(layout)
-        self.appendSystemMessage('Type in and press Enter to send message.')
+        self.appendSystemMessage(self.tr('Type in and press Enter to send message.'))

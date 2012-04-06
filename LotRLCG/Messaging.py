@@ -78,7 +78,7 @@ class Client(QTcpSocket):
             
             if 'has left the game' in data:
                 leftPlayerNickname = message.split(' ')[0]
-                QMessageBox.critical(self.parent, self.tr('Player Disconnected'), self.tr('%1 has left the game...'.arg(leftPlayerNickname)))
+                QMessageBox.critical(self.parent, self.tr('Player Disconnected'), self.tr('%1 has left the game...').arg(leftPlayerNickname))
         else:
             chatMessage = nickname + '> ' + QString.fromUtf8(message)
             self.parent.appendMessage(chatMessage)

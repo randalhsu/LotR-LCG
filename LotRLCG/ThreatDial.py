@@ -97,7 +97,7 @@ class ThreatDial(QGraphicsView):
             self.appendLog()
             
         elif event.button() == Qt.RightButton:
-            (value, valid) = QInputDialog.getInt(self, 'Threat Dial', 'Set threat value to:', self.value, 0, 99)
+            (value, valid) = QInputDialog.getInt(self, self.tr('Threat Dial'), self.tr('Set threat value to:'), self.value, 0, 99)
             if valid:
                 self.setValue(value)
                 self.appendLog()

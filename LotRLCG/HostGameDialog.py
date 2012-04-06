@@ -18,7 +18,7 @@ class HostGameDialog(xxxxGameDialog):
             return
             
         if not self.ipList.currentItem():
-            QMessageBox.critical(self, self.tr('IP?'), self.tr('Please select an IP'))
+            QMessageBox.critical(self, self.tr('IP Address?'), self.tr('Please select an IP address'))
             return
             
         port = self.server.hostGame()
@@ -37,7 +37,7 @@ class HostGameDialog(xxxxGameDialog):
         QTimer.singleShot(100, self.appendWaitingMessage)
         
     def appendWaitingMessage(self):
-        self.chatter.appendSystemMessage('Waiting for other players...')
+        self.chatter.appendSystemMessage(self.tr('Waiting for other players...'))
         
     def connectToSelf(self, port):
         localhost = str(QHostAddress(QHostAddress.LocalHost).toString())

@@ -236,14 +236,14 @@ class MainWindow(QMainWindow):
         state = self.getState()
         state['version'] = VERSION
         jsonState = self.dumpState(state)
-        filePath = QFileDialog.getSaveFileName(self, self.tr('Save game'), 'LotRLCG.sav', 'Game Save (*.sav)')
+        filePath = QFileDialog.getSaveFileName(self, QCoreApplication.translate('MainWindow', 'Save game'), 'LotRLCG.sav', QCoreApplication.translate('MainWindow', 'Game Save (*.sav)'))
         if filePath:
             if not saveFile(filePath, jsonState):
-                QMessageBox.critical(self, self.tr("Can't save game"), self.tr('Failed to write file!'))
+                QMessageBox.critical(self, QCoreApplication.translate('MainWindow', "Can't save game"), QCoreApplication.translate('MainWindow', 'Failed to write file!'))
                 
     def loadGame(self, filePath=''):
         if not filePath:
-            filePath = QFileDialog.getOpenFileName(self, self.tr('Load game'), '.', 'Game Save (*.sav)')
+            filePath = QFileDialog.getOpenFileName(self, QCoreApplication.translate('MainWindow', 'Load game'), '.', QCoreApplication.translate('MainWindow', 'Game Save (*.sav)'))
             
         if filePath:
             file = QFile(filePath)
@@ -252,7 +252,7 @@ class MainWindow(QMainWindow):
                 try:
                     state = json.loads(jsonState, encoding='ascii')
                 except ValueError:
-                    QMessageBox.critical(self, self.tr("Can't load game"), self.tr('Game save corrupted!'))
+                    QMessageBox.critical(self, QCoreApplication.translate('MainWindow', "Can't load game"), QCoreApplication.translate('MainWindow', 'Game save corrupted!'))
                     return
                     
                 self.victorySpinBox.setValue(state['victory'])
@@ -262,7 +262,7 @@ class MainWindow(QMainWindow):
                     
                 file.close()
             else:
-                QMessageBox.critical(self, self.tr("Can't load game"), self.tr('Failed to open file!'))
+                QMessageBox.critical(self, QCoreApplication.translate('MainWindow', "Can't load game"), QCoreApplication.translate('MainWindow', 'Failed to open file!'))
                 
     def dumpState(self, dictObject):
         return json.dumps(dictObject, separators=(',', ':'), encoding='ascii')
@@ -525,13 +525,13 @@ class MainWindow(QMainWindow):
         
         
         # post processing
-        title = self.tr('Manually Setup Required')
+        title = QCoreApplication.translate('MainWindow', 'Manually Setup Required')
         if scenarioId == 2:  # Escape From Dol Guldur
-            QMessageBox.information(self, title, self.tr('Objective cards are Guarded!'))
+            QMessageBox.information(self, title, QCoreApplication.translate('MainWindow', 'Objective cards are Guarded!'))
             
         elif scenarioId in (3, 7, 12, 13, 14):  # The Hunt for Gollum, The Dead Marshes, Flight from Moria, The Redhorn Gate, Road to Rivendell
             if self.playerCount > 1:
-                QMessageBox.information(self, title, self.tr('Reveal 1 card per player!'))
+                QMessageBox.information(self, title, QCoreApplication.translate('MainWindow', 'Reveal 1 card per player!'))
                 
         elif scenarioId == 5:  # A Journey to Rhosgobel
             for i in range(2):  # attach 2 damage token to Wilyador
@@ -539,14 +539,14 @@ class MainWindow(QMainWindow):
                 
         elif scenarioId == 8:  # Return to Mirkwood
             if self.playerCount > 1:
-                QMessageBox.information(self, title, QString('%1<br>%2').arg(self.tr('Choose a player to guard %1,').arg('<b>"Gollum"</b>')).arg(self.tr('then reveal 1 card per player.')))
+                QMessageBox.information(self, title, QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Choose a player to guard %1,').arg('<b>"Gollum"</b>')).arg(QCoreApplication.translate('MainWindow', 'then reveal 1 card per player.')))
                 
         elif scenarioId == 10:  # Into the Pit
             self.locationDeck.addCard(self.stagingArea.draw())  # make East-gate as active location
-            QMessageBox.information(self, title, QString('%1<br>%2').arg(self.tr('Attach %1 to a hero,').arg('<b>"Cave Torch"</b>')).arg(self.tr('then reveal 1 card per player.')))
+            QMessageBox.information(self, title, QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Attach %1 to a hero,').arg('<b>"Cave Torch"</b>')).arg(QCoreApplication.translate('MainWindow', 'then reveal 1 card per player.')))
             
         elif scenarioId == 11:  # The Seventh Level
-            QMessageBox.information(self, title, QString('%1<br>%2').arg(self.tr('Attach %1 to a hero,').arg('<b>"Book of Mazarbul"</b>')).arg(self.tr('then reveal 1 card per player.')))
+            QMessageBox.information(self, title, QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Attach %1 to a hero,').arg('<b>"Book of Mazarbul"</b>')).arg(QCoreApplication.translate('MainWindow', 'then reveal 1 card per player.')))
         # EXPANSION
         
     def logInitialState(self):
@@ -688,23 +688,23 @@ class MainWindow(QMainWindow):
         pass
         
     def createUI(self):
-        self.newGameAct = QAction(self.tr('&New Journey...'), self)
+        self.newGameAct = QAction(QCoreApplication.translate('MainWindow', '&New Journey...'), self)
         self.newGameAct.triggered.connect(self.startNewGameAction)
         self.newGameAct.setShortcut(QKeySequence.New)
-        self.restartGameAct = QAction(self.tr('&Restart Journey'), self)
+        self.restartGameAct = QAction(QCoreApplication.translate('MainWindow', '&Restart Journey'), self)
         self.restartGameAct.triggered.connect(self.restartGameAction)
         self.restartGameAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_R))
-        self.saveGameAct = QAction(self.tr('&Save Game'), self)
+        self.saveGameAct = QAction(QCoreApplication.translate('MainWindow', '&Save Game'), self)
         self.saveGameAct.triggered.connect(self.saveGame)
         self.saveGameAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_S))
-        self.loadGameAct = QAction(self.tr('&Load Game'), self)
+        self.loadGameAct = QAction(QCoreApplication.translate('MainWindow', '&Load Game'), self)
         self.loadGameAct.triggered.connect(self.loadGame)
         self.loadGameAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_L))
-        quitAct = QAction(self.tr('&Quit'), self)
+        quitAct = QAction(QCoreApplication.translate('MainWindow', '&Quit'), self)
         quitAct.triggered.connect(self.close)
         quitAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_Q))
         
-        gameMenu = self.menuBar().addMenu(self.tr('&Game'))
+        gameMenu = self.menuBar().addMenu(QCoreApplication.translate('MainWindow', '&Game'))
         gameMenu.addAction(self.newGameAct)
         gameMenu.addAction(self.restartGameAct)
         gameMenu.addSeparator()
@@ -716,13 +716,13 @@ class MainWindow(QMainWindow):
         self.journeyLogger = JourneyLogger(self)
         self.log = self.journeyLogger.append  # this 'log' function will be called by those who wants to write journey log
         
-        self.journeyLoggerAct = QAction(self.tr('&Journey Logger'), self)
+        self.journeyLoggerAct = QAction(QCoreApplication.translate('MainWindow', '&Journey Logger'), self)
         self.journeyLoggerAct.triggered.connect(lambda: self.journeyLogger.show())
         self.journeyLoggerAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_J))
         self.journeyLoggerAct.setIcon(QIcon(':/images/tokens/progress.png'))
         
         self.phaseTips = _PhaseTips(self)
-        phaseTipsAct = QAction(self.tr('&Phase Tips'), self)
+        phaseTipsAct = QAction(QCoreApplication.translate('MainWindow', '&Phase Tips'), self)
         phaseTipsAct.triggered.connect(lambda: self.phaseTips.show())
         phaseTipsAct.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_P))
         
@@ -732,15 +732,15 @@ class MainWindow(QMainWindow):
             hero.flip()
             hero.attach(Token('damage'))
             
-        self.prisonAct = QAction(self.tr('Prison a random Hero'), self)
+        self.prisonAct = QAction(QCoreApplication.translate('MainWindow', 'Prison a random Hero'), self)
         self.prisonAct.triggered.connect(prisonRandomHero)
-        self.prisonAct.setToolTip(self.tr('For "Escape From Dol Guldur" scenario'))
+        self.prisonAct.setToolTip(QCoreApplication.translate('MainWindow', 'For "Escape From Dol Guldur" scenario'))
         
         self.scoringDialog = _ScoringDialog(self)
-        self.scoringAct = QAction(self.tr('Scoring...'), self)
+        self.scoringAct = QAction(QCoreApplication.translate('MainWindow', 'Scoring...'), self)
         self.scoringAct.triggered.connect(lambda: self.scoringDialog.show())
         
-        utilityMenu = self.menuBar().addMenu(self.tr('&Utility'))
+        utilityMenu = self.menuBar().addMenu(QCoreApplication.translate('MainWindow', '&Utility'))
         utilityMenu.addAction(self.journeyLoggerAct)
         utilityMenu.addAction(phaseTipsAct)
         utilityMenu.addSeparator()
@@ -748,10 +748,10 @@ class MainWindow(QMainWindow):
         utilityMenu.addAction(self.scoringAct)
         
         self.about = _About(self)
-        aboutAct = QAction(self.tr('&About'), self)
+        aboutAct = QAction(QCoreApplication.translate('MainWindow', '&About'), self)
         aboutAct.triggered.connect(lambda: self.about.show())
         
-        helpMenu = self.menuBar().addMenu(self.tr('?'))
+        helpMenu = self.menuBar().addMenu(QCoreApplication.translate('MainWindow', '?'))
         
         def currentLocaleSetting():
             settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
@@ -777,15 +777,15 @@ class MainWindow(QMainWindow):
         def changeLocale(locale):
             def changeLocale_():
                 self.locale = locale
-                QMessageBox.information(self, self.tr('Setting Changed'), self.tr('Restart program to apply change.'))
+                QMessageBox.information(self, QCoreApplication.translate('MainWindow', 'Setting Changed'), QCoreApplication.translate('MainWindow', 'Restart program to apply change.'))
             return changeLocale_
             
         languages = collections.OrderedDict()
-        languages[self.tr('English')] = 'en_US'
-        languages[self.tr('Traditional Chinese')] = 'zh_TW'
-        languages[self.tr('Simplified Chinese')] = 'zh_CN'
+        languages[QCoreApplication.translate('MainWindow', 'English')] = 'en_US'
+        languages[QCoreApplication.translate('MainWindow', 'Traditional Chinese')] = 'zh_TW'
+        languages[QCoreApplication.translate('MainWindow', 'Simplified Chinese')] = 'zh_CN'
         
-        interfaceLanguageMenu = helpMenu.addMenu(self.tr('Interface Langauge'))
+        interfaceLanguageMenu = helpMenu.addMenu(QCoreApplication.translate('MainWindow', 'Interface Langauge'))
         languageGroup = QActionGroup(self)
         for (language, locale) in languages.items():
             changeLanguageAct = QAction(language, self, checkable=True)
@@ -806,18 +806,18 @@ class MainWindow(QMainWindow):
         self.threatDial = ThreatDial()
         self.threatDial.setFixedWidth(CARD_WIDTH)
         
-        resourcePhaseButton = QPushButton(self.tr('Resource Phase'))
+        resourcePhaseButton = QPushButton(QCoreApplication.translate('MainWindow', 'Resource Phase'))
         resourcePhaseButton.clicked.connect(self.proceedResourcePhase)
-        resourcePhaseButton.setToolTip(QString('%1<br>%2').arg(self.tr('Add 1 resource to each hero and draw 1 card.')).arg(self.tr('Special card-effects are not concerned.')))
+        resourcePhaseButton.setToolTip(QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Add 1 resource to each hero and draw 1 card.')).arg(QCoreApplication.translate('MainWindow', 'Special card-effects are not concerned.')))
         resourcePhaseButton.setFocusPolicy(Qt.NoFocus)
-        refreshPhaseButton = QPushButton(self.tr('Refresh Phase'))
+        refreshPhaseButton = QPushButton(QCoreApplication.translate('MainWindow', 'Refresh Phase'))
         refreshPhaseButton.clicked.connect(self.proceedRefreshPhase)
-        refreshPhaseButton.setToolTip(QString('%1<br>%2').arg(self.tr('Ready all cards and raise 1 threat.')).arg(self.tr('Special card-effects are not concerned.')))
+        refreshPhaseButton.setToolTip(QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Ready all cards and raise 1 threat.')).arg(QCoreApplication.translate('MainWindow', 'Special card-effects are not concerned.')))
         refreshPhaseButton.setFocusPolicy(Qt.NoFocus)
         
         self.victorySpinBox = QSpinBox()
         self.victorySpinBox.valueChanged.connect(lambda: self.log('<font color="#3f48cc">Victory Points: {0}</font>'.format(self.victorySpinBox.value())))
-        victoryLabel = QLabel(self.tr('&Victory:'))
+        victoryLabel = QLabel(QCoreApplication.translate('MainWindow', '&Victory:'))
         victoryLabel.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
         victoryLabel.setBuddy(self.victorySpinBox)
         
@@ -826,15 +826,15 @@ class MainWindow(QMainWindow):
         self.handArea = Area('Hand Area')
         self.stagingArea = Area('Staging Area', orientation=Qt.Vertical)
         
-        self.locationDeck = Deck('Active Location', self.tr('Active<br>Location', 'Deck'))
-        self.questDeck = Deck('Quest Deck', self.tr('Quest<br>Deck', 'Deck'))
-        self.encounterDeck = Deck('Encounter Deck', self.tr('Encounter<br>Deck', 'Deck'))
-        self.encounterDiscardPile = Deck('Encounter Discard Pile', self.tr('Encounter<br>Discard<br>Pile', 'Deck'))
+        self.locationDeck = Deck('Active Location', QCoreApplication.translate('MainWindow', 'Active<br>Location', 'Deck'))
+        self.questDeck = Deck('Quest Deck', QCoreApplication.translate('MainWindow', 'Quest<br>Deck', 'Deck'))
+        self.encounterDeck = Deck('Encounter Deck', QCoreApplication.translate('MainWindow', 'Encounter<br>Deck', 'Deck'))
+        self.encounterDiscardPile = Deck('Encounter Discard Pile', QCoreApplication.translate('MainWindow', 'Encounter<br>Discard<br>Pile', 'Deck'))
         self.tokenBank = TokenBank()
-        self.prepareDeck = Deck('Prepare Deck', self.tr('Prepare<br>Deck', 'Deck'), Qt.Horizontal)
-        self.removedPile = Deck('Removed From Play', self.tr('Removed<br>From<br>Play', 'Deck'), Qt.Horizontal)
-        self.playerDeck = Deck('Player Deck', self.tr('Player<br>Deck', 'Deck'))
-        self.playerDiscardPile = Deck('Player Discard Pile', self.tr('Player<br>Discard<br>Pile', 'Deck'))
+        self.prepareDeck = Deck('Prepare Deck', QCoreApplication.translate('MainWindow', 'Prepare<br>Deck', 'Deck'), Qt.Horizontal)
+        self.removedPile = Deck('Removed From Play', QCoreApplication.translate('MainWindow', 'Removed<br>From<br>Play', 'Deck'), Qt.Horizontal)
+        self.playerDeck = Deck('Player Deck', QCoreApplication.translate('MainWindow', 'Player<br>Deck', 'Deck'))
+        self.playerDiscardPile = Deck('Player Discard Pile', QCoreApplication.translate('MainWindow', 'Player<br>Discard<br>Pile', 'Deck'))
         
         self.engagedArea.setBackgroundBrush(QBrush(Qt.darkRed))
         self.heroArea.setBackgroundBrush(QBrush(Qt.darkBlue))
@@ -885,7 +885,7 @@ class MainWindow(QMainWindow):
         centralWidget.setLayout(layout)
         
         self.setCentralWidget(centralWidget)
-        self.setWindowTitle(self.tr('The Lord of the Rings: The Card Game'))
+        self.setWindowTitle(QCoreApplication.translate('MainWindow', 'The Lord of the Rings: The Card Game'))
         self.setWindowIcon(QIcon(':/images/icons/LotRLCG.ico'))
         self.showMaximized()  # will trigger resizeEvent()
         self.readSettings()

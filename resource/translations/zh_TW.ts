@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="2.0" language="zh_TW" sourcelanguage="en_US">
 <context>
+    <name>Chatter</name>
+    <message>
+        <location filename="../../LotRLCG/Chatter.py" line="26"/>
+        <source>Not Connected</source>
+        <translation>未連接</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/Chatter.py" line="26"/>
+        <source>Not connected to server...</source>
+        <translation>尚未連接到伺服器...</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/Chatter.py" line="42"/>
+        <source>Type in and press Enter to send message.</source>
+        <translation>輸入訊息並按 Enter 送出.</translation>
+    </message>
+</context>
+<context>
     <name>Client</name>
     <message>
         <location filename="../../LotRLCG/Messaging.py" line="111"/>
@@ -292,24 +310,49 @@
         <translation>選擇一個 IP 位址來建立遊戲:</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="78"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="67"/>
         <source>&amp;Host Game!</source>
         <translation>建立遊戲!</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="81"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="70"/>
         <source>Hosting game at</source>
         <translation>已建立遊戲於</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="83"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="72"/>
         <source>&amp;Start Game!</source>
         <translation>開始遊戲!</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="113"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="102"/>
         <source>Host Multiplayer Game</source>
         <translation>建立多人遊戲</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="26"/>
+        <source>Networking Failed</source>
+        <translation>網路失敗</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="26"/>
+        <source>Unable to host game...</source>
+        <translation>無法建立遊戲...</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="40"/>
+        <source>Waiting for other players...</source>
+        <translation>等待其他玩家加入...</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="21"/>
+        <source>IP Address?</source>
+        <translation>IP 位址?</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="21"/>
+        <source>Please select an IP address</source>
+        <translation>請選擇一個 IP 位址</translation>
     </message>
 </context>
 <context>
@@ -348,6 +391,36 @@
         <location filename="../../LotRLCG/JoinGameDialog.py" line="56"/>
         <source>Cannot connect to server!</source>
         <translation>無法連接到伺服端!</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/JoinGameDialog.py" line="56"/>
+        <source>(Wrong address maybe?)</source>
+        <translation>(或許位址是錯誤的?)</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/JoinGameDialog.py" line="77"/>
+        <source>&amp;Join Game!</source>
+        <translation>加入遊戲!</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/JoinGameDialog.py" line="40"/>
+        <source>Invalid address!</source>
+        <translation>錯誤的位址!</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/JoinGameDialog.py" line="40"/>
+        <source>Example address:</source>
+        <translation>位址範例:</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/JoinGameDialog.py" line="40"/>
+        <source>Address?</source>
+        <translation>位址?</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/JoinGameDialog.py" line="62"/>
+        <source>Connected to server!</source>
+        <translation>已連接至伺服器!</translation>
     </message>
 </context>
 <context>
@@ -686,28 +759,10 @@
         <source>Simplified Chinese</source>
         <translation>簡體中文</translation>
     </message>
-</context>
-<context>
-    <name>MultiplayerMainWindow</name>
     <message>
-        <location filename="../../LotRLCG/MultiplayerMainWindow.py" line="224"/>
-        <source>%1 [Server]</source>
-        <translation>%1 [伺服端]</translation>
-    </message>
-    <message>
-        <location filename="../../LotRLCG/MultiplayerMainWindow.py" line="226"/>
-        <source>%1 [Client]</source>
-        <translation>%1 [客戶端]</translation>
-    </message>
-    <message>
-        <location filename="../../LotRLCG/MultiplayerMainWindow.py" line="53"/>
-        <source>%1  (Press any key to bring up Multiplayer Panel)</source>
-        <translation>%1  (按任意鍵打開多人面板)</translation>
-    </message>
-    <message>
-        <location filename="../../LotRLCG/MultiplayerMainWindow.py" line="57"/>
-        <source>%1  (Waiting for other players ready...)</source>
-        <translation>%1  (等待其他玩家準備好...)</translation>
+        <location filename="../../LotRLCG/MainWindow.py" line="246"/>
+        <source>Game Save (*.sav)</source>
+        <translation>遊戲存檔 (*.sav)</translation>
     </message>
 </context>
 <context>
@@ -751,10 +806,58 @@
         <translation>載入預設牌組...</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="137"/>
+        <location filename="../../LotRLCG/MultiplayerMainWindow.py" line="79"/>
         <source>Ready!</source>
         <translation>準備好了!</translation>
     </message>
+    <message>
+        <location filename="../../LotRLCG/Area.py" line="219"/>
+        <source>Progressing</source>
+        <translation>任務進展</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/Area.py" line="219"/>
+        <source>How many?</source>
+        <translation>獲得多少進展？</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/MultiplayerMainWindow.py" line="53"/>
+        <source>%1  (Press any key to bring up Multiplayer Panel)</source>
+        <translation>%1  (按任意鍵打開多人面板)</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/MultiplayerMainWindow.py" line="57"/>
+        <source>%1  (Waiting for other players ready...)</source>
+        <translation>%1  (等待其他玩家準備好...)</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/MultiplayerMainWindow.py" line="224"/>
+        <source>%1 [Server]</source>
+        <translation>%1 [伺服端]</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/MultiplayerMainWindow.py" line="226"/>
+        <source>%1 [Client]</source>
+        <translation>%1 [客戶端]</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/xxxxGameDialog.py" line="40"/>
+        <source>Nickname?</source>
+        <translation>暱稱?</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/xxxxGameDialog.py" line="35"/>
+        <source>Please give a nickname!</source>
+        <translation>請輸入暱稱!</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/xxxxGameDialog.py" line="40"/>
+        <source>Valid characters: A-Z, a-z, 0-9, dash, underscore</source>
+        <translation>可用的字元: A-Z, a-z, 0-9, -, _</translation>
+    </message>
+</context>
+<context>
+    <name>SetupDialog</name>
     <message>
         <location filename="../../LotRLCG/SetupDialog.py" line="69"/>
         <source>Scenario:</source>
@@ -781,14 +884,22 @@
         <translation>遊戲設置</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/Area.py" line="219"/>
-        <source>Progressing</source>
-        <translation>任務進展</translation>
+        <location filename="../../LotRLCG/SetupDialog.py" line="137"/>
+        <source>Ready!</source>
+        <translation>準備好了!</translation>
+    </message>
+</context>
+<context>
+    <name>ThreatDial</name>
+    <message>
+        <location filename="../../LotRLCG/ThreatDial.py" line="100"/>
+        <source>Threat Dial</source>
+        <translation>威脅輪盤</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/Area.py" line="219"/>
-        <source>How many?</source>
-        <translation>獲得多少進展？</translation>
+        <location filename="../../LotRLCG/ThreatDial.py" line="100"/>
+        <source>Set threat value to:</source>
+        <translation>將威脅值設為:</translation>
     </message>
 </context>
 <context>
