@@ -1,5 +1,5 @@
 '''
-TODO: attached card may get resource
+TODO: attached card may get resource, visual feedback
 '''
 import random
 from Draggable import *
@@ -211,9 +211,10 @@ class Area(QGraphicsView):
             draggingItem = event.source().draggingItem
             targetItem = self.itemAt(event.pos())
             if targetItem:
-                while targetItem.parentItem():
-                    targetItem = targetItem.parentItem()
-                    
+                if isinstance(draggingItem, Card):
+                    while targetItem.parentItem():
+                        targetItem = targetItem.parentItem()
+                        
                 # if dragging a progress Token to Quest Deck
                 if self.name == 'Quest Deck' and isinstance(draggingItem, Token) and draggingItem.type_() == 'progress':
                     (count, ok) = QInputDialog.getInt(self, QCoreApplication.translate('QObject', 'Progressing'), QCoreApplication.translate('QObject', 'How many?'), 1, 1, 20)
