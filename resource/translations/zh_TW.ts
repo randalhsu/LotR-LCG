@@ -300,47 +300,42 @@
 <context>
     <name>HostGameDialog</name>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="53"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="56"/>
         <source>Your &amp;nickname:</source>
         <translation>你的暱稱:</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="57"/>
-        <source>Select an IP to host game:</source>
-        <translation>選擇一個 IP 位址來建立遊戲:</translation>
-    </message>
-    <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="67"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="80"/>
         <source>&amp;Host Game!</source>
         <translation>建立遊戲!</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="70"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="83"/>
         <source>Hosting game at</source>
         <translation>已建立遊戲於</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="72"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="85"/>
         <source>&amp;Start Game!</source>
         <translation>開始遊戲!</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="102"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="122"/>
         <source>Host Multiplayer Game</source>
         <translation>建立多人遊戲</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="26"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="29"/>
         <source>Networking Failed</source>
         <translation>網路失敗</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="26"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="29"/>
         <source>Unable to host game...</source>
         <translation>無法建立遊戲...</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/HostGameDialog.py" line="40"/>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="43"/>
         <source>Waiting for other players...</source>
         <translation>等待其他玩家加入...</translation>
     </message>
@@ -353,6 +348,26 @@
         <location filename="../../LotRLCG/HostGameDialog.py" line="21"/>
         <source>Please select an IP address</source>
         <translation>請選擇一個 IP 位址</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="60"/>
+        <source>Select an IP address:</source>
+        <translation>選擇 IP 位址:</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="70"/>
+        <source>Select a port:</source>
+        <translation>選擇埠號:</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="71"/>
+        <source>Auto</source>
+        <translation>自動</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/HostGameDialog.py" line="77"/>
+        <source>Specific:</source>
+        <translation>指定:</translation>
     </message>
 </context>
 <context>
@@ -864,27 +879,27 @@
         <translation>劇本:</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="107"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="114"/>
         <source>Player Deck:</source>
         <translation>玩家牌組:</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="120"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="127"/>
         <source>Description:</source>
         <translation>描述:</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="129"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="136"/>
         <source>Start!</source>
         <translation>開始!</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="141"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="148"/>
         <source>Setting Game</source>
         <translation>遊戲設置</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="149"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="156"/>
         <source>Ready!</source>
         <translation>準備好了!</translation>
     </message>

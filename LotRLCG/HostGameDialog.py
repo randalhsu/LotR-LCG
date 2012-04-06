@@ -21,7 +21,10 @@ class HostGameDialog(xxxxGameDialog):
             QMessageBox.critical(self, self.tr('IP Address?'), self.tr('Please select an IP address'))
             return
             
-        port = self.server.hostGame()
+        specificPort = 0
+        if self.portSpinBox.isEnabled():
+            specificPort = self.portSpinBox.value()
+        port = self.server.hostGame(specificPort)
         if port == -1:
             QMessageBox.critical(self, self.tr('Networking Failed'), self.tr('Unable to host game...'))
             return
@@ -54,7 +57,7 @@ class HostGameDialog(xxxxGameDialog):
         nickLabel.setBuddy(self.nickLineEdit)
         self.nickLineEdit.selectAll()
         
-        selectLabel = QLabel(self.tr('Select an IP to host game:'))
+        selectIPLabel = QLabel(self.tr('Select an IP address:'))
         self.ipList = QListWidget()
         
         for address in QNetworkInterface.allAddresses():
@@ -64,6 +67,16 @@ class HostGameDialog(xxxxGameDialog):
         if self.ipList.count() > 1:
             self.ipList.setCurrentRow(0)
             
+        selectPortLabel = QLabel(self.tr('Select a port:'))
+        autoPortButton = QRadioButton(self.tr('Auto'))
+        autoPortButton.setChecked(True)
+        self.portSpinBox = QSpinBox()
+        self.portSpinBox.setRange(0, 65535)
+        self.portSpinBox.setValue(5566)
+        self.portSpinBox.setEnabled(False)
+        specificPortButton = QRadioButton(self.tr('Specific:'))
+        specificPortButton.toggled.connect(self.portSpinBox.setEnabled)
+        
         self.hostButton = QPushButton(self.tr('&Host Game!'))
         self.hostButton.clicked.connect(self.hostGame)
         
@@ -75,10 +88,17 @@ class HostGameDialog(xxxxGameDialog):
         nicknameLayout = QHBoxLayout()
         nicknameLayout.addWidget(nickLabel)
         nicknameLayout.addWidget(self.nickLineEdit)
+        portLayout = QHBoxLayout()
+        portLayout.addWidget(selectPortLabel)
+        portLayout.addWidget(autoPortButton)
+        portLayout.addWidget(specificPortButton)
+        portLayout.addWidget(self.portSpinBox)
+        
         topLayout = QVBoxLayout()
         topLayout.addLayout(nicknameLayout)
-        topLayout.addWidget(selectLabel)
+        topLayout.addWidget(selectIPLabel)
         topLayout.addWidget(self.ipList)
+        topLayout.addLayout(portLayout)
         topLayout.addWidget(self.hostButton)
         self.topWidget = QWidget()
         self.topWidget.setLayout(topLayout)

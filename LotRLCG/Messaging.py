@@ -161,11 +161,15 @@ class Server(QTcpServer):
     def setParent(self, parentWidget):
         self.parent = parentWidget
         
-    def hostGame(self):
+    def hostGame(self, port):
         '''return PORT that is hosting game, or -1 if failed'''
-        if not self.listen():
-            return -1
-        return self.serverPort()
+        if port == 0:  # auto port
+            if self.listen():
+                return self.serverPort()
+        else:
+            if self.listen(QHostAddress.Any, port):
+                return self.serverPort()
+        return -1
         
     def writeDataToSocket(self, data, socket):
         if not data.endswith('\n'):
