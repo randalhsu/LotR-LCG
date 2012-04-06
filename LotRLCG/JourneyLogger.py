@@ -6,7 +6,7 @@ class JourneyLogger(QDialog):
     def __init__(self, parent=None):
         super(JourneyLogger, self).__init__(parent)
         self.sphereColor = {
-            'neutral': 'cbbeb8',
+            'neutral': '969696',
             'leadership': '9d489b',
             'tactics': 'b71f25',
             'spirit': '00b6e3',

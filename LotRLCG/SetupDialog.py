@@ -18,7 +18,15 @@ class SetupDialog(QDialog):
                 return id
                 
     def _deckContentToText(self, cardList):
-        iconToDisplay = {
+        sphereColor = {
+            'neutral': '969696',
+            'leadership': '9d489b',
+            'tactics': 'b71f25',
+            'spirit': '00b6e3',
+            'lore': '00a651',
+        }
+        sphereToDisplay = {
+               'neutral': '   Neutral',
             'leadership': 'Leadership',
                'tactics': '   Tactics',
                 'spirit': '    Spirit',
@@ -39,7 +47,7 @@ class SetupDialog(QDialog):
                 heroes.append((set_, id))
             else:
                 counter['{0} {1}'.format(cardsInfo[set_][id]['icon'], cardsInfo[set_][id]['type'])] += 1
-                
+        
         maxHeroNameLength = 0
         for (set_, id) in heroes:
             length = len(cardsInfo[set_][id]['title'])
@@ -50,14 +58,17 @@ class SetupDialog(QDialog):
         for (set_, id) in heroes:
             name = cardsInfo[set_][id]['title']
             spaces = ' ' * (maxHeroNameLength - len(name))
-            text += '{0}{1}  ({2})<br>'.format(spaces, name, cardsInfo[set_][id]['icon'].title())
+            sphere = cardsInfo[set_][id]['icon']
+            text += '<font color="#{0}">{1}{2}  ({3})</font><br>'.format(sphereColor[sphere], spaces, name, sphere.title())
             
         text += '<br>      Deck Size : {0}<br>'.format(deckSize)
         
-        for icon in ('leadership', 'tactics', 'spirit', 'lore'):
+        for sphere in ('neutral', 'leadership', 'tactics', 'spirit', 'lore'):
             for type_ in ('ally', 'event', 'attachment'):
-                text += '{0} {1}: {2}<br>'.format(iconToDisplay[icon], typeToDisplay[type_], counter['{0} {1}'.format(icon, type_)])
-                
+                quantity = counter['{0} {1}'.format(sphere, type_)]
+                if quantity > 0:
+                    text += '<font color="#{0}">{1} {2}: {3:2}</font><br>'.format(sphereColor[sphere], sphereToDisplay[sphere], typeToDisplay[type_], quantity)
+                    
         return '<pre>{0}</pre>'.format(text)
         
     def createUI(self):
@@ -78,7 +89,7 @@ class SetupDialog(QDialog):
                 continue
             n = len(self.scenarioButtons)
             button = RadioButton(scenario['name'])
-            button.description = '{0}\nDifficulty = {1}\n\n{2}'.format(scenario['name'], scenario['difficulty'], scenario['description'])
+            button.description = '<h3>{0}</b></h3>Difficulty = {1}<hr>{2}'.format(scenario['name'], scenario['difficulty'], scenario['description'])
             if n == 0:
                 button.setChecked(True)
             button.setIcon(QIcon(QPixmap(':/images/icons/{0}.png'.format(scenarioNames[i]))))
