@@ -669,7 +669,7 @@
     <message>
         <location filename="../../LotRLCG/MainWindow.py" line="820"/>
         <source>&amp;Victory:</source>
-        <translation>勝利點</translation>
+        <translation>勝利點數:</translation>
     </message>
     <message>
         <location filename="../../LotRLCG/MainWindow.py" line="888"/>
@@ -685,7 +685,7 @@
         <location filename="../../LotRLCG/MainWindow.py" line="829"/>
         <source>Active&lt;br&gt;Location</source>
         <comment>Deck</comment>
-        <translation>活動區域</translation>
+        <translation>活動地區</translation>
     </message>
     <message>
         <location filename="../../LotRLCG/MainWindow.py" line="830"/>
@@ -811,12 +811,12 @@
         <translation>準備好了!</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/Area.py" line="219"/>
+        <location filename="../../LotRLCG/Area.py" line="220"/>
         <source>Progressing</source>
         <translation>任務進展</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/Area.py" line="219"/>
+        <location filename="../../LotRLCG/Area.py" line="220"/>
         <source>How many?</source>
         <translation>獲得多少進展？</translation>
     </message>
@@ -859,32 +859,32 @@
 <context>
     <name>SetupDialog</name>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="69"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="80"/>
         <source>Scenario:</source>
         <translation>劇本:</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="95"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="107"/>
         <source>Player Deck:</source>
         <translation>玩家牌組:</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="108"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="120"/>
         <source>Description:</source>
         <translation>描述:</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="117"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="129"/>
         <source>Start!</source>
         <translation>開始!</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="129"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="141"/>
         <source>Setting Game</source>
         <translation>遊戲設置</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/SetupDialog.py" line="137"/>
+        <location filename="../../LotRLCG/SetupDialog.py" line="149"/>
         <source>Ready!</source>
         <translation>準備好了!</translation>
     </message>

@@ -10,8 +10,8 @@ class SetupDialog(QDialog):
     def selectedScenarioId(self):
         for button in self.scenarioButtons:
             if button.isChecked():
-                return button.id
-            
+                return button.scenarioId
+                
     def selectedDeckId(self):
         for (id, button) in enumerate(self.deckButtons):
             if button.isChecked():
@@ -25,14 +25,14 @@ class SetupDialog(QDialog):
             'spirit': '00b6e3',
             'lore': '00a651',
         }
-        sphereToDisplay = {
+        alignedSphere = {
                'neutral': '   Neutral',
             'leadership': 'Leadership',
                'tactics': '   Tactics',
                 'spirit': '    Spirit',
                   'lore': '      Lore',
         }
-        typeToDisplay = {
+        alignedType = {
                   'ally': 'Ally ',
                  'event': 'Event',
             'attachment': 'Att  ',
@@ -61,13 +61,13 @@ class SetupDialog(QDialog):
             sphere = cardsInfo[set_][id]['icon']
             text += '<font color="#{0}">{1}{2}  ({3})</font><br>'.format(sphereColor[sphere], spaces, name, sphere.title())
             
-        text += '<br>      Deck Size : {0}<br>'.format(deckSize)
+        text += '<br>      Deck Size = {0}<br>'.format(deckSize)
         
         for sphere in ('neutral', 'leadership', 'tactics', 'spirit', 'lore'):
             for type_ in ('ally', 'event', 'attachment'):
                 quantity = counter['{0} {1}'.format(sphere, type_)]
                 if quantity > 0:
-                    text += '<font color="#{0}">{1} {2}: {3:2}</font><br>'.format(sphereColor[sphere], sphereToDisplay[sphere], typeToDisplay[type_], quantity)
+                    text += '<font color="#{0}">{1} {2}: {3:2}</font><br>'.format(sphereColor[sphere], alignedSphere[sphere], alignedType[type_], quantity)
                     
         return '<pre>{0}</pre>'.format(text)
         
@@ -97,10 +97,18 @@ class SetupDialog(QDialog):
             if n % 10 == 9:
                 scenarioLayout.addWidget(QLabel())
             self.scenarioButtons.append(button)
-            button.id = i
+            button.scenarioId = i
         scenarioLayout.setRowStretch(10, 1)
         self.scenarioGroupBox.setLayout(scenarioLayout)
-        self.scenarioGroupBox.leaveEvent = lambda _: self.descriptionLabel.setText(self.scenarioButtons[self.selectedScenarioId()].description)
+        
+        def setScenarioText(event):
+            n = self.selectedScenarioId()
+            shift = 0
+            for i in range(n):
+                if not scenarioExists[i]:
+                    shift += 1
+            self.descriptionLabel.setText(self.scenarioButtons[n - shift].description)
+        self.scenarioGroupBox.leaveEvent = setScenarioText
         
         self.deckButtons = []
         decksGroupBox = QGroupBox(QCoreApplication.translate('SetupDialog', 'Player Deck:'))

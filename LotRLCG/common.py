@@ -12,7 +12,7 @@ except ImportError:
     sys.exit(1)
 
 
-VERSION = '2012.04.03'
+VERSION = '2012.04.06'
 
 
 SETS = ('core', 'mirkwood', 'osgiliath', 'khazaddum', 'dwarrowdelf')  # EXPANSION
@@ -56,7 +56,7 @@ def _convertJson():
                 json.dump(object, f, separators=(',', ':'))
                 print('{0} dumped.'.format(newFilePath))
 
-_convertJson()
+#_convertJson()
 
 
 def _parseInfo(filePath):
