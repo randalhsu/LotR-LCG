@@ -592,185 +592,185 @@
         <translation>將 %1 附屬到一個英雄,</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="691"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="701"/>
         <source>&amp;New Journey...</source>
         <translation>新的旅程...</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="694"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="704"/>
         <source>&amp;Restart Journey</source>
         <translation>重新旅程</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="697"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="707"/>
         <source>&amp;Save Game</source>
         <translation>儲存遊戲</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="700"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="710"/>
         <source>&amp;Load Game</source>
         <translation>載入遊戲</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="703"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="713"/>
         <source>&amp;Quit</source>
         <translation>離開</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="707"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="717"/>
         <source>&amp;Game</source>
         <translation>遊戲</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="719"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="729"/>
         <source>&amp;Journey Logger</source>
         <translation>旅程紀錄</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="735"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="745"/>
         <source>Prison a random Hero</source>
         <translation>隨機監禁一個英雄</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="737"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="747"/>
         <source>For &quot;Escape From Dol Guldur&quot; scenario</source>
         <translation>在「逃離多爾哥多」劇本使用</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="740"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="750"/>
         <source>Scoring...</source>
         <translation>計分...</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="743"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="753"/>
         <source>&amp;Utility</source>
         <translation>工具</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="725"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="735"/>
         <source>&amp;Phase Tips</source>
         <translation>階段提示</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="751"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="761"/>
         <source>&amp;About</source>
         <translation>關於</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="809"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="819"/>
         <source>Resource Phase</source>
         <translation>資源階段</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="811"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="821"/>
         <source>Add 1 resource to each hero and draw 1 card.</source>
         <translation>每個英雄獲得 1 資源, 然後抽一張牌.</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="815"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="829"/>
         <source>Special card-effects are not concerned.</source>
         <translation>不考慮特殊卡牌效果</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="813"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="827"/>
         <source>Refresh Phase</source>
         <translation>更新階段</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="815"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="829"/>
         <source>Ready all cards and raise 1 threat.</source>
         <translation>重置所有卡牌, 並增加 1 點威脅值.</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="820"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="834"/>
         <source>&amp;Victory:</source>
         <translation>勝利點數:</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="888"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="903"/>
         <source>The Lord of the Rings: The Card Game</source>
         <translation>《魔戒》卡牌版</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="754"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="764"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="829"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="843"/>
         <source>Active&lt;br&gt;Location</source>
         <comment>Deck</comment>
         <translation>活動地區</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="830"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="844"/>
         <source>Quest&lt;br&gt;Deck</source>
         <comment>Deck</comment>
         <translation>任務牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="831"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="845"/>
         <source>Encounter&lt;br&gt;Deck</source>
         <comment>Deck</comment>
         <translation>遭遇牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="832"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="846"/>
         <source>Encounter&lt;br&gt;Discard&lt;br&gt;Pile</source>
         <comment>Deck</comment>
         <translation>遭遇牌&lt;br&gt;棄牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="834"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="848"/>
         <source>Prepare&lt;br&gt;Deck</source>
         <comment>Deck</comment>
         <translation>準備區</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="835"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="849"/>
         <source>Removed&lt;br&gt;From&lt;br&gt;Play</source>
         <comment>Deck</comment>
         <translation>已移除</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="836"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="850"/>
         <source>Player&lt;br&gt;Deck</source>
         <comment>Deck</comment>
         <translation>玩家牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="837"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="851"/>
         <source>Player&lt;br&gt;Discard&lt;br&gt;Pile</source>
         <comment>Deck</comment>
         <translation>玩家牌&lt;br&gt;棄牌堆</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="780"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="790"/>
         <source>Restart program to apply change.</source>
         <translation>程式會在重啟後變更語言.</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="788"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="798"/>
         <source>Interface Langauge</source>
         <translation>介面語言</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="780"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="790"/>
         <source>Setting Changed</source>
         <translation>設定變更</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="784"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="794"/>
         <source>English</source>
         <translation>英文</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="785"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="795"/>
         <source>Traditional Chinese</source>
         <translation>繁體中文</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/MainWindow.py" line="786"/>
+        <location filename="../../LotRLCG/MainWindow.py" line="796"/>
         <source>Simplified Chinese</source>
         <translation>簡體中文</translation>
     </message>
@@ -778,6 +778,16 @@
         <location filename="../../LotRLCG/MainWindow.py" line="246"/>
         <source>Game Save (*.sav)</source>
         <translation>遊戲存檔 (*.sav)</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/MainWindow.py" line="823"/>
+        <source>Deal Shadows</source>
+        <translation>發暗影牌</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/MainWindow.py" line="825"/>
+        <source>Deal 1 shadow card to each engaged enemy.</source>
+        <translation>每個已遭遇的敵人發 1 張暗影牌.</translation>
     </message>
 </context>
 <context>

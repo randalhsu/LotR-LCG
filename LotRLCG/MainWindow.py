@@ -615,6 +615,16 @@ class MainWindow(QMainWindow):
         self.threatDial.appendLog()
         # TODO: pass first player token in multiplayer game
         
+    def proceedDealShadows(self):
+        enemies = filter(lambda card: 'cost' in card.info, list(self.engagedArea.getList()))
+        enemies.sort(reverse=True, key=lambda card: card.info['cost'])  # sort from highest to lowest engagement cost
+        for enemy in enemies:
+            card = self.encounterDeck.draw()
+            if card:
+                enemy.attach(card)
+                shadow = repr(card) if card.revealed() else '[???]'
+                self.log('Deal shadow {0} to {1}'.format(shadow, enemy))
+                
     def writeSettings(self):
         settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
         
@@ -810,6 +820,10 @@ class MainWindow(QMainWindow):
         resourcePhaseButton.clicked.connect(self.proceedResourcePhase)
         resourcePhaseButton.setToolTip(QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Add 1 resource to each hero and draw 1 card.')).arg(QCoreApplication.translate('MainWindow', 'Special card-effects are not concerned.')))
         resourcePhaseButton.setFocusPolicy(Qt.NoFocus)
+        dealShadowsButton = QPushButton(QCoreApplication.translate('MainWindow', 'Deal Shadows'))
+        dealShadowsButton.clicked.connect(self.proceedDealShadows)
+        dealShadowsButton.setToolTip(QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Deal 1 shadow card to each engaged enemy.')).arg(QCoreApplication.translate('MainWindow', 'Special card-effects are not concerned.')))
+        dealShadowsButton.setFocusPolicy(Qt.NoFocus)
         refreshPhaseButton = QPushButton(QCoreApplication.translate('MainWindow', 'Refresh Phase'))
         refreshPhaseButton.clicked.connect(self.proceedRefreshPhase)
         refreshPhaseButton.setToolTip(QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Ready all cards and raise 1 threat.')).arg(QCoreApplication.translate('MainWindow', 'Special card-effects are not concerned.')))
@@ -855,9 +869,10 @@ class MainWindow(QMainWindow):
         leftLayout.addWidget(self.threatDial)
         littleLayout = QGridLayout()
         littleLayout.addWidget(resourcePhaseButton, 0, 0, 1, 2)
-        littleLayout.addWidget(refreshPhaseButton, 0, 2, 1, 2)
-        littleLayout.addWidget(victoryLabel, 0, 4, 1, 1)
-        littleLayout.addWidget(self.victorySpinBox, 0, 5, 1, 1)
+        littleLayout.addWidget(dealShadowsButton, 0, 2, 1, 2)
+        littleLayout.addWidget(refreshPhaseButton, 0, 4, 1, 2)
+        littleLayout.addWidget(victoryLabel, 0, 6, 1, 1)
+        littleLayout.addWidget(self.victorySpinBox, 0, 7, 1, 1)
         leftLayout.addLayout(littleLayout)
         
         midLayout = QVBoxLayout()
