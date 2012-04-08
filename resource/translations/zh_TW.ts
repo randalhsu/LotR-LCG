@@ -928,6 +928,24 @@
     </message>
 </context>
 <context>
+    <name>Token</name>
+    <message>
+        <location filename="../../LotRLCG/Draggable.py" line="161"/>
+        <source>Damage</source>
+        <translation>傷害</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/Draggable.py" line="162"/>
+        <source>Progress</source>
+        <translation>進度</translation>
+    </message>
+    <message>
+        <location filename="../../LotRLCG/Draggable.py" line="163"/>
+        <source>Resource</source>
+        <translation>資源</translation>
+    </message>
+</context>
+<context>
     <name>_About</name>
     <message>
         <location filename="../../LotRLCG/MainWindow.py" line="115"/>

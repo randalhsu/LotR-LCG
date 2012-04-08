@@ -157,6 +157,12 @@ class Token(QGraphicsPixmapItem):
         assert(tokenType in ('damage', 'progress', 'resource'))
         super(Token, self).__init__(QPixmap(':/images/tokens/{0}.png'.format(tokenType)), parent)
         self.setFlag(QGraphicsItem.ItemIgnoresParentOpacity)
+        translations = {
+            'damage': QCoreApplication.translate('Token', 'Damage'),
+            'progress': QCoreApplication.translate('Token', 'Progress'),
+            'resource': QCoreApplication.translate('Token', 'Resource'),
+        }
+        self.setToolTip(translations[tokenType])
         self._type = tokenType
         
     def type_(self):
