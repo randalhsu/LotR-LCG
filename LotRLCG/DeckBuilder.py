@@ -546,6 +546,20 @@ class DeckBuilder(QMainWindow):
         self.dirty = False
         self.updateSizeLabel()
         
+    def filterChanged(self, keyword):
+        if keyword.isEmpty():
+            for row in range(self.playerCardsTable.rowCount()):
+                self.playerCardsTable.setRowHidden(row, False)
+            return
+            
+        for row in range(self.playerCardsTable.rowCount()):
+            matched = False
+            for col in range(self.playerCardsTable.columnCount()):
+                if self.playerCardsTable.item(row, col).text().contains(keyword, Qt.CaseInsensitive):
+                    matched = True
+                    break
+            self.playerCardsTable.setRowHidden(row, not matched)
+            
     def changeTab(self, index_):
         self.changeDefaultImage(index_)
         if index_ == 1 and ('core', 74) not in self.imageDict:  # check if Encounter Cards are not loaded yet
@@ -574,7 +588,12 @@ class DeckBuilder(QMainWindow):
         leftLayout.addWidget(infoLabel)
         
         playerTab = QWidget()
-        allLabel = QLabel(self.tr('All Player Cards'))
+        playerCardsLabel = QLabel(self.tr('Player Cards'))
+        filterLabel = QLabel(self.tr('Filter:'))
+        filterComboBox = QComboBox()
+        filterComboBox.addItems(('', 'Dwarf', 'Eagle', 'Gondor', 'Hobbit', 'Ranged', 'Rohan', 'Sentinel', 'Silvan', 'Song'))
+        filterComboBox.setEditable(True)
+        filterComboBox.editTextChanged.connect(self.filterChanged)
         self.playerCardsTable = self.createPlayerCardsTable()
         
         sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
@@ -608,7 +627,9 @@ class DeckBuilder(QMainWindow):
         saveDeckButton.clicked.connect(self.save)
         
         playerLayout = QGridLayout()
-        playerLayout.addWidget(allLabel, 0, 0, 1, 1)
+        playerLayout.addWidget(playerCardsLabel, 0, 0, 1, 1)
+        playerLayout.addWidget(filterLabel, 0, 2, 1, 1, Qt.AlignRight)
+        playerLayout.addWidget(filterComboBox, 0, 3, 1, 1)
         playerLayout.addWidget(self.playerCardsTable, 1, 0, 4, 4)
         playerLayout.addWidget(addButton, 2, 4, 1, 1)
         playerLayout.addWidget(removeButton, 3, 4, 1, 1)
