@@ -225,6 +225,7 @@ class MainWindow(QMainWindow):
     def restartGame(self):
         self.cleanup()
         self.setup()
+        self.prisonAct.setEnabled(self.scenarioId == 2)  # is it Escape From Dol Guldur?
         
     def startNewGameAction(self):
         self.startNewGame()
