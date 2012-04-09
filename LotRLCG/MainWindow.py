@@ -210,7 +210,7 @@ class MainWindow(QMainWindow):
                     break
             area.update()
             
-        self.log('<hr><br>')
+        self.journeyLogger.clearLog()
         
     def startNewGame(self):
         self.cleanup()
@@ -561,19 +561,17 @@ class MainWindow(QMainWindow):
             heroesString = '{0} and {1}'.format(heroes[0], heroes[1])
         elif len(heroes) >= 3:
             heroesString = '{0} and {1}'.format(', '.join(heroes[:-1]), heroes[-1])
-        self.log('<h3>{0} started {1} journey on <b>[{2}]</b>...</h3>'.format(heroesString, pronoun, scenariosInfo[self.scenarioId]['name']))
+        self.log('<h3>{0} started {1} journey on <b>[{2}]</b>...</h3><br>'.format(heroesString, pronoun, scenariosInfo[self.scenarioId]['name']))
         self.logCurrentState()
         if self.questDeck.getList():
             self.log('Questing {0}'.format(repr(self.questDeck.getList()[-1])))
             
     def logCurrentState(self):
-        self.log('<br>')
         self.threatDial.appendLog()
         hand = [repr(card) for card in self.handArea.getList()]
         self.log('Hand: {0}'.format(', '.join(hand)))
         staging = [repr(card) for card in self.stagingArea.getList()]
-        self.log('Staging: {0}'.format(', '.join(staging)))
-        self.log('<br>')
+        self.log('Staging: {0}<br>'.format(', '.join(staging)))
         
     def setLargeImage(self, card):
         if card.info['type'] != 'quest':

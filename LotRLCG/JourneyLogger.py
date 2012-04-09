@@ -238,6 +238,9 @@ class JourneyLogger(QDialog):
         self.stateLabel.setText(text)
         QTimer.singleShot(3000, lambda: self.stateLabel.setText(''))  # clear it later
         
+    def clearLog(self):
+        self.textEdit.clear()
+        
     def copyPlainText(self):
         QApplication.clipboard().setText(self.textEdit.toPlainText())
         self.setStateLabel(self.tr('Copied to clipboard!'))
@@ -261,7 +264,7 @@ class JourneyLogger(QDialog):
     def createUI(self):
         self.textEdit = QTextEdit()
         clearButton = QPushButton(self.tr('Clear'))
-        clearButton.clicked.connect(self.textEdit.clear)
+        clearButton.clicked.connect(self.clearLog)
         copyPlainTextButton = QPushButton(self.tr('Copy as Plain Text'))
         copyPlainTextButton.clicked.connect(self.copyPlainText)
         saveHtmlButton = QPushButton(self.tr('&Save as HTML'))
