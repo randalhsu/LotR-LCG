@@ -98,6 +98,7 @@ class JoinGameDialog(xxxxGameDialog):
         self.setWindowTitle(self.tr('Join Multiplayer Game'))
         self.addressLineEdit.setFocus()
         self.joinButton.setDefault(True)
+        self.restoreGeometry()
 
 
 if __name__ == '__main__':

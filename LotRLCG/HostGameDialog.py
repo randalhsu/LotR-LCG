@@ -121,6 +121,7 @@ class HostGameDialog(xxxxGameDialog):
         self.setLayout(layout)
         self.setWindowTitle(self.tr('Host Multiplayer Game'))
         self.hostButton.setDefault(True)
+        self.restoreGeometry()
 
 
 if __name__ == '__main__':

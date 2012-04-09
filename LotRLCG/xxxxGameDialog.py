@@ -58,6 +58,28 @@ class xxxxGameDialog(QWidget):
         mainWindow.show()
         mainWindows.append(mainWindow)  # make it survive after this method ends...
         
+    def saveGeometry(self):
+        settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
+        settings.beginGroup('Geometry')
+        settings.beginGroup(self.__class__.__name__)
+        settings.setValue('size', self.size())
+        settings.setValue('pos', self.pos())
+        settings.endGroup()
+        settings.endGroup()
+        
+    def restoreGeometry(self):
+        settings = QSettings(MainWindow.CONFIG_PATH, QSettings.IniFormat)
+        settings.beginGroup('Geometry')
+        settings.beginGroup(self.__class__.__name__)
+        size = settings.value('size', QSize()).toSize()
+        if size.isValid():
+            self.resize(size)
+        point = settings.value('pos', QPoint(-100, -100)).toPoint()
+        if point != QPoint(-100, -100):
+            self.move(point)
+        settings.endGroup()
+        settings.endGroup()
+        
     def closeEvent(self, event):
         className = self.__class__.__name__
         if self.isManuallyClosing:
@@ -65,4 +87,5 @@ class xxxxGameDialog(QWidget):
                 self.client.disconnectFromHost()
             if className == 'HostGameDialog':
                 self.server.farewell()
+        self.saveGeometry()
         event.accept()
