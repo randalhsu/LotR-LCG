@@ -2,9 +2,13 @@
 	{
 		"set": "dwarrowdelf",
 		"id": 0,
-		"type": "iDontCare",
-		"icon": "iDontCare",
-		"why": "programmers count from zero"
+		"quantity": 4,
+		"type": "treachery",
+		"title": "Wrapped!",
+		"icon": "watcher",
+		"effect": {
+			"when revealed": "The first player attaches Wrapped! to a hero he controls. (Counts as a Tentacle attachment with the text: \"Limit 1 per hero. Attached hero cannot exhaust or ready. At the end of the round, discard attached hero from play. Combat Action: Exhaust a hero you control without a Tentacle attachment to discard Wrapped!.\")"
+		}
 	},
 	{
 		"set": "dwarrowdelf",
@@ -787,6 +791,721 @@
 		"effect": {
 			"normal": "Ambush (After this enemy enters play, each player makes an engagement check against it.)",
 			"forced": "After Wild Bear engages a player, it makes an immediate attack."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 53,
+		"quantity": 1,
+		"unique": true,
+		"type": "hero",
+		"title": "Aragorn",
+		"icon": "lore",
+		"cost": 12,
+		"strength": 2,
+		"attack": 3,
+		"defense": 2,
+		"hp": 5,
+		"traits": ["Dunedain", "Ranger"],
+		"effect": {
+			"normal": "Sentinel.",
+			"refresh action": "Reduce your threat to your starting threat level. (Limit once per game.)"
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 54,
+		"quantity": 3,
+		"type": "event",
+		"title": "Grave Cairn",
+		"icon": "leadership",
+		"cost": 1,
+		"effect": {
+			"response": "After a character leaves play, add its Attack to another characters Attack until the end of the round."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 55,
+		"quantity": 3,
+		"type": "attachment",
+		"title": "Sword that was Broken",
+		"icon": "leadership",
+		"cost": 3,
+		"traits": ["Artifact"],
+		"effect": {
+			"normal": "Attach to a hero.\nAttached hero gains a Leadership resource icon.\nIf attached hero is Aragorn, each character you control gets +1 Willpower."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 56,
+		"quantity": 3,
+		"type": "ally",
+		"title": "Watcher of the Bruinen",
+		"icon": "tactics",
+		"cost": 2,
+		"strength": 0,
+		"attack": 1,
+		"defense": 2,
+		"hp": 2,
+		"traits": ["Noldor", "Warrior"],
+		"effect": {
+			"normal": "Sentinel.\nWatcher of the Bruinen does not exhaust to defend.",
+			"forced": "After Watcher of the Bruinen defends, either discard it from play or discard 1 card from your hand."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 57,
+		"quantity": 3,
+		"type": "attachment",
+		"title": "Rivendell Bow",
+		"icon": "tactics",
+		"cost": 1,
+		"traits": ["Item", "Weapon"],
+		"effect": {
+			"normal": "Attach to a Noldor or Silvan character, or to Aragorn. Limit 1 per character.\nAttached character gains ranged.\nIf attached character has a printed ranged keyword, it gets +1 Attack during a ranged attack."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 58,
+		"quantity": 3,
+		"type": "ally",
+		"title": "Arwen Undomiel",
+		"icon": "spirit",
+		"cost": 2,
+		"strength": 2,
+		"attack": 0,
+		"defense": 1,
+		"hp": 2,
+		"traits": ["Noldor", "Noble"],
+		"effect": {
+			"response": "After Arwen Undomiel exhausts, choose a character. That character gains sentinel and +1 Defense until the end of the round."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 59,
+		"quantity": 3,
+		"type": "event",
+		"title": "Elrond's Counsel",
+		"icon": "spirit",
+		"cost": 0,
+		"effect": {
+			"action": "If you control a unique Noldor character, give another character +1 Willpower until the end of the phase and lower your threat by 3."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 60,
+		"quantity": 3,
+		"type": "event",
+		"title": "Short Cut",
+		"icon": "lore",
+		"cost": 1,
+		"effect": {
+			"response": "After a location enters play, exhaust a Hobbit character to shuffle that location back into the encounter deck. Then, reveal 1 card from the encounter deck and add it to the staging area."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 61,
+		"quantity": 3,
+		"type": "attachment",
+		"title": "Legacy of Durin",
+		"icon": "lore",
+		"cost": 1,
+		"traits": ["Condition"],
+		"effect": {
+			"normal": "Attach to a Dwarf hero.",
+			"response": "After you play a Dwarf character from your hand, draw 1 card."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 62,
+		"quantity": 3,
+		"type": "attachment",
+		"title": "Resourceful",
+		"icon": "neutral",
+		"cost": 4,
+		"effect": {
+			"normal": "Secrecy 3.\nAttach to a hero you control.\nAttached hero collects 1 additional resource during the resource phase each round."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 63,
+		"quantity": 1,
+		"type": "quest",
+		"title": "To the West-Door",
+		"icon": "watcher",
+		"hp": 13,
+		"effect": {
+			"A": {
+				"normal": "Elrond has asked you to scout the Mines of Moria on your return to Lorien, hoping to discover if it is the source of increased Orc activity along the Misty Mountains.",
+				"setup": "Remove The Watcher and Doors of Durin from the encounter deck and set them aside, out of play."
+			},
+			"B": {
+				"when revealed": "Reveal cards from the top of the encounter deck and add them to the staging area until there is at least X Threat in the staging area. X is twice the number of players in the game."
+			}
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 64,
+		"quantity": 1,
+		"type": "quest",
+		"title": "The Seething Lake",
+		"icon": "watcher",
+		"hp": 5,
+		"effect": {
+			"A": {
+				"normal": "The others swung round and saw the waters of the lake seething, as if a host of snakes were swimming up from the southern end. - The Fellowship of the Ring\nThe Doors of Durin are blocked by an ancient spell. You must figure out a way into the mines before the Seething bog and its Watcher consumes you all."
+			},
+			"B": {
+				"when revealed": "Add The Watcher to the staging area. Doors of Durin becomes the active location, moving any previous active location to the staging area. Shuffle all Tentacle cards in the encounter discard pile back into the encounter deck.\nIf the players have at least 3 victory points and defeat this stage, they have won the game."
+			}
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 65,
+		"quantity": 1,
+		"unique": true,
+		"type": "location",
+		"title": "Doors of Durin",
+		"icon": "watcher",
+		"strength": 2,
+		"hp": -1,
+		"traits": ["Gate"],
+		"effect": {
+			"normal": "Progress tokens that would be placed on Doors of Durin are instead placed on the current quest card.",
+			"action": "Each player may discard any number of cards from his hand. Then, discard the top card of the encounter deck. If the first letter of the encounter card's title matches that of one of the discarded player cards, add Doors of Durin to your victory display. (Limit once per round.)"
+		},
+		"victory": 3
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 66,
+		"quantity": 1,
+		"type": "location",
+		"title": "Stair Falls",
+		"icon": "watcher",
+		"strength": 2,
+		"hp": 4,
+		"traits": ["Stair"],
+		"effect": {
+			"travel": "The first player must exhaust 2 characters to travel here.",
+			"shadow": "Remove 1 progress token from the current quest."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 67,
+		"quantity": 2,
+		"type": "location",
+		"title": "Perilous Swamp",
+		"icon": "watcher",
+		"strength": 4,
+		"hp": 2,
+		"traits": ["Swamp"],
+		"effect": {
+			"normal": "No more than 1 progress token can be placed on Perilous Swamp each round.",
+			"shadow": "Remove 1 progress token from the current quest."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 68,
+		"quantity": 2,
+		"type": "location",
+		"title": "Makeshift Passage",
+		"icon": "watcher",
+		"strength": 1,
+		"hp": 5,
+		"traits": ["Swamp"],
+		"effect": {
+			"forced": "After you travel to Makeshift Passage, place 2 progress tokens on the current quest card, bypassing any active location."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 69,
+		"quantity": 3,
+		"type": "location",
+		"title": "Stagnant Creek",
+		"icon": "watcher",
+		"strength": 3,
+		"hp": 3,
+		"traits": ["Swamp"],
+		"effect": {
+			"when revealed": "Discard the top card of the encounter deck. If the discarded card is a Tentacle enemy, add that card to the staging area and raise each player's threat by 5."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 70,
+		"quantity": 1,
+		"type": "treachery",
+		"title": "Ill Purpose",
+		"icon": "watcher",
+		"effect": {
+			"when revealed": "All enemies in the staging area engage the player with the highest threat. Then, each player raises his threat by the total Threat of all cards in the staging area.",
+			"shadow": "Attacking enemy gets +1 Attack. (+3 Attack instead of it is a Tentacle.)"
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 71,
+		"quantity": 3,
+		"type": "treachery",
+		"title": "Disturbed Waters",
+		"icon": "watcher",
+		"effect": {
+			"normal": "Doomed 5."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 72,
+		"quantity": 1,
+		"unique": true,
+		"type": "enemy",
+		"title": "The Watcher",
+		"icon": "watcher",
+		"cost": 48,
+		"strength": 4,
+		"attack": 5,
+		"defense": 7,
+		"hp": 9,
+		"traits": ["Creature", "Tentacle"],
+		"effect": {
+			"normal": "Regenerate 2. While there is another Tentacle enemy in play, The Watcher cannot be optionally engaged.\nIf The Watcher is in the staging area at the end of the combat phase, each player must deal 3 damage to 1 character he controls."
+		},
+		"victory": 3
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 73,
+		"quantity": 4,
+		"type": "enemy",
+		"title": "Grasping Tentacle",
+		"icon": "watcher",
+		"cost": 12,
+		"strength": 2,
+		"attack": 3,
+		"defense": 0,
+		"hp": 3,
+		"traits": ["Tentacle"],
+		"effect": {
+			"forced": "When Grasping Tentacle is attacked, discard the top card of the encounter deck. If that card has a shadow effect or is a Tentacle enemy, attach this card to an attacking character as a Tentacle attachment with the text: \"Attached character's Attack and Defense are reduced to 0.\""
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 74,
+		"quantity": 4,
+		"type": "enemy",
+		"title": "Trashing Tentacle",
+		"icon": "watcher",
+		"cost": 12,
+		"strength": 2,
+		"attack": 3,
+		"defense": 0,
+		"hp": 3,
+		"traits": ["Tentacle"],
+		"effect": {
+			"forced": "When Thrashing Tentacle is attacked, discard the top card of the encounter deck. If that card has a shadow effect or is a Tentacle enemy, deal the damage from the attack to 1 character an attacking player controls (ignoring defense)."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 75,
+		"quantity": 4,
+		"type": "enemy",
+		"title": "Striking Tentacle",
+		"icon": "watcher",
+		"cost": 18,
+		"strength": 2,
+		"attack": 4,
+		"defense": 1,
+		"hp": 3,
+		"traits": ["Tentacle"],
+		"effect": {
+			"forced": "When Striking Tentacle attacks, discard the top card of the encounter deck. If that card has a shadow effect or is a Tentacle enemy, this attack is considered undefended."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 76,
+		"quantity": 1,
+		"unique": true,
+		"type": "hero",
+		"title": "Hama",
+		"icon": "tactics",
+		"cost": 9,
+		"strength": 1,
+		"attack": 3,
+		"defense": 1,
+		"hp": 4,
+		"traits": ["Rohan", "Warrior"],
+		"effect": {
+			"response": "After Hama is declared as an attacker, return a Tactics event from your discard pile to your hand. Then, choose and discard 1 card from your hand."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 77,
+		"quantity": 3,
+		"type": "ally",
+		"title": "Erestor",
+		"icon": "leadership",
+		"cost": 4,
+		"strength": 2,
+		"attack": 0,
+		"defense": 1,
+		"hp": 3,
+		"traits": ["Noldor"],
+		"effect": {
+			"action": "Choose and discard 1 card from your hand to draw 1 card. (Limit once per round.)"
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 78,
+		"quantity": 3,
+		"type": "event",
+		"title": "Fresh Tracks",
+		"icon": "leadership",
+		"cost": 1,
+		"effect": {
+			"response": "After an enemy is added to the staging area, deal 1 damage to that enemy. Players ignore that enemy while making engagement checks this round."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 79,
+		"quantity": 3,
+		"type": "ally",
+		"title": "Erebor Battle Master",
+		"icon": "tactics",
+		"cost": 3,
+		"strength": 0,
+		"attack": 1,
+		"defense": 1,
+		"hp": 2,
+		"traits": ["Dwarf", "Warrior"],
+		"effect": {
+			"normal": "Erebor Battle Master gets +1 Attack for each other Dwarf character you control."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 80,
+		"quantity": 3,
+		"type": "attachment",
+		"title": "Ring Mail",
+		"icon": "tactics",
+		"cost": 2,
+		"traits": ["Item", "Armor"],
+		"effect": {
+			"normal": "Attach to a Dwarf or Hobbit character.\nRestricted.\nAttached character gets +1 hit point and +1 Defense."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 81,
+		"quantity": 3,
+		"type": "event",
+		"title": "Out of Sight",
+		"icon": "spirit",
+		"cost": 5,
+		"effect": {
+			"normal": "Secrecy 3.",
+			"action": "Enemies engaged with you cannot attack this phase."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 82,
+		"quantity": 3,
+		"type": "attachment",
+		"title": "Ever My Heart Rises",
+		"icon": "spirit",
+		"cost": 0,
+		"traits": ["Condition"],
+		"effect": {
+			"normal": "Attach to a Dwarf character.",
+			"response": "After you travel to a Mountain or Underground location, ready attached character and reduce your threat by 1."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 83,
+		"quantity": 3,
+		"type": "ally",
+		"title": "Warden of Healing",
+		"icon": "lore",
+		"cost": 2,
+		"strength": 1,
+		"attack": 0,
+		"defense": 1,
+		"hp": 1,
+		"traits": ["Gondor", "Healer"],
+		"effect": {
+			"action": "Exhaust Warden of Healing to heal 1 damage on up to 2 different characters. Then, you may pay 2 Lore resources to ready Warden of Healing."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 84,
+		"quantity": 3,
+		"type": "event",
+		"title": "Word of Command",
+		"icon": "lore",
+		"cost": 1,
+		"effect": {
+			"action": "Exhaust an Istari character to search your deck for 1 card and add it to your hand. Shuffle your deck."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 85,
+		"quantity": 3,
+		"type": "attachment",
+		"title": "Love of Tales",
+		"icon": "lore",
+		"cost": 0,
+		"traits": ["Condition"],
+		"effect": {
+			"normal": "Attach to a Lore hero. Limit 1 per hero.",
+			"response": "After a Song card is played, add 1 resource to attached hero's resource pool."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 86,
+		"quantity": 1,
+		"type": "quest",
+		"title": "Journey in the Black Pit",
+		"icon": "dark",
+		"hp": 13,
+		"effect": {
+			"A": {
+				"normal": "Your party is scouting the Mines of Moria, searching for signs of Orcs. Dark tunnels and twisting passages spread out in all directions, a labyrinthine maze that you could wander in forever if you take the wrong path.",
+				"setup": "The first player attaches Cave Torch to a hero of his choice."
+			},
+			"B": {
+				"when revealed": "Discard cards from the top of the encounter deck until you discard X locations, where X is one less than the number of players in the game (minimum of 1). Add those locations to the staging area, and shuffle the other discarded cards back into the encounter deck.\nEach location gets +1 Threat. If the players quest unsuccessfully, trigger all \"Lost:\" effects in play."
+			}
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 87,
+		"quantity": 1,
+		"type": "quest",
+		"title": "Continuing Eastward",
+		"icon": "dark",
+		"hp": 17,
+		"effect": {
+			"A": {
+				"normal": "Time carries no weight in the darkness, and the hours creep by with no end in sight. The number of Orcs in the mines increase as you head toward the East-gate, but there appears to be little real organization within their ranks. You press onward."
+			},
+			"B": {
+				"when revealed": "The first player makes a locate test. If this test is failed, reveal cards from the encounter deck equal to the number of players in the game and add them to the staging area. Then, trigger all \"Lost:\" effects in play.\nIf the players quest unsuccessfully, trigger all \"Lost:\" effects in play.\nIf the players defeat this stage, they have won the game."
+			}
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 88,
+		"quantity": 1,
+		"unique": true,
+		"type": "objective",
+		"title": "Durin's Greaves",
+		"icon": "dark",
+		"traits": ["Artifact", "Armour"],
+		"effect": {
+			"when revealed": "The first player attaches Durin's Greaves to a hero of his choice as an attachment.\nAttached hero gains +1 Defense."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 89,
+		"quantity": 3,
+		"type": "location",
+		"title": "Abandoned Mine",
+		"icon": "dark",
+		"strength": 3,
+		"hp": 3,
+		"traits": ["Underground", "Dark"],
+		"effect": {
+			"normal": "Lost: Return the top 2 Goblin enemies in the encounter discard pile to the staging area, if able.\nPASS"
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 90,
+		"quantity": 2,
+		"type": "location",
+		"title": "Dwarven Forge",
+		"icon": "dark",
+		"strength": 2,
+		"hp": 4,
+		"traits": ["Underground", "Dark"],
+		"effect": {
+			"normal": "Lost: Each player must choose and discard 1 card from his hand.\nPASS"
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 91,
+		"quantity": 2,
+		"type": "location",
+		"title": "Silent Caverns",
+		"icon": "dark",
+		"strength": 1,
+		"hp": 3,
+		"traits": ["Underground"],
+		"effect": {
+			"normal": "Lost: Exhaust all characters.\nPASS"
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 92,
+		"quantity": 2,
+		"type": "location",
+		"title": "Twisting Passage",
+		"icon": "dark",
+		"strength": 3,
+		"hp": 5,
+		"traits": ["Underground", "Dark"],
+		"effect": {
+			"normal": "PASS",
+			"forced": "Before placing progress tokens on Twisting Passage, the first player must make a locate test. If this test is failed, do not place any progress tokens on Twisting Passage and trigger all \"Lost:\" effects in play."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 93,
+		"quantity": 2,
+		"type": "treachery",
+		"title": "Fatigue",
+		"icon": "dark",
+		"effect": {
+			"when revealed": "Each player must exhaust 1 character he controls, if able. Then, if any player controls no unexhausted characters, Fatigue gains surge.",
+			"shadow": "The defending player must exhaust 1 character he controls, if able."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 94,
+		"quantity": 4,
+		"type": "treachery",
+		"title": "Foul Air",
+		"icon": "dark",
+		"effect": {
+			"when revealed": "The first player makes a locate test. If this test is failed, deal 2 damage to all characters and trigger all \"Lost:\" effects in play."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 95,
+		"quantity": 1,
+		"type": "treachery",
+		"title": "Gathering Ground",
+		"icon": "dark",
+		"effect": {
+			"normal": "PASS",
+			"when revealed": "Attach this card to a location in the staging area with the highest combined threat and remaining quest points. (Counts as a Condition attachment with the text: \"Each enemy revealed from the encounter deck gains surge.\")"
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 96,
+		"quantity": 2,
+		"type": "treachery",
+		"title": "Vast and Intricate",
+		"icon": "dark",
+		"effect": {
+			"when revealed": "The first player makes a locate test. If this test is failed, raise each player's threat by 7, remove all progress tokens from play, and trigger all \"Lost:\" effects in play."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 97,
+		"quantity": 3,
+		"type": "enemy",
+		"title": "Cave Spider",
+		"icon": "dark",
+		"cost": 31,
+		"strength": 3,
+		"attack": 2,
+		"defense": 1,
+		"hp": 4,
+		"traits": ["Spider", "Creature"],
+		"effect": {
+			"when revealed": "The first player draws 1 card. Then, that player must choose and discard 4 cards from his hand, if able.",
+			"forced": "After Cave Spider engages a player, that player must choose and discard 1 card from his hand, if able."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 98,
+		"quantity": 4,
+		"type": "enemy",
+		"title": "Goblin Sneak",
+		"icon": "dark",
+		"cost": 15,
+		"strength": 2,
+		"attack": 1,
+		"defense": 1,
+		"hp": 2,
+		"traits": ["Goblin", "Orc"],
+		"effect": {
+			"forced": "After Goblin Sneak engages a player, discard the top card of the encounter deck. If it is a treachery card, Goblin Sneak engages the next player, if able.",
+			"shadow": "Add Goblin Sneak to the staging area."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 99,
+		"quantity": 1,
+		"type": "enemy",
+		"title": "Goblin Warlord",
+		"icon": "dark",
+		"cost": 39,
+		"strength": 4,
+		"attack": 3,
+		"defense": 3,
+		"hp": 5,
+		"traits": ["Goblin", "Orc"],
+		"effect": {
+			"normal": "Lost: Each player must choose and discard 1 ally he controls from play, if able.",
+			"shadow": "Trigger all \"Lost:\" effects in play."
+		}
+	},
+	{
+		"set": "dwarrowdelf",
+		"id": 100,
+		"quantity": 3,
+		"type": "enemy",
+		"title": "Rock Adder",
+		"icon": "dark",
+		"cost": 20,
+		"strength": 1,
+		"attack": 3,
+		"defense": 0,
+		"hp": 3,
+		"traits": ["Creature"],
+		"effect": {
+			"normal": "Rock Adder cannot be attacked unless it has dealt at least 1 damage this round.",
+			"shadow": "If this attack is undefended, the defending player must discard 1 character he controls from play."
 		}
 	}
 ]

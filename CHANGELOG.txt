@@ -1,25 +1,32 @@
-Major changelog and Windows binary download:
+Major changelog:
 
 
-2012.03.30    ( http://db.tt/BUUc9dGu )
+2012.06.13
+  * Add Chinese interface translation
+  * New adventure packs:
+      - The Dead Marshes
+      - Return to Mirkwood
+
+
+2012.03.30
   * Journey logging in Solo Game
   * Refined scenario setup
-  * New supported expansion set:
+  * New adventure pack:
       - The Hills of Emyn Muil
 
 
-2012.03.13    ( http://db.tt/CiyIbB64 )
+2012.03.13
   * Multiplayer Game
   * Save/Load in Solo Game
-  * New supported expansion set:
+  * New adventure pack:
       - A Journey to Rhosgobel
 
 
-2012.02.24    ( http://db.tt/bokQjsEZ )
+2012.02.24
   * First release
   * Solo Game
   * Deck Builder
-  * Supported expansion sets:
+  * Supported adventure packs:
       - Core Set
       - The Hunt for Gollum
       - Conflict at the Carrock

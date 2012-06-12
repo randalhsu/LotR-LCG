@@ -504,6 +504,18 @@ class MainWindow(QMainWindow):
             encounterList.remove((s, 41))
             if self.playerCount == 1:
                 stagingList.append(encounterList.pop(-1))  # 1 card per player
+                
+        elif scenarioId == 15:  # The Watcher in the Water
+            questList = [(s, 63), (s, 64)]
+            prepareList = [(s, 72), (s, 65)]  # The Watcher, Doors of Durin
+            for card in prepareList:
+                encounterList.remove(card)
+            stagingList.append(encounterList.pop(-1))  # reveal 1 card
+            
+        elif scenarioId == 16:  # The Long Dark
+            questList = [(s, 86), (s, 87)]
+            heroList.append(('khazaddum', 41))  # Cave Torch, for first player  # TODO: this is for first player
+            encounterList.remove(('khazaddum', 41))
         # EXPANSION
         
         prepareList.reverse()
@@ -548,6 +560,14 @@ class MainWindow(QMainWindow):
             
         elif scenarioId == 11:  # The Seventh Level
             QMessageBox.information(self, title, QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Attach %1 to a hero,').arg('<b>"Book of Mazarbul"</b>')).arg(QCoreApplication.translate('MainWindow', 'then reveal 1 card per player.')))
+            
+        elif scenarioId == 15:  # The Watcher in the Water
+            card = self.stagingArea.getList()[0]
+            if ('strength' not in card.info) or (card.info['strength'] < self.playerCount * 2):
+                QMessageBox.information(self, title, QCoreApplication.translate('MainWindow', 'Reveal cards until total threat >= %1.').arg(self.playerCount * 2))
+                
+        elif scenarioId == 16:  # The Long Dark
+            QMessageBox.information(self, title, QString('%1<br>%2').arg(QCoreApplication.translate('MainWindow', 'Attach %1 to a hero,').arg('<b>"Cave Torch"</b>')).arg(QCoreApplication.translate('MainWindow', "then follow Quest card's setup instruction.")))
         # EXPANSION
         
     def logInitialState(self):

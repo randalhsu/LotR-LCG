@@ -118,5 +118,21 @@
 		"icon": "rivendell",
 		"encounters": ["rivendell", "misty", "plundering"],
 		"description": "The heroes continue their journey northward to Rivendell, escorting Arwen to visit her father Elrond. But the road is long, and Orcs ambush the party along the way. With enemies hounding the heroes' steps, the weather drives the party ever closer to the looming mountains, and the dangers they hold."
+	},
+	{
+		"set": "dwarrowdelf",
+		"difficulty": 5,
+		"name": "The Watcher in the Water",
+		"icon": "watcher",
+		"encounters": ["watcher", "misty"],
+		"description": "Elrond is disturbed by the report of Arwen's journey to Rivendell. He has requsted that the heroes discover the source of the increased Orc activity along the Misty Mountains. This mission has led the party South to Moria, but the Doors of Durin are blocked by a deep, dark lake. As the heroes make their way around its waters, an ancient evil stirs from within its depths. A desperate battle begins, and the heroes must drive the creature away or find safety in the mines."
+	},
+	{
+		"set": "dwarrowdelf",
+		"difficulty": 7,
+		"name": "The Long Dark",
+		"icon": "dark",
+		"encounters": ["dark", "twists", "moria"],
+		"description": "The Mines of Moria are a dark labyrinth of narrow tunnels and wide passages, natural caves and impressive caverns of Dwarven workmanship. The heroes must make their way eastward, discovering what they can about the Orcs, and perhaps even meeting up with Balin for more information. But it is easy to get lost in the darkness..."
 	}
 ]

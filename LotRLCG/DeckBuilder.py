@@ -165,7 +165,7 @@ class DeckBuilder(QMainWindow):
         self.decks = playerDecksInfo
         self.currentDeck = collections.Counter()
         self.dirty = False  # are there unsaved changes?
-        
+        self.currentTab = 0  # 0: player cards, 1: encounter cards
         self.createUI()
         
         self.timer = QTimer()  # for clearing state label automatically
@@ -203,13 +203,23 @@ class DeckBuilder(QMainWindow):
                         self.imageDict[(set_, id)] = pixmap
                 else:
                     break
+                    
+        # patch the fucked up Dwarrowdelf No.76
+        if QFile(':/dwarrowdelf/0.jpg').exists():
+            pixmap = getCardPixmap(':/dwarrowdelf/0.jpg')
+            self.imageDict[('dwarrowdelf', 0)] = pixmap
+            
         self.loadingLabel.setText('')
         self.setCursor(Qt.ArrowCursor)
         
     def setLargeImage(self, (set_, id)):
         if self.largeImageLabel.currentCard != (set_, id):
             try:
-                self.largeImageLabel.setPixmap(self.imageDict[(set_, id)])
+                # patch the fucked up Dwarrowdelf No.76
+                if (set_, id) == ('dwarrowdelf', 76) and self.currentTab == 1:
+                    self.largeImageLabel.setPixmap(self.imageDict[('dwarrowdelf', 0)])
+                else:
+                    self.largeImageLabel.setPixmap(self.imageDict[(set_, id)])
                 self.largeImageLabel.currentCard = (set_, id)
             except KeyError:  # occurs right after program startup but before images are loaded
                 pass
@@ -268,6 +278,10 @@ class DeckBuilder(QMainWindow):
             value = ''
             
         if isinstance(value, int) or field in ('quantity', 'id', 'cost', 'strength', 'attack', 'defense', 'hp'):
+            # patch the fucked up Dwarrowdelf No.76
+            if (set_, id) == ('dwarrowdelf', 0) and field == 'id':
+                value = 76
+                
             item = NumericItem(str(value))
             item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
             if field == 'quantity':
@@ -283,6 +297,11 @@ class DeckBuilder(QMainWindow):
             
         #item.setSizeHint(QSize(0, 12))
         item.card = (set_, id)  # append this info for convenience
+        
+        # patch the fucked up Dwarrowdelf No.76
+        if (set_, id) == ('dwarrowdelf', 0):
+            item.card = ('dwarrowdelf', 76)
+            
         return item
         
     def updateDeckTable(self):
@@ -334,14 +353,27 @@ class DeckBuilder(QMainWindow):
         encounterCards = []
         for set_ in SETS:
             for (id, card) in enumerate(cardsInfo[set_]):
+                # patch the fucked up Dwarrowdelf No.76
+                if (set_, id) == ('dwarrowdelf', 0):
+                    continue
+                    
                 if isEncounterCard(set_, id):
                     if QFile(':/{0}/{1}.jpg'.format(set_, id)).exists():
                         encounterCards.append((set_, id))
-                    
+                        
+                # patch the fucked up Dwarrowdelf No.76
+                if (set_, id) == ('dwarrowdelf', 75):
+                    if QFile(':/dwarrowdelf/0.jpg').exists():
+                        encounterCards.append(('dwarrowdelf', 76))
+                        
         tableWidget = EncounterTableWidget(len(encounterCards), 0, self)
         
         for (row, (set_, id)) in enumerate(encounterCards):
             for (col, field) in enumerate(['set', 'id', 'quantity'] + list(CARD_FIELDS[2:])):
+                # patch the fucked up Dwarrowdelf No.76
+                if (set_, id) == ('dwarrowdelf', 76):
+                    id = 0
+                    
                 item = self.createTableItem(set_, id, field)
                 tableWidget.setItem(row, col, item)
         
@@ -561,6 +593,7 @@ class DeckBuilder(QMainWindow):
             self.playerCardsTable.setRowHidden(row, not matched)
             
     def changeTab(self, index_):
+        self.currentTab = index_
         self.changeDefaultImage(index_)
         if index_ == 1 and ('core', 74) not in self.imageDict:  # check if Encounter Cards are not loaded yet
             QTimer.singleShot(10, self.loadEncounterCards)

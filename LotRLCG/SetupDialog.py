@@ -81,7 +81,7 @@ class SetupDialog(QDialog):
         scenarioLayout = QGridLayout()
         scenarioNames = [scenario['icon'] for scenario in scenariosInfo]
         
-        testCases = (('core', 119), ('core', 126), ('core', 123), ('mirkwood', 11), ('mirkwood', 35), ('mirkwood', 60), ('mirkwood', 82), ('mirkwood', 105), ('mirkwood', 126), ('osgiliath', 16), ('khazaddum', 64), ('khazaddum', 67), ('khazaddum', 69), ('dwarrowdelf', 11), ('dwarrowdelf', 38))
+        testCases = (('core', 119), ('core', 126), ('core', 123), ('mirkwood', 11), ('mirkwood', 35), ('mirkwood', 60), ('mirkwood', 82), ('mirkwood', 105), ('mirkwood', 126), ('osgiliath', 16), ('khazaddum', 64), ('khazaddum', 67), ('khazaddum', 69), ('dwarrowdelf', 11), ('dwarrowdelf', 38), ('dwarrowdelf', 63), ('dwarrowdelf', 86))
         scenarioExists = [QFile(':/{0}/{1}.jpg'.format(set_, id)).exists() for (set_, id) in testCases]
         
         for (i, scenario) in enumerate(scenariosInfo):

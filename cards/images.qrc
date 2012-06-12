@@ -8,6 +8,7 @@
 	<file>images/icons/anduin.png</file>
 	<file>images/icons/ATK.png</file>
 	<file>images/icons/carrock.png</file>
+	<file>images/icons/dark.png</file>
 	<file>images/icons/DeckBuilder.ico</file>
 	<file>images/icons/DEF.png</file>
 	<file>images/icons/emynmuil.png</file>
@@ -42,6 +43,7 @@
 	<file>images/icons/tactics.png</file>
 	<file>images/icons/Threat.png</file>
 	<file>images/icons/twists.png</file>
+	<file>images/icons/watcher.png</file>
 	<file>images/icons/wilderlands.png</file>
 	<file>images/icons/WP.png</file>
 	<file>images/tokens/damage.png</file>

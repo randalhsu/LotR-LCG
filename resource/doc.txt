@@ -37,8 +37,8 @@ khazaddum        (Khazad-dum)               2012/01/06
 dwarrowdelf      (Dwarrowdelf)
  |-- redhorn     (The Redhorn Gate)         2012/03/01
  |-- rivendell   (Road to Rivendell)        2012/03/21
- |-- watcher     (The Watcher in the Water)
- |-- long        (The Long Dark)
+ |-- watcher     (The Watcher in the Water) 2012/04/25
+ |-- dark        (The Long Dark)            2012/05/16
  |-- foundations (Foundations of Stone)
  |-- flame       (Shadow and Flame)
 
@@ -70,6 +70,10 @@ JSON structure of resource/introspection/*.js :
 ======================================================
 
 If you want to trace code, maybe you can follow modules' import order in LotRLCG/MainWindow.py
+
+======================================================
+
+Dwarrowdelf No.76 "Wrapped!" is indexed as Dwarrowdelf No.0 in this program's internal representation.
 
 ======================================================
 
