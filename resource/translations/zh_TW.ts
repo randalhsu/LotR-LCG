@@ -89,7 +89,7 @@
         <translation>錯誤：同一卡牌最多只能有 3 張</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="649"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="676"/>
         <source>Add New Deck</source>
         <translation>新增牌組</translation>
     </message>
@@ -129,47 +129,47 @@
         <translation>牌組已儲存至 &quot;decks.json&quot;!</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="651"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="678"/>
         <source>Remove This Deck</source>
         <translation>移除牌組</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="657"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="684"/>
         <source>Duplicate This Deck</source>
         <translation>複製牌組</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="659"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="686"/>
         <source>Save Decks</source>
         <translation>儲存牌組</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="682"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="735"/>
         <source>Construct Player Decks</source>
         <translation>建構玩家牌組</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="683"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="736"/>
         <source>View Encounter Cards</source>
         <translation>瀏覽遭遇牌</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="693"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="746"/>
         <source>LotR LCG Deck Builder</source>
         <translation>《魔戒》卡牌版: 牌組建構</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="702"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="755"/>
         <source>Unsaved Changes</source>
         <translation>變更尚未儲存</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="702"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="755"/>
         <source>Some changes are not saved yet.</source>
         <translation>有尚未儲存的變更.</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="702"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="755"/>
         <source>Save now?</source>
         <translation>現在儲存？</translation>
     </message>
@@ -194,7 +194,7 @@
         <translation>牌組大小</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="615"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="640"/>
         <source>Program written by amulet</source>
         <translation>程式由 amulet 撰寫</translation>
     </message>
@@ -254,12 +254,12 @@
         <translation>請使用英數字</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="624"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="649"/>
         <source>Player Cards</source>
         <translation>玩家卡牌</translation>
     </message>
     <message>
-        <location filename="../../LotRLCG/DeckBuilder.py" line="625"/>
+        <location filename="../../LotRLCG/DeckBuilder.py" line="706"/>
         <source>Filter:</source>
         <translation>篩選:</translation>
     </message>

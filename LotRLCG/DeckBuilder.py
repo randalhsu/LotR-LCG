@@ -592,6 +592,31 @@ class DeckBuilder(QMainWindow):
                     break
             self.playerCardsTable.setRowHidden(row, not matched)
             
+    def encounterFilterChanged(self, keyword):
+        if keyword.isEmpty():
+            for row in range(self.encounterCardsTable.rowCount()):
+                self.encounterCardsTable.setRowHidden(row, False)
+            return
+            
+        if keyword.toLower() == 'victory':
+            for row in range(self.encounterCardsTable.rowCount()):
+                set_ = setFull[str(self.encounterCardsTable.item(row, 0).text())]
+                id = int(self.encounterCardsTable.item(row, 1).text())
+                matched = 'victory' in cardsInfo[set_][id]
+                for col in range(self.encounterCardsTable.columnCount()):
+                    if self.encounterCardsTable.item(row, col).text().contains(keyword, Qt.CaseInsensitive):
+                        matched = True
+                self.encounterCardsTable.setRowHidden(row, not matched)
+            return
+            
+        for row in range(self.encounterCardsTable.rowCount()):
+            matched = False
+            for col in range(self.encounterCardsTable.columnCount()):
+                if self.encounterCardsTable.item(row, col).text().contains(keyword, Qt.CaseInsensitive):
+                    matched = True
+                    break
+            self.encounterCardsTable.setRowHidden(row, not matched)
+        
     def changeTab(self, index_):
         self.currentTab = index_
         self.changeDefaultImage(index_)
@@ -624,8 +649,10 @@ class DeckBuilder(QMainWindow):
         playerCardsLabel = QLabel(self.tr('Player Cards'))
         filterLabel = QLabel(self.tr('Filter:'))
         filterComboBox = QComboBox()
-        filterComboBox.addItems(('', 'Dwarf', 'Eagle', 'Gondor', 'Hobbit', 'Ranged', 'Rohan', 'Sentinel', 'Silvan', 'Song'))
+        filterComboBox.addItems(('', 'Dwarf', 'Eagle', 'Gondor', 'Hobbit', 'Istari', 'Noldor', 'Ranged', 'Rohan', 'Secrecy', 'Sentinel', 'Silvan', 'Song'))
         filterComboBox.setEditable(True)
+        filterComboBox.setMaxVisibleItems(100)
+        filterComboBox.setMinimumContentsLength(10)
         filterComboBox.editTextChanged.connect(self.filterChanged)
         self.playerCardsTable = self.createPlayerCardsTable()
         
@@ -676,7 +703,33 @@ class DeckBuilder(QMainWindow):
         playerLayout.addWidget(saveDeckButton, 5, 8, 1, 1)
         playerTab.setLayout(playerLayout)
         
-        encounterTab = self.createEncounterCardsTable()
+        encounterFilterLabel = QLabel(self.tr('Filter:'))
+        encounterFilterComboBox = QComboBox()
+        encounterFilterComboBox.addItems(('', 'Forced', 'Response', 'Shadow', 'Travel', 'When Revealed', 'Victory'))
+        encounterFilterComboBox.insertSeparator(encounterFilterComboBox.count())
+        encounterFilterComboBox.addItems(('Ambush', 'Doomed', 'Surge'))
+        encounterFilterComboBox.insertSeparator(encounterFilterComboBox.count())
+        encounterFilterComboBox.addItems(('Ally', 'Clue', 'Dark', 'Condition', 'Creature', 'Goblin', 'Mountain', 'Orc', 'Scout', 'Snow', 'Tentacle', 'Troll', 'Underground'))
+        encounterFilterComboBox.insertSeparator(encounterFilterComboBox.count())
+        encounterFilterComboBox.addItems(('Escape', 'Lost'))
+        encounterFilterComboBox.insertSeparator(encounterFilterComboBox.count())
+        encounterFilterComboBox.addItems(('attachment', 'character', 'deal', 'discard', 'draw', 'exhaust', 'player', 'progress', 'raise', 'ranged', 'resource', 'staging'))
+        
+        encounterFilterComboBox.setEditable(True)
+        encounterFilterComboBox.setMaxVisibleItems(100)
+        encounterFilterComboBox.setMinimumContentsLength(10)
+        encounterFilterComboBox.editTextChanged.connect(self.encounterFilterChanged)
+        encounterFilterLayout = QHBoxLayout()
+        encounterFilterLayout.addWidget(encounterFilterLabel)
+        encounterFilterLayout.addWidget(encounterFilterComboBox)
+        encounterFilterLayout.addStretch(1)
+        
+        self.encounterCardsTable = self.createEncounterCardsTable()
+        encounterLayout = QVBoxLayout()
+        encounterLayout.addLayout(encounterFilterLayout)
+        encounterLayout.addWidget(self.encounterCardsTable)
+        encounterTab = QWidget()
+        encounterTab.setLayout(encounterLayout)
         
         self.tabWidget = QTabWidget()
         self.tabWidget.addTab(playerTab, self.tr('Construct Player Decks'))
