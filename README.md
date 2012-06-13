@@ -6,9 +6,7 @@ http://ogc-daily.blogspot.com/2012/02/lotr-lcg-for-pc.html
 
 ### About Card Image Files
 
-* Card image files included in the repository are stripped. You can replace them by your own scans, just follow the same naming.
-
-* If you do so, note that each Quest Card image `*.jpg` must also be splitted to `*-A.jpg` and `*-B.jpg`. `resource/quest_cards_splitter.py` is doing this.
+* Card image files are not included in the repository. Download the Windows build from blog post and put cards/*.pyc at correct place.
 
 
 ### Usage
