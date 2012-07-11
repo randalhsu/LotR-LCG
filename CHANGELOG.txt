@@ -1,6 +1,11 @@
 Major changelog:
 
 
+2012.07.07
+  * New adventure pack:
+      - Khazad-dum
+
+
 2012.06.13
   * Add Chinese interface translation
   * New adventure packs:

@@ -134,5 +134,13 @@
 		"icon": "dark",
 		"encounters": ["dark", "twists", "moria"],
 		"description": "The Mines of Moria are a dark labyrinth of narrow tunnels and wide passages, natural caves and impressive caverns of Dwarven workmanship. The heroes must make their way eastward, discovering what they can about the Orcs, and perhaps even meeting up with Balin for more information. But it is easy to get lost in the darkness..."
+	},
+	{
+		"set": "dwarrowdelf",
+		"difficulty": 6,
+		"name": "Foundations of Stone",
+		"icon": "foundations",
+		"encounters": ["foundations", "twists", "hazards", "goblin"],
+		"description": "The walls are weeping water, and the air grows damp. A low rumble sounds from above, accompanied by the sound of rushing water. There are underground waterways in Moria that lead to deep darkness, and who knows what else..."
 	}
 ]
