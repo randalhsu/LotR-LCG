@@ -28,6 +28,3 @@ Windows binary can be found in the blog post.
 ### License
 
 * Python codes are licensed under GNU GPL v2.
-
-
-https://github.com/amulet-tw/LotR-LCG
